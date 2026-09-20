@@ -40,15 +40,25 @@ MIN_SCORE_BY_TYPE: Dict[str, float] = {
     "PERSON": 0.4,
     # spaCy's ORG tag on this pipeline gives every hit the same flat, low
     # confidence (0.85 x the 0.4 multiplier below = 0.34) regardless of
-    # whether it's actually a company name, and in practice on real
-    # documents it is dominated by false positives it has no way to filter
-    # itself: job titles ("AI/ML Intern", "Project Mentor & Director"),
+    # whether it's actually a company name, and it is noisy on real
+    # documents: job titles ("AI/ML Intern", "Project Mentor & Director"),
     # address fragments ("Silverpark Soc", "Pal Rd"), department names,
-    # bare acronyms ("AI"). With no reliable signal to separate those from
-    # a real employer/institution name, the threshold sits just above that
-    # flat score so spaCy's org guesses don't surface at all by default -
-    # our own custom recognizers (MEDICAL_RECORD_NUMBER etc.) are unaffected.
-    "ORGANIZATION": 0.4,
+    # bare acronyms ("AI").
+    #
+    # This sat at 0.4 - just *above* that flat 0.34 - which dropped every
+    # spaCy org guess before the user ever saw it. Measured on a 12-document
+    # set, that cost 7 of 35 expected entities, and the losses were not only
+    # companies: spaCy mislabels some personal names as ORG ("Bjorn
+    # Haraldsson"), so suppressing the label silently leaked a real name into
+    # "redacted" output. For a tool whose failure mode is exposing PII, a
+    # noisy entity the user can untick beats a missing one they never see.
+    #
+    # 0.3 is below the flat score, so these now surface - but they stay well
+    # under AUTO_SELECT_MIN_SCORE (0.6), so they are shown for review and
+    # never pre-checked for redaction. Measured effect: recall 28/35 -> 35/35
+    # with the auto-selected count unchanged at 27, at the cost of 2 extra
+    # unchecked false positives on a deliberately noisy sample.
+    "ORGANIZATION": 0.3,
     "LOCATION": 0.5,
     "NRP": 0.5,
     # Lowered analogously to PERSON so structurally-downweighted false
