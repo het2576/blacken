@@ -8,9 +8,12 @@ __pycache__/
 uploads/
 data/
 
-# Any locally-generated/experimental spaCy model dirs - the image builds its
-# own pruned model in stage 1 of the Dockerfile, it doesn't need one from disk
-models/
+# Any locally-generated/experimental spaCy model dirs. The one exception is
+# the committed pruned model the image actually runs on - note this excludes
+# models/* (the contents), not models/ (the dir), because Docker cannot
+# re-include a path underneath an excluded directory.
+models/*
+!models/en_core_web_lg_pruned
 
 # Secrets - real config comes from platform env vars, not a baked-in file
 .env

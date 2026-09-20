@@ -104,8 +104,14 @@ backend/uploads/
 backend/data/
 
 # Locally-generated spaCy model artifacts (e.g. pruned models for memory
-# testing) - the deploy image builds its own, see backend/Dockerfile
-backend/models/
+# testing). The exception is en_core_web_lg_pruned, which the deploy image
+# actually runs on and is therefore tracked - the Dockerfile no longer builds
+# it, because doing so peaks at ~1.28GB RSS and gets OOM-killed on a free-tier
+# builder. Regenerate it with backend/scripts/build_pruned_model.py.
+# Note this ignores the directory's contents, not the directory itself: git
+# cannot re-include a path underneath an ignored directory.
+backend/models/*
+!backend/models/en_core_web_lg_pruned/
 
 # Test files (scratch scripts at the repo root only - the real pytest
 # suite in backend/tests/ is tracked, see the negations below)

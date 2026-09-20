@@ -1,27 +1,19 @@
-# ---- Stage 1: prepare a memory-slimmed en_core_web_lg ----
-# Full en_core_web_lg loads to ~800MB RAM (its 342k-entry word-vector table
-# dominates), which doesn't fit a 512MB-1GB free-tier host. The NER model's
-# actual trained weights are a small fraction of that - the vectors are only
-# used as an auxiliary lookup table - so spaCy's own supported technique
-# (vocab.prune_vectors) collapses rare vectors onto their nearest neighbor,
-# shrinking that table 17x while keeping the same NER accuracy. Verified
-# locally: 799MB -> 426MB RSS, no measurable accuracy loss on real documents.
-# This stage is discarded after build; only the ~54MB pruned model directory
-# it produces is copied into the final image below, so the full ~560MB
-# download never ends up in what actually ships.
-FROM python:3.11-slim AS model-prep
-RUN pip install --no-cache-dir spacy>=3.7.0
-RUN python -m spacy download en_core_web_lg
-# nlp.to_disk() only creates the leaf directory (a plain mkdir(), not
-# mkdir(parents=True)) - its parent must already exist, or this fails.
-RUN mkdir -p /model
-RUN python -c "\
-import spacy; \
-nlp = spacy.load('en_core_web_lg'); \
-nlp.vocab.prune_vectors(20000); \
-nlp.to_disk('/model/en_core_web_lg_pruned')"
-
-# ---- Stage 2: runtime image ----
+# Single-stage build. The memory-slimmed spaCy model is committed to the repo
+# under models/ and copied in as-is - it is deliberately NOT built here.
+#
+# This image used to have a "model-prep" stage that downloaded the full
+# en_core_web_lg (~560MB) and ran nlp.vocab.prune_vectors(20000) at build
+# time. That step peaks at ~1.28GB RSS (measured): prune_vectors holds the
+# original 342,918x300 vector table (411MB), the 20k-row `keep` copy and the
+# 322,918-row `toss` copy all live at once, on top of materializing a Lexeme
+# for every vector key. A free-tier builder has less RAM than that, so the
+# step got OOM-killed and the build failed with "Failed to build an image"
+# after ~5 minutes - with no obvious error, because an OOM kill is a bare
+# SIGKILL, not a Python traceback.
+#
+# The prune is a pure, deterministic, one-off transformation, so it belongs in
+# version control, not in every build. To regenerate it (needs ~1.5GB RAM,
+# takes ~50s), run:  python scripts/build_pruned_model.py
 FROM python:3.11-slim
 
 WORKDIR /app
@@ -38,17 +30,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# The memory-slimmed model from stage 1 - see the comment above for why.
-COPY --from=model-prep /model/en_core_web_lg_pruned /app/models/en_core_web_lg_pruned
+# Application source, including models/en_core_web_lg_pruned. See
+# .dockerignore: everything under models/ is excluded except that one
+# directory, so stray local model dirs don't bloat the image.
+COPY . .
 
 # Must point at the model actually present in this image, or the app fails
 # to start ("Can't find model ..."). Overridable at deploy time via a
-# platform env var of the same name - e.g. set it back to en_core_web_lg
-# if you switch to a host with >= 1.5GB RAM and don't need the smaller one.
+# platform env var of the same name - e.g. set it to en_core_web_lg if you
+# switch to a host with >= 1.5GB RAM and install the full model.
+#
+# The committed model declares spacy_version ">=3.8.0,<3.9.0" in its
+# meta.json, which is why requirements.txt pins spacy to that same range -
+# an unpinned spacy would eventually resolve to 4.x and refuse to load it.
 ENV SPACY_MODEL=/app/models/en_core_web_lg_pruned
-
-# Copy application source
-COPY . .
 
 EXPOSE 8000
 
