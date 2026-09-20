@@ -12,7 +12,10 @@ add a light per-type minimum-score filter on top, in one place.
 """
 
 import logging
+from pathlib import Path
 from typing import Dict, List
+
+import spacy
 
 from presidio_analyzer import AnalyzerEngine
 from presidio_analyzer.nlp_engine import NlpEngineProvider
@@ -171,11 +174,39 @@ def _resolve_overlaps(entities: List[dict]) -> List[dict]:
     return sorted(kept, key=lambda e: e["start"])
 
 
+def _assert_model_available(spacy_model: str) -> None:
+    """Fail fast if the configured spaCy model is not already installed.
+
+    Presidio's NlpEngineProvider silently falls back to `spacy download` when
+    it can't find the named model. On a memory-constrained host that is a trap
+    rather than a convenience: a typo or a stale platform env var makes the
+    container pull ~560MB at startup and then get OOM-killed loading it, which
+    surfaces only as a bare "Killed" in the logs with no indication that the
+    wrong model was ever requested. The deployed image ships the model it needs,
+    so a missing one always means misconfiguration - say so plainly instead.
+    """
+    if Path(spacy_model).expanduser().is_dir():
+        return
+    if spacy_model in spacy.util.get_installed_models():
+        return
+    installed = ", ".join(spacy.util.get_installed_models()) or "none"
+    raise RuntimeError(
+        f"spaCy model {spacy_model!r} is not installed and is not a directory on "
+        f"disk. Installed models: {installed}. Refusing to let Presidio download "
+        f"it at runtime - that pulls hundreds of MB into a running container and "
+        f"typically ends in an OOM kill. Set SPACY_MODEL to a model present in "
+        f"this image (the Docker image ships /app/models/en_core_web_lg_pruned), "
+        f"or install the model. Note that a platform env var (Railway/Render "
+        f"dashboard variables) overrides the Dockerfile's ENV."
+    )
+
+
 class PiiDetectionEngine:
     """Loads spaCy + Presidio once at startup and reuses it across requests."""
 
     def __init__(self, spacy_model: str = "en_core_web_lg", language: str = "en"):
         self.language = language
+        _assert_model_available(spacy_model)
         logger.info("Loading spaCy model '%s' for PII detection...", spacy_model)
 
         nlp_configuration = {
