@@ -1,0 +1,91 @@
+# Scheduled health check for the deployed backend.
+#
+# This is MONITORING, not keep-alive. It tells you the backend is down before
+# a user finds out. It deliberately does NOT try to prevent Railway's idle
+# sleep, because GitHub Actions is the wrong tool for that:
+#
+#   - Railway sleeps after roughly ten minutes idle, so preventing it needs a
+#     ping every ~5 minutes. GitHub's scheduled runs are explicitly
+#     best-effort and are routinely delayed by 5-15+ minutes under load, so
+#     they cannot hold a 10-minute timer open reliably.
+#   - At a 5-minute interval this would be ~288 runs/day. On a private repo
+#     that exhausts the 2,000 free Actions minutes/month within about a week.
+#
+# Use an external monitor for keep-alive instead - UptimeRobot (free, 5-min
+# interval) or cron-job.org (free, 1-min). Point it at the same /api/health
+# URL. Those are purpose-built for this and cost nothing.
+#
+# Worth knowing before you keep it awake 24/7: Railway's free allowance is
+# metered by GB-hours, not requests. A ~500MB service pinned awake all month
+# consumes roughly the whole free credit, and when credit runs out the
+# service stops entirely - which is worse than sleeping. Pinging only during
+# the hours you expect traffic (and letting it sleep overnight) makes the
+# allowance last materially longer.
+#
+# Setup: Settings -> Secrets and variables -> Actions -> Variables tab ->
+#   New repository variable
+#     Name:  BACKEND_HEALTH_URL
+#     Value: https://your-app.up.railway.app/api/health
+#
+# Note: GitHub disables scheduled workflows after 60 days with no repo
+# activity.
+
+name: Backend health check
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch: # lets you run it by hand from the Actions tab
+
+# Two runs racing each other tells you nothing extra.
+concurrency:
+  group: backend-healthcheck
+  cancel-in-progress: false
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Ping /api/health
+        env:
+          HEALTH_URL: ${{ vars.BACKEND_HEALTH_URL }}
+        run: |
+          set -uo pipefail
+
+          if [ -z "${HEALTH_URL:-}" ]; then
+            echo "::error::Repository variable BACKEND_HEALTH_URL is not set."
+            echo "Set it under Settings -> Secrets and variables -> Actions -> Variables."
+            exit 1
+          fi
+
+          # Retry before crying wolf: a single failed request is as likely to
+          # be a transient network blip or a cold start as a real outage.
+          attempt=1
+          max=3
+          while [ "$attempt" -le "$max" ]; do
+            echo "Attempt $attempt/$max: GET $HEALTH_URL"
+            body=$(curl -sS --max-time 60 -w '\n%{http_code}' "$HEALTH_URL" 2>&1) && rc=0 || rc=$?
+            code=$(printf '%s' "$body" | tail -n1)
+            payload=$(printf '%s' "$body" | sed '$d')
+
+            if [ "$rc" -eq 0 ] && [ "$code" = "200" ]; then
+              echo "$payload"
+              # A 200 with a non-healthy status means the process is up but a
+              # subsystem (OCR, PDF, the detection engine) failed to load.
+              status=$(printf '%s' "$payload" | jq -r '.status // "unknown"' 2>/dev/null || echo unknown)
+              if [ "$status" != "healthy" ]; then
+                echo "::error::Backend responded 200 but status=$status"
+                exit 1
+              fi
+              echo "::notice::Backend healthy (HTTP $code, status=$status)"
+              exit 0
+            fi
+
+            echo "Failed (exit=$rc, http=$code)"
+            attempt=$((attempt + 1))
+            [ "$attempt" -le "$max" ] && sleep 20
+          done
+
+          echo "::error::Backend unreachable or unhealthy after $max attempts (last http=$code)"
+          exit 1
