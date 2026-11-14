@@ -1,0 +1,575 @@
+{
+  "samples": 32,
+  "formats": {
+    "pdf": {
+      "documents": 32,
+      "gold_values": 249,
+      "observable_values": 249,
+      "leak_rate_auto": 0.0963855421686747,
+      "leak_rate_oracle": 0.0,
+      "redaction_recall_auto": 0.9036144578313253,
+      "over_redaction_rate": 0.03052805280528053,
+      "metadata_leak_docs": 0,
+      "errors": {},
+      "latency_ms_p50": 134.78064601076767,
+      "latency_ms_p95": 202.23479199921712,
+      "leak_rate_by_class_auto": {
+        "ADDRESS": 0.13636363636363635,
+        "AGE": 0.14285714285714285,
+        "DATE": 0.0,
+        "EMAIL": 0.0,
+        "FINANCIAL": 0.09090909090909091,
+        "GOV_ID": 0.1111111111111111,
+        "NETWORK": 0.0,
+        "OTHER_ID": 0.1111111111111111,
+        "PERSON": 0.140625,
+        "PHONE": 0.047619047619047616
+      },
+      "leak_rate_by_class_oracle": {
+        "ADDRESS": 0.0,
+        "AGE": 0.0,
+        "DATE": 0.0,
+        "EMAIL": 0.0,
+        "FINANCIAL": 0.0,
+        "GOV_ID": 0.0,
+        "NETWORK": 0.0,
+        "OTHER_ID": 0.0,
+        "PERSON": 0.0,
+        "PHONE": 0.0
+      },
+      "top_leaks": [
+        [
+          "PERSON",
+          "Neha",
+          4
+        ],
+        [
+          "ADDRESS",
+          "Reading",
+          2
+        ],
+        [
+          "ADDRESS",
+          "Round Rock",
+          1
+        ],
+        [
+          "ADDRESS",
+          "Pune",
+          1
+        ],
+        [
+          "OTHER_ID",
+          "ZF-20931",
+          1
+        ],
+        [
+          "ADDRESS",
+          "Naperville",
+          1
+        ],
+        [
+          "FINANCIAL",
+          "NWBKGB2L",
+          1
+        ],
+        [
+          "ADDRESS",
+          "560011",
+          1
+        ],
+        [
+          "GOV_ID",
+          "M4829106",
+          1
+        ],
+        [
+          "PERSON",
+          "Priyanka Chawla",
+          1
+        ],
+        [
+          "PERSON",
+          "Rahul",
+          1
+        ],
+        [
+          "PHONE",
+          "+44 7700 900461",
+          1
+        ],
+        [
+          "ADDRESS",
+          "M14 5TQ",
+          1
+        ],
+        [
+          "ADDRESS",
+          "Chennai",
+          1
+        ],
+        [
+          "AGE",
+          "34",
+          1
+        ]
+      ]
+    },
+    "pdf_scanned": {
+      "documents": 32,
+      "gold_values": 249,
+      "observable_values": 241,
+      "leak_rate_auto": 0.1078838174273859,
+      "leak_rate_oracle": 0.016597510373443983,
+      "redaction_recall_auto": 0.892116182572614,
+      "over_redaction_rate": 0.05785123966942149,
+      "metadata_leak_docs": 0,
+      "errors": {},
+      "latency_ms_p50": 1040.533791470807,
+      "latency_ms_p95": 1340.1003329781815,
+      "leak_rate_by_class_auto": {
+        "ADDRESS": 0.13846153846153847,
+        "AGE": 0.14285714285714285,
+        "DATE": 0.03333333333333333,
+        "EMAIL": 0.0,
+        "FINANCIAL": 0.09090909090909091,
+        "GOV_ID": 0.1111111111111111,
+        "NETWORK": 0.0,
+        "OTHER_ID": 0.1111111111111111,
+        "PERSON": 0.16666666666666666,
+        "PHONE": 0.047619047619047616
+      },
+      "leak_rate_by_class_oracle": {
+        "ADDRESS": 0.015384615384615385,
+        "AGE": 0.0,
+        "DATE": 0.06666666666666667,
+        "EMAIL": 0.0,
+        "FINANCIAL": 0.0,
+        "GOV_ID": 0.0,
+        "NETWORK": 0.0,
+        "OTHER_ID": 0.0,
+        "PERSON": 0.016666666666666666,
+        "PHONE": 0.0
+      },
+      "top_leaks": [
+        [
+          "PERSON",
+          "Neha",
+          4
+        ],
+        [
+          "ADDRESS",
+          "Reading",
+          2
+        ],
+        [
+          "ADDRESS",
+          "Round Rock",
+          1
+        ],
+        [
+          "ADDRESS",
+          "Pune",
+          1
+        ],
+        [
+          "DATE",
+          "1 September 2025",
+          1
+        ],
+        [
+          "OTHER_ID",
+          "ZF-20931",
+          1
+        ],
+        [
+          "ADDRESS",
+          "Naperville",
+          1
+        ],
+        [
+          "FINANCIAL",
+          "NWBKGB2L",
+          1
+        ],
+        [
+          "PERSON",
+          "Sofia Ramirez",
+          1
+        ],
+        [
+          "GOV_ID",
+          "M4829106",
+          1
+        ],
+        [
+          "PERSON",
+          "Priyanka Chawla",
+          1
+        ],
+        [
+          "PERSON",
+          "Rahul",
+          1
+        ],
+        [
+          "ADDRESS",
+          "Ludhiana",
+          1
+        ],
+        [
+          "PHONE",
+          "+44 7700 900461",
+          1
+        ],
+        [
+          "ADDRESS",
+          "M14 5TQ",
+          1
+        ]
+      ]
+    },
+    "docx": {
+      "documents": 32,
+      "gold_values": 249,
+      "observable_values": 249,
+      "leak_rate_auto": 0.0963855421686747,
+      "leak_rate_oracle": 0.0,
+      "redaction_recall_auto": 0.9036144578313253,
+      "over_redaction_rate": 0.025556471558120363,
+      "metadata_leak_docs": 0,
+      "errors": {},
+      "latency_ms_p50": 140.43583351303823,
+      "latency_ms_p95": 187.8103750059381,
+      "leak_rate_by_class_auto": {
+        "ADDRESS": 0.12121212121212122,
+        "AGE": 0.14285714285714285,
+        "DATE": 0.0,
+        "EMAIL": 0.0,
+        "FINANCIAL": 0.09090909090909091,
+        "GOV_ID": 0.1111111111111111,
+        "NETWORK": 0.0,
+        "OTHER_ID": 0.1111111111111111,
+        "PERSON": 0.15625,
+        "PHONE": 0.047619047619047616
+      },
+      "leak_rate_by_class_oracle": {
+        "ADDRESS": 0.0,
+        "AGE": 0.0,
+        "DATE": 0.0,
+        "EMAIL": 0.0,
+        "FINANCIAL": 0.0,
+        "GOV_ID": 0.0,
+        "NETWORK": 0.0,
+        "OTHER_ID": 0.0,
+        "PERSON": 0.0,
+        "PHONE": 0.0
+      },
+      "top_leaks": [
+        [
+          "PERSON",
+          "Neha",
+          4
+        ],
+        [
+          "ADDRESS",
+          "Reading",
+          2
+        ],
+        [
+          "ADDRESS",
+          "Round Rock",
+          1
+        ],
+        [
+          "PERSON",
+          "Rohan Kulkarni",
+          1
+        ],
+        [
+          "ADDRESS",
+          "Pune",
+          1
+        ],
+        [
+          "OTHER_ID",
+          "ZF-20931",
+          1
+        ],
+        [
+          "ADDRESS",
+          "Naperville",
+          1
+        ],
+        [
+          "FINANCIAL",
+          "NWBKGB2L",
+          1
+        ],
+        [
+          "GOV_ID",
+          "M4829106",
+          1
+        ],
+        [
+          "PERSON",
+          "Priyanka Chawla",
+          1
+        ],
+        [
+          "PERSON",
+          "Rahul",
+          1
+        ],
+        [
+          "PHONE",
+          "+44 7700 900461",
+          1
+        ],
+        [
+          "ADDRESS",
+          "M14 5TQ",
+          1
+        ],
+        [
+          "ADDRESS",
+          "Chennai",
+          1
+        ],
+        [
+          "AGE",
+          "34",
+          1
+        ]
+      ]
+    },
+    "docx_structured": {
+      "documents": 32,
+      "gold_values": 249,
+      "observable_values": 249,
+      "leak_rate_auto": 0.08835341365461848,
+      "leak_rate_oracle": 0.0,
+      "redaction_recall_auto": 0.9116465863453815,
+      "over_redaction_rate": 0.02720527617477329,
+      "metadata_leak_docs": 0,
+      "errors": {},
+      "latency_ms_p50": 136.12693798495457,
+      "latency_ms_p95": 188.70337499538437,
+      "leak_rate_by_class_auto": {
+        "ADDRESS": 0.12121212121212122,
+        "AGE": 0.14285714285714285,
+        "DATE": 0.0,
+        "EMAIL": 0.0,
+        "FINANCIAL": 0.09090909090909091,
+        "GOV_ID": 0.1111111111111111,
+        "NETWORK": 0.0,
+        "OTHER_ID": 0.1111111111111111,
+        "PERSON": 0.125,
+        "PHONE": 0.047619047619047616
+      },
+      "leak_rate_by_class_oracle": {
+        "ADDRESS": 0.0,
+        "AGE": 0.0,
+        "DATE": 0.0,
+        "EMAIL": 0.0,
+        "FINANCIAL": 0.0,
+        "GOV_ID": 0.0,
+        "NETWORK": 0.0,
+        "OTHER_ID": 0.0,
+        "PERSON": 0.0,
+        "PHONE": 0.0
+      },
+      "top_leaks": [
+        [
+          "PERSON",
+          "Neha",
+          4
+        ],
+        [
+          "ADDRESS",
+          "Reading",
+          2
+        ],
+        [
+          "ADDRESS",
+          "Round Rock",
+          1
+        ],
+        [
+          "ADDRESS",
+          "Pune",
+          1
+        ],
+        [
+          "OTHER_ID",
+          "ZF-20931",
+          1
+        ],
+        [
+          "ADDRESS",
+          "Naperville",
+          1
+        ],
+        [
+          "FINANCIAL",
+          "NWBKGB2L",
+          1
+        ],
+        [
+          "GOV_ID",
+          "M4829106",
+          1
+        ],
+        [
+          "PERSON",
+          "Rahul",
+          1
+        ],
+        [
+          "PHONE",
+          "+44 7700 900461",
+          1
+        ],
+        [
+          "ADDRESS",
+          "M14 5TQ",
+          1
+        ],
+        [
+          "ADDRESS",
+          "Chennai",
+          1
+        ],
+        [
+          "AGE",
+          "34",
+          1
+        ],
+        [
+          "GOV_ID",
+          "CV 48213",
+          1
+        ],
+        [
+          "PERSON",
+          "Julia",
+          1
+        ]
+      ]
+    },
+    "png": {
+      "documents": 32,
+      "gold_values": 249,
+      "observable_values": 242,
+      "leak_rate_auto": 0.10743801652892562,
+      "leak_rate_oracle": 0.01652892561983471,
+      "redaction_recall_auto": 0.8925619834710744,
+      "over_redaction_rate": 0.05950413223140496,
+      "metadata_leak_docs": 0,
+      "errors": {},
+      "latency_ms_p50": 984.3734374735504,
+      "latency_ms_p95": 1261.0866670147516,
+      "leak_rate_by_class_auto": {
+        "ADDRESS": 0.13846153846153847,
+        "AGE": 0.14285714285714285,
+        "DATE": 0.03333333333333333,
+        "EMAIL": 0.0,
+        "FINANCIAL": 0.09090909090909091,
+        "GOV_ID": 0.1111111111111111,
+        "NETWORK": 0.0,
+        "OTHER_ID": 0.1111111111111111,
+        "PERSON": 0.16666666666666666,
+        "PHONE": 0.047619047619047616
+      },
+      "leak_rate_by_class_oracle": {
+        "ADDRESS": 0.015384615384615385,
+        "AGE": 0.0,
+        "DATE": 0.06666666666666667,
+        "EMAIL": 0.0,
+        "FINANCIAL": 0.0,
+        "GOV_ID": 0.0,
+        "NETWORK": 0.0,
+        "OTHER_ID": 0.0,
+        "PERSON": 0.016666666666666666,
+        "PHONE": 0.0
+      },
+      "top_leaks": [
+        [
+          "PERSON",
+          "Neha",
+          4
+        ],
+        [
+          "ADDRESS",
+          "Reading",
+          2
+        ],
+        [
+          "ADDRESS",
+          "Round Rock",
+          1
+        ],
+        [
+          "ADDRESS",
+          "Pune",
+          1
+        ],
+        [
+          "DATE",
+          "1 September 2025",
+          1
+        ],
+        [
+          "OTHER_ID",
+          "ZF-20931",
+          1
+        ],
+        [
+          "ADDRESS",
+          "Naperville",
+          1
+        ],
+        [
+          "FINANCIAL",
+          "NWBKGB2L",
+          1
+        ],
+        [
+          "PERSON",
+          "Sofia Ramirez",
+          1
+        ],
+        [
+          "GOV_ID",
+          "M4829106",
+          1
+        ],
+        [
+          "PERSON",
+          "Priyanka Chawla",
+          1
+        ],
+        [
+          "PERSON",
+          "Rahul",
+          1
+        ],
+        [
+          "ADDRESS",
+          "Ludhiana",
+          1
+        ],
+        [
+          "PHONE",
+          "+44 7700 900461",
+          1
+        ],
+        [
+          "ADDRESS",
+          "M14 5TQ",
+          1
+        ]
+      ]
+    }
+  }
+}

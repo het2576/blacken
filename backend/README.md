@@ -129,6 +129,8 @@ Railway or Render (typically 512MB-1GB RAM):
 | **Most accurate on the gold set** - pruned `lg` + rules + GLiNER-edge | 431 MB | 65.7 / 69.8 / **95.1** | **96.5** | ~3.2 s | >= 1 GB hosts |
 | Full `lg` + rules | 703 MB | 62.3 / 71.9 / 93.5 | 97.3 | ~0.3 s | >= 1.5 GB hosts / HF Space |
 
+Recall columns are 1,000-document dev samples (same sample for every row, so rows compare fairly). On the full held-out test splits the recommended profile scores 65.8 / 74.5 / 91.1 versus 59.3 / 69.1 / 93.7 for the default.
+
 \* measured on Apple Silicon, where onnxruntime int8 is relatively slow; re-measure on the target
 host with `python -m evals.run_latency`.
 

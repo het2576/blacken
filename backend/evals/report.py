@@ -122,6 +122,22 @@ def main():
         parts += ["## Before → after (auto-selected)", "", delta_table(before, final), ""]
         if "blacken_gold" in final["datasets"]:
             parts += ["## Per-class (gold set, auto-selected)", "", per_class_table(final, "blacken_gold"), ""]
+    depl, depl_e2e = _load("detection_test_final_F.json"), _load("e2e_final_F.json")
+    if depl and final:
+        parts += ["## Deployed profile (small spaCy + rules + GLiNER-PII) — held-out test splits, auto-selected", "",
+                  "Same full test splits as the default profile above; what runs on the 512 MB Railway host.", "",
+                  detection_table(depl, "auto"), "",
+                  "Change vs the default profile (pruned spaCy lg + rules):", "",
+                  delta_table(final, depl), ""]
+        if depl_e2e and e2e_a:
+            rows = ["| Format | Leak (default → deployed) | Redactor-only leak | Over-redaction (default → deployed) |",
+                    "|---|---:|---:|---:|"]
+            for fmt, d in depl_e2e["formats"].items():
+                a = e2e_a["formats"].get(fmt)
+                if a:
+                    rows.append(f"| {fmt} | {pct(a['leak_rate_auto'])} → **{pct(d['leak_rate_auto'])}** | "
+                                f"{pct(d['leak_rate_oracle'])} | {pct(a['over_redaction_rate'])} → {pct(d['over_redaction_rate'])} |")
+            parts += ["End-to-end leakage with the deployed profile:", "", *rows, ""]
     memory = (_load("memory.json") or {}).get("configs", {})
     cfg_rows = []
     for tag, mem in memory.items():

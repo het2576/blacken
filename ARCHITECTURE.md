@@ -689,7 +689,7 @@ flowchart TB
 
 **Takeaways**
 - GLiNER-edge **complements** spaCy but **doesn't replace** it: removing spaCy's NER loses 8–14 recall points.
-- **Best recall that fits 512 MB:** `sm` + rules + GLiNER-edge — +8.4 / +5.8 points over the default on the public dev sets at *less* memory (215 MB vs 335 MB). Cost: more false alarms (gold precision 94.8% vs 96.5%; pre-ticked false alarms on 33% vs 25% of PII-free documents).
+- **Best recall that fits 512 MB:** `sm` + rules + GLiNER-edge — on the full held-out test splits it gains **+6.5 / +5.4 points** of token recall over the default (ai4privacy 59.3% → 65.8%, Gretel 69.1% → 74.5%; the dev-sample estimate of +8.4 / +5.8 was optimistic) at *less* memory (215 MB vs 335 MB). Cost: more false alarms (gold precision 94.8% vs 96.5%; pre-ticked false alarms on 33% vs 25% of PII-free documents).
 - **Best on the fully annotated gold set:** pruned `lg` + GLiNER-edge (95.1% recall, 96.5% precision) — needs ~1 GB to run comfortably.
 - Pruned vs full `lg` is **not free**: ~2–4 recall points on public sets, for ~370 MB saved.
 - Speed cost of the transformer: ~0.4 s → ~3.2 s per 10k characters (measured on arm64; x86 int8 is typically faster).
@@ -734,7 +734,7 @@ Each decision: context → decision → alternatives → consequences.
 
 **ADR-5 · Optional transformer via ONNX, without PyTorch**
 - *Why:* PyTorch alone exceeds the memory budget; GLiNER's pre/post-processing is small enough to own.
-- *Consequence:* ~150 lines of model-specific code to maintain; a 46 MB model. Paired with the small spaCy pipeline it gives the best measured recall on public data (+8.4 pts on ai4privacy) at 215 MB.
+- *Consequence:* ~150 lines of model-specific code to maintain; a 46 MB model. Paired with the small spaCy pipeline it gives the best measured recall on public data (held-out: +6.5 pts on ai4privacy) at 215 MB.
 - *Off by default* (no model download needed); enabled via a build arg + two env vars.
 
 **ADR-6 · Redact all boundary-respecting occurrences of the selected text**
@@ -880,7 +880,7 @@ Full list: `backend/README.md` → Configuration.
 - Gold set: **93.7% recall / 96.5% precision / 94.2% F2** (CI on recall 89.7–97.2).
 - Public: ai4privacy recall **59.3%** (+6.9 pts), Gretel **69.1%** (+7.0 pts).
 - Leakage: DOCX forms **74.3% → 9.2%**, PDF **18.5% → 10.4%**, false redactions **22.8% → 1.9%**, metadata **100% → 0%**.
-- Transformer (GLiNER-edge, 46 MB int8 ONNX): with pruned `lg` **+5.7 pts** ai4privacy recall and **+1.4** on gold; with small spaCy **+8.4 / +5.8 pts** on public sets at **215 MB** total.
+- Transformer (GLiNER-edge, 46 MB int8 ONNX): with pruned `lg` **+5.7 pts** ai4privacy recall and **+1.4** on gold; with small spaCy **+6.5 / +5.4 pts** on the held-out public test splits (65.8% / 74.5% recall) at **215 MB** total; gold recall 91.1% (−2.6 pts), leakage unchanged at 8.8–10.8% across formats.
 - Rejected with evidence: dev-fitted thresholds (gold recall −4.3 pts), 300 DPI OCR (no gain, 2.25× memory).
 - Speed: **~40k chars/s**, 5-page PDF round trip **~0.6 s**, live server-side **~85 ms** with the transformer on (0 errors).
 - Scale of evaluation: **~20k documents, ~27k entities**.

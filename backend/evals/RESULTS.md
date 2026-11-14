@@ -55,6 +55,46 @@ False-alarm rate on PII-free gold documents (auto): **25.0%**
 | PERSON | 64 | 87.5% | 85.9% | 94.9% |
 | PHONE | 21 | 95.2% | 85.7% | 100.0% |
 
+## Deployed profile (small spaCy + rules + GLiNER-PII) — held-out test splits, auto-selected
+
+Same full test splits as the default profile above; what runs on the 512 MB Railway host.
+
+| Dataset | Docs | Gold entities | Token P | Token R (95% CI) | Token F1 | Token F2 | Entity P | Entity R | Strict F1 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| Blacken gold (hand-annotated) | 44 | 249 | 94.8% | 91.1% [86.4–95.1] | 93.0% | 91.8% | 92.7% | 90.4% | 68.1% |
+| ai4privacy pii-masking-400k (EN val) | 17,046 | 17,695 | 38.4% | 65.8% [65.0–66.6] | 48.5% | 57.6% | 45.5% | 60.7% | 29.7% |
+| Gretel synthetic PII finance (EN test) | 2,891 | 9,106 | 41.4% | 74.5% [73.3–75.6] | 53.2% | 64.2% | 43.6% | 78.2% | 33.0% |
+
+Change vs the default profile (pruned spaCy lg + rules):
+
+| Dataset | Metric | Before | After | Δ |
+|---|---|---:|---:|---:|
+| Blacken gold (hand-annotated) | Token recall | 93.7% | 91.1% | -2.6 pp |
+| Blacken gold (hand-annotated) | Token precision | 96.5% | 94.8% | -1.6 pp |
+| Blacken gold (hand-annotated) | Token F2 | 94.2% | 91.8% | -2.4 pp |
+| Blacken gold (hand-annotated) | Entity recall | 91.2% | 90.4% | -0.8 pp |
+| Blacken gold (hand-annotated) | Strict F1 | 74.8% | 68.1% | -6.7 pp |
+| ai4privacy pii-masking-400k (EN val) | Token recall | 59.3% | 65.8% | +6.5 pp |
+| ai4privacy pii-masking-400k (EN val) | Token precision | 40.3% | 38.4% | -1.9 pp |
+| ai4privacy pii-masking-400k (EN val) | Token F2 | 54.2% | 57.6% | +3.4 pp |
+| ai4privacy pii-masking-400k (EN val) | Entity recall | 52.4% | 60.7% | +8.4 pp |
+| ai4privacy pii-masking-400k (EN val) | Strict F1 | 29.0% | 29.7% | +0.7 pp |
+| Gretel synthetic PII finance (EN test) | Token recall | 69.1% | 74.5% | +5.4 pp |
+| Gretel synthetic PII finance (EN test) | Token precision | 42.9% | 41.4% | -1.5 pp |
+| Gretel synthetic PII finance (EN test) | Token F2 | 61.6% | 64.2% | +2.6 pp |
+| Gretel synthetic PII finance (EN test) | Entity recall | 75.1% | 78.2% | +3.1 pp |
+| Gretel synthetic PII finance (EN test) | Strict F1 | 36.2% | 33.0% | -3.2 pp |
+
+End-to-end leakage with the deployed profile:
+
+| Format | Leak (default → deployed) | Redactor-only leak | Over-redaction (default → deployed) |
+|---|---:|---:|---:|
+| pdf | 10.4% → **9.6%** | 0.0% | 1.9% → 3.1% |
+| pdf_scanned | 10.0% → **10.8%** | 1.7% | 4.7% → 5.8% |
+| docx | 9.2% → **9.6%** | 0.0% | 1.4% → 2.6% |
+| docx_structured | 9.2% → **8.8%** | 0.0% | 1.5% → 2.7% |
+| png | 10.7% → **10.7%** | 1.7% | 5.0% → 6.0% |
+
 ## Model configuration comparison (auto-selected token recall / precision)
 
 Dev splits: 1,000 docs each (seeded); gold: all 44 docs. Memory = detection engine, steady / peak. Memory is macOS physical footprint (closest analogue of Linux RSS). 'Fits 512 MB' accounts for request-processing headroom (OCR rasters + Tesseract subprocess).
