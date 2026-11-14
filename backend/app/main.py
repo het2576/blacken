@@ -1,5 +1,6 @@
-"""FastAPI application entrypoint: CORS, lifespan (load the detector, open
-the document store, start the retention cleanup loop), and route wiring."""
+"""FastAPI application entrypoint: logging/observability, CORS, lifespan
+(load the detector, open the encrypted document store, start the retention
+cleanup loop), and route wiring."""
 
 import asyncio
 import logging
@@ -12,19 +13,19 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.detection.engine import PiiDetectionEngine
+from app.observability import RequestContextMiddleware, configure_logging, init_sentry
 from app.routes.documents import api_router
+from app.security import JobLimiter
 from app.storage import DocumentStore
+from app.vault import Vault
 
-logging.basicConfig(
-    level=getattr(logging, settings.log_level.upper(), logging.INFO),
-    format="%(asctime)s %(levelname)s %(name)s: %(message)s",
-)
+configure_logging(settings.log_level, json_logs=settings.log_format == "json")
 logger = logging.getLogger("blacken")
 
 
 def _purge_stray_audit_logs() -> None:
-    """Audit-log downloads are written to disk on demand and aren't tracked
-    in the document store, so sweep them by file age here too."""
+    """Older versions wrote audit-log downloads to disk; sweep any leftovers
+    by file age. (Audit logs are now streamed from memory.)"""
     cutoff_seconds = settings.retention_hours * 3600
     now = time.time()
     for path in settings.data_dir.glob("audit_log_*.json"):
@@ -44,7 +45,7 @@ async def _purge_expired_documents(store: DocumentStore) -> None:
                 try:
                     os.remove(path)
                 except OSError:
-                    logger.warning("Failed to remove expired file: %s", path)
+                    logger.warning("Failed to remove expired file for document %s", doc.get("id"))
 
     _purge_stray_audit_logs()
 
@@ -67,9 +68,20 @@ async def _cleanup_loop(app: FastAPI) -> None:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("Starting Blacken API...")
-    app.state.store = DocumentStore(settings.db_path)
+    if init_sentry(settings.sentry_dsn or "", settings.environment):
+        logger.info("Sentry error reporting enabled (PII scrubbing on)")
+    app.state.vault = Vault(settings.data_encryption_key)
+    if not app.state.vault.enabled:
+        logger.warning("DATA_ENCRYPTION_KEY not set - documents are stored unencrypted at rest")
+    app.state.store = DocumentStore(settings.db_path, vault=app.state.vault)
+    app.state.jobs = JobLimiter(settings.max_concurrent_jobs, settings.job_queue_timeout_s)
     app.state.engine = PiiDetectionEngine(
-        spacy_model=settings.spacy_model, language=settings.detection_language
+        spacy_model=settings.spacy_model,
+        language=settings.detection_language,
+        pii_model_dir=settings.pii_model_dir,
+        pii_model_threshold=settings.pii_model_threshold,
+        use_spacy_ner=settings.use_spacy_ner,
+        use_calibrated_thresholds=settings.use_calibrated_thresholds,
     )
 
     # Purge anything already past retention from a previous run before
@@ -91,18 +103,20 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Blacken API",
     description="AI-powered document PII detection and redaction",
-    version="2.0.0",
+    version="2.1.0",
     docs_url="/api/docs",
     redoc_url="/api/redoc",
     lifespan=lifespan,
 )
 
+app.add_middleware(RequestContextMiddleware, json_logs=settings.log_format == "json")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins_list,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["X-Request-ID", "X-Page-Count", "Retry-After"],
 )
 
 app.include_router(api_router)

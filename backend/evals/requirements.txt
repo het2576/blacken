@@ -1,0 +1,5 @@
+# Extra dependencies for the evaluation harness only (not needed to serve).
+-r ../requirements.txt
+pandas>=2.0
+pyarrow>=14.0
+certifi>=2024.2.2

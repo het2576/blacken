@@ -74,6 +74,21 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
+// Rate limiting (429) and load shedding (503) carry a Retry-After header;
+// rewrite their detail into one consistent, human message so every caller's
+// existing `error.response.data.detail` handling shows it.
+apiClient.interceptors.response.use(undefined, (error) => {
+  const status = error?.response?.status;
+  if (status === 429 || status === 503) {
+    const retry = Number(error.response.headers?.['retry-after']) || 10;
+    const reason = status === 429 ? 'Too many requests' : 'The server is busy with other documents';
+    if (error.response.data && typeof error.response.data === 'object') {
+      error.response.data.detail = `${reason} — please try again in ${retry} seconds.`;
+    }
+  }
+  return Promise.reject(error);
+});
+
 // Types for API responses
 export interface Entity {
   text: string;
@@ -114,6 +129,9 @@ export interface HealthResponse {
     ocr: boolean;
     pdf: boolean;
     docx: boolean;
+    detection_engine?: boolean;
+    transformer_model?: boolean;
+    encryption_at_rest?: boolean;
   };
 }
 
@@ -182,6 +200,18 @@ export interface ConfigResponse {
   detection_language: string;
   spacy_model: string;
   api_key_required: boolean;
+  config_editable?: boolean;
+}
+
+/** Per-browser custom redaction rules (stored server-side, keyed to the owner token). */
+export interface Preferences {
+  always_redact: string[];
+  never_flag: string[];
+}
+
+export interface PageImage {
+  url: string;
+  pageCount: number;
 }
 
 export interface ConfigUpdateRequest {
@@ -216,7 +246,7 @@ class DocumentRedactionAPI {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-        timeout: 60000, // 60 seconds for file processing
+        timeout: 120000, // OCR + optional transformer can take a while on large scans
       });
 
       return response.data;
@@ -224,8 +254,8 @@ class DocumentRedactionAPI {
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 413) {
           throw new Error('File too large. Please choose a smaller file.');
-        } else if (error.response?.status === 400) {
-          throw new Error('Invalid file format. Please upload a PDF, DOCX, or image file.');
+        } else if (error.response?.status === 400 && !error.response?.data?.detail) {
+          throw new Error('Invalid file format. Please upload a PDF, DOCX, TXT, or image file.');
         } else if (error.response?.data?.detail) {
           throw new Error(error.response.data.detail);
         }
@@ -411,8 +441,10 @@ class DocumentRedactionAPI {
         responseType: 'blob',
       });
       
-      // Create blob URL for PDF viewing
-      const blob = new Blob([response.data], { type: 'application/pdf' });
+      // Keep the server's content type - forcing application/pdf broke DOCX
+      // and image previews.
+      const type = String(response.headers['content-type'] || 'application/octet-stream');
+      const blob = new Blob([response.data], { type });
       return URL.createObjectURL(blob);
     } catch (error) {
       console.error('Get document URL failed:', error);
@@ -533,6 +565,39 @@ class DocumentRedactionAPI {
         throw new Error(error.response.data.detail);
       }
       throw new Error('Failed to update server configuration. Please try again.');
+    }
+  }
+
+  /**
+   * Server-rendered PNG of one page (PDF or image) - shows exactly what the
+   * redacted file looks like, consistently across browsers and on mobile.
+   */
+  async getPageImage(documentId: string, page: number, redacted: boolean): Promise<PageImage> {
+    const response = await apiClient.get(`/document/${documentId}/page/${page}`, {
+      params: { redacted },
+      responseType: 'blob',
+      timeout: 60000,
+    });
+    return {
+      url: URL.createObjectURL(response.data),
+      pageCount: Number(response.headers['x-page-count']) || 1,
+    };
+  }
+
+  async getPreferences(): Promise<Preferences> {
+    const response: AxiosResponse<Preferences> = await apiClient.get('/preferences');
+    return response.data;
+  }
+
+  async savePreferences(prefs: Preferences): Promise<Preferences> {
+    try {
+      const response: AxiosResponse<Preferences> = await apiClient.put('/preferences', prefs);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new Error(String(error.response.data.detail));
+      }
+      throw new Error('Failed to save your redaction rules. Please try again.');
     }
   }
 }

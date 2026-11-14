@@ -1,0 +1,579 @@
+{
+  "samples": 32,
+  "formats": {
+    "pdf": {
+      "documents": 31,
+      "gold_values": 249,
+      "observable_values": 249,
+      "leak_rate_auto": 0.18473895582329317,
+      "leak_rate_oracle": 0.004016064257028112,
+      "redaction_recall_auto": 0.8152610441767069,
+      "over_redaction_rate": 0.22849695916594265,
+      "metadata_leak_docs": 31,
+      "errors": {
+        "auto_errors": 1
+      },
+      "latency_ms_p50": 28.869082976598293,
+      "latency_ms_p95": 36.61145898513496,
+      "leak_rate_by_class_auto": {
+        "ADDRESS": 0.2878787878787879,
+        "AGE": 0.14285714285714285,
+        "DATE": 0.0,
+        "EMAIL": 0.0,
+        "FINANCIAL": 0.2727272727272727,
+        "GOV_ID": 0.3333333333333333,
+        "NETWORK": 0.0,
+        "OTHER_ID": 0.4444444444444444,
+        "PERSON": 0.1774193548387097,
+        "PHONE": 0.09523809523809523
+      },
+      "leak_rate_by_class_oracle": {
+        "ADDRESS": 0.0,
+        "AGE": 0.0,
+        "DATE": 0.0,
+        "EMAIL": 0.0,
+        "FINANCIAL": 0.0,
+        "GOV_ID": 0.0,
+        "NETWORK": 0.0,
+        "OTHER_ID": 0.0,
+        "PERSON": 0.0,
+        "PHONE": 0.047619047619047616
+      },
+      "top_leaks": [
+        [
+          "PERSON",
+          "Neha",
+          4
+        ],
+        [
+          "ADDRESS",
+          "Austin",
+          2
+        ],
+        [
+          "ADDRESS",
+          "Reading",
+          2
+        ],
+        [
+          "ADDRESS",
+          "Round Rock",
+          1
+        ],
+        [
+          "ADDRESS",
+          "RG2 7PL",
+          1
+        ],
+        [
+          "PERSON",
+          "Hayes",
+          1
+        ],
+        [
+          "AGE",
+          "52",
+          1
+        ],
+        [
+          "ADDRESS",
+          "380009",
+          1
+        ],
+        [
+          "GOV_ID",
+          "AFZPM7190K",
+          1
+        ],
+        [
+          "ADDRESS",
+          "700016",
+          1
+        ],
+        [
+          "PERSON",
+          "Vikram Singh Rathore",
+          1
+        ],
+        [
+          "ADDRESS",
+          "Gurugram",
+          1
+        ],
+        [
+          "ADDRESS",
+          "122016",
+          1
+        ],
+        [
+          "PHONE",
+          "+91 20 6714 2200",
+          1
+        ],
+        [
+          "OTHER_ID",
+          "ZF-20931",
+          1
+        ]
+      ]
+    },
+    "pdf_scanned": {
+      "documents": 31,
+      "gold_values": 249,
+      "observable_values": 241,
+      "leak_rate_auto": 0.26556016597510373,
+      "leak_rate_oracle": 0.016597510373443983,
+      "redaction_recall_auto": 0.7344398340248963,
+      "over_redaction_rate": 0.050478677110530897,
+      "metadata_leak_docs": 0,
+      "errors": {
+        "auto_errors": 1
+      },
+      "latency_ms_p50": 1024.1432909970172,
+      "latency_ms_p95": 1420.498833002057,
+      "leak_rate_by_class_auto": {
+        "ADDRESS": 0.36923076923076925,
+        "AGE": 0.42857142857142855,
+        "DATE": 0.03333333333333333,
+        "EMAIL": 0.0,
+        "FINANCIAL": 0.36363636363636365,
+        "GOV_ID": 0.5555555555555556,
+        "NETWORK": 0.0,
+        "OTHER_ID": 0.7777777777777778,
+        "PERSON": 0.2413793103448276,
+        "PHONE": 0.047619047619047616
+      },
+      "leak_rate_by_class_oracle": {
+        "ADDRESS": 0.015384615384615385,
+        "AGE": 0.0,
+        "DATE": 0.06666666666666667,
+        "EMAIL": 0.0,
+        "FINANCIAL": 0.0,
+        "GOV_ID": 0.0,
+        "NETWORK": 0.0,
+        "OTHER_ID": 0.0,
+        "PERSON": 0.016666666666666666,
+        "PHONE": 0.0
+      },
+      "top_leaks": [
+        [
+          "PERSON",
+          "Neha",
+          4
+        ],
+        [
+          "ADDRESS",
+          "Austin",
+          2
+        ],
+        [
+          "ADDRESS",
+          "Reading",
+          2
+        ],
+        [
+          "ADDRESS",
+          "Round Rock",
+          1
+        ],
+        [
+          "ADDRESS",
+          "14 Kingfisher Close",
+          1
+        ],
+        [
+          "ADDRESS",
+          "RG2 7PL",
+          1
+        ],
+        [
+          "PERSON",
+          "Robert Allen Hayes",
+          1
+        ],
+        [
+          "PERSON",
+          "Hayes",
+          1
+        ],
+        [
+          "AGE",
+          "52",
+          1
+        ],
+        [
+          "ADDRESS",
+          "380009",
+          1
+        ],
+        [
+          "GOV_ID",
+          "3588 1399 8697",
+          1
+        ],
+        [
+          "GOV_ID",
+          "AFZPM7190K",
+          1
+        ],
+        [
+          "ADDRESS",
+          "700016",
+          1
+        ],
+        [
+          "PERSON",
+          "Vikram Singh Rathore",
+          1
+        ],
+        [
+          "GOV_ID",
+          "BQRPS4482M",
+          1
+        ]
+      ]
+    },
+    "docx": {
+      "documents": 32,
+      "gold_values": 249,
+      "observable_values": 249,
+      "leak_rate_auto": 0.27710843373493976,
+      "leak_rate_oracle": 0.0,
+      "redaction_recall_auto": 0.7228915662650602,
+      "over_redaction_rate": 0.025556471558120363,
+      "metadata_leak_docs": 32,
+      "errors": {},
+      "latency_ms_p50": 41.09691650955938,
+      "latency_ms_p95": 49.25062495749444,
+      "leak_rate_by_class_auto": {
+        "ADDRESS": 0.42424242424242425,
+        "AGE": 0.42857142857142855,
+        "DATE": 0.0,
+        "EMAIL": 0.0,
+        "FINANCIAL": 0.36363636363636365,
+        "GOV_ID": 0.6666666666666666,
+        "NETWORK": 0.0,
+        "OTHER_ID": 0.7777777777777778,
+        "PERSON": 0.21875,
+        "PHONE": 0.047619047619047616
+      },
+      "leak_rate_by_class_oracle": {
+        "ADDRESS": 0.0,
+        "AGE": 0.0,
+        "DATE": 0.0,
+        "EMAIL": 0.0,
+        "FINANCIAL": 0.0,
+        "GOV_ID": 0.0,
+        "NETWORK": 0.0,
+        "OTHER_ID": 0.0,
+        "PERSON": 0.0,
+        "PHONE": 0.0
+      },
+      "top_leaks": [
+        [
+          "PERSON",
+          "Neha",
+          4
+        ],
+        [
+          "ADDRESS",
+          "Austin",
+          2
+        ],
+        [
+          "ADDRESS",
+          "Reading",
+          2
+        ],
+        [
+          "ADDRESS",
+          "Round Rock",
+          1
+        ],
+        [
+          "ADDRESS",
+          "14 Kingfisher Close",
+          1
+        ],
+        [
+          "ADDRESS",
+          "RG2 7PL",
+          1
+        ],
+        [
+          "PERSON",
+          "Hayes",
+          1
+        ],
+        [
+          "AGE",
+          "52",
+          1
+        ],
+        [
+          "ADDRESS",
+          "380009",
+          1
+        ],
+        [
+          "GOV_ID",
+          "3588 1399 8697",
+          1
+        ],
+        [
+          "GOV_ID",
+          "AFZPM7190K",
+          1
+        ],
+        [
+          "ADDRESS",
+          "700016",
+          1
+        ],
+        [
+          "PERSON",
+          "Vikram Singh Rathore",
+          1
+        ],
+        [
+          "GOV_ID",
+          "BQRPS4482M",
+          1
+        ],
+        [
+          "ADDRESS",
+          "Plot 17, Sector 21",
+          1
+        ]
+      ]
+    },
+    "docx_structured": {
+      "documents": 32,
+      "gold_values": 249,
+      "observable_values": 249,
+      "leak_rate_auto": 0.7429718875502008,
+      "leak_rate_oracle": 0.6626506024096386,
+      "redaction_recall_auto": 0.2570281124497992,
+      "over_redaction_rate": 0.01483924154987634,
+      "metadata_leak_docs": 32,
+      "errors": {},
+      "latency_ms_p50": 39.99666700838134,
+      "latency_ms_p95": 47.171249985694885,
+      "leak_rate_by_class_auto": {
+        "ADDRESS": 0.7727272727272727,
+        "AGE": 0.7142857142857143,
+        "DATE": 0.7333333333333333,
+        "EMAIL": 0.6470588235294118,
+        "FINANCIAL": 0.8181818181818182,
+        "GOV_ID": 1.0,
+        "NETWORK": 0.5,
+        "OTHER_ID": 1.0,
+        "PERSON": 0.6875,
+        "PHONE": 0.6190476190476191
+      },
+      "leak_rate_by_class_oracle": {
+        "ADDRESS": 0.6212121212121212,
+        "AGE": 0.5714285714285714,
+        "DATE": 0.7333333333333333,
+        "EMAIL": 0.6470588235294118,
+        "FINANCIAL": 0.8181818181818182,
+        "GOV_ID": 0.7777777777777778,
+        "NETWORK": 0.5,
+        "OTHER_ID": 1.0,
+        "PERSON": 0.625,
+        "PHONE": 0.5714285714285714
+      },
+      "top_leaks": [
+        [
+          "PERSON",
+          "Neha",
+          4
+        ],
+        [
+          "ADDRESS",
+          "Austin",
+          2
+        ],
+        [
+          "ADDRESS",
+          "Reading",
+          2
+        ],
+        [
+          "ADDRESS",
+          "Ahmedabad",
+          2
+        ],
+        [
+          "ADDRESS",
+          "Oakland",
+          2
+        ],
+        [
+          "PERSON",
+          "Priya Venkataraman",
+          1
+        ],
+        [
+          "EMAIL",
+          "priya.venkat92@gmail.com",
+          1
+        ],
+        [
+          "PHONE",
+          "+91 98450 31276",
+          1
+        ],
+        [
+          "NETWORK",
+          "linkedin.com/in/priya-venkataraman",
+          1
+        ],
+        [
+          "NETWORK",
+          "github.com/priyav-dev",
+          1
+        ],
+        [
+          "PERSON",
+          "Marcus J. Whitfield",
+          1
+        ],
+        [
+          "ADDRESS",
+          "Round Rock",
+          1
+        ],
+        [
+          "PERSON",
+          "Eleanor Brightwell",
+          1
+        ],
+        [
+          "ADDRESS",
+          "14 Kingfisher Close",
+          1
+        ],
+        [
+          "ADDRESS",
+          "RG2 7PL",
+          1
+        ]
+      ]
+    },
+    "png": {
+      "documents": 32,
+      "gold_values": 249,
+      "observable_values": 242,
+      "leak_rate_auto": 0.2975206611570248,
+      "leak_rate_oracle": 0.024793388429752067,
+      "redaction_recall_auto": 0.7024793388429752,
+      "over_redaction_rate": 0.0512396694214876,
+      "metadata_leak_docs": 0,
+      "errors": {},
+      "latency_ms_p50": 1082.564916985575,
+      "latency_ms_p95": 1355.6096670217812,
+      "leak_rate_by_class_auto": {
+        "ADDRESS": 0.4307692307692308,
+        "AGE": 0.42857142857142855,
+        "DATE": 0.03333333333333333,
+        "EMAIL": 0.0,
+        "FINANCIAL": 0.36363636363636365,
+        "GOV_ID": 0.6666666666666666,
+        "NETWORK": 0.0,
+        "OTHER_ID": 0.7777777777777778,
+        "PERSON": 0.26666666666666666,
+        "PHONE": 0.047619047619047616
+      },
+      "leak_rate_by_class_oracle": {
+        "ADDRESS": 0.046153846153846156,
+        "AGE": 0.0,
+        "DATE": 0.06666666666666667,
+        "EMAIL": 0.0,
+        "FINANCIAL": 0.0,
+        "GOV_ID": 0.0,
+        "NETWORK": 0.0,
+        "OTHER_ID": 0.0,
+        "PERSON": 0.016666666666666666,
+        "PHONE": 0.0
+      },
+      "top_leaks": [
+        [
+          "PERSON",
+          "Neha",
+          4
+        ],
+        [
+          "ADDRESS",
+          "Ahmedabad",
+          3
+        ],
+        [
+          "ADDRESS",
+          "Austin",
+          2
+        ],
+        [
+          "ADDRESS",
+          "Reading",
+          2
+        ],
+        [
+          "ADDRESS",
+          "Round Rock",
+          1
+        ],
+        [
+          "ADDRESS",
+          "14 Kingfisher Close",
+          1
+        ],
+        [
+          "ADDRESS",
+          "RG2 7PL",
+          1
+        ],
+        [
+          "PERSON",
+          "Robert Allen Hayes",
+          1
+        ],
+        [
+          "PERSON",
+          "Hayes",
+          1
+        ],
+        [
+          "AGE",
+          "52",
+          1
+        ],
+        [
+          "ADDRESS",
+          "B-204, Shanti Nagar Society, Navrangpura",
+          1
+        ],
+        [
+          "ADDRESS",
+          "380009",
+          1
+        ],
+        [
+          "GOV_ID",
+          "3588 1399 8697",
+          1
+        ],
+        [
+          "GOV_ID",
+          "AFZPM7190K",
+          1
+        ],
+        [
+          "ADDRESS",
+          "700016",
+          1
+        ]
+      ]
+    }
+  }
+}

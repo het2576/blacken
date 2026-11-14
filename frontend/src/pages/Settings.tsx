@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
-import { documentRedactionAPI, ConfigResponse, HealthResponse } from '@/services/api';
+import { documentRedactionAPI, ConfigResponse, HealthResponse, Preferences } from '@/services/api';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Panel } from '@/components/ui/panel';
@@ -43,6 +43,113 @@ function NumberField({
         <span className="font-display text-xs uppercase tracking-[0.06em] text-ink-faint">{suffix}</span>
       </div>
     </div>
+  );
+}
+
+const toLines = (terms: string[]) => terms.join('\n');
+const fromLines = (text: string) =>
+  text
+    .split('\n')
+    .map((t) => t.trim())
+    .filter(Boolean);
+
+function TermsField({
+  label,
+  hint,
+  value,
+  onChange,
+}: {
+  label: string;
+  hint: string;
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <div>
+      <label className="font-display text-[11px] font-medium uppercase tracking-[0.08em] text-ink">{label}</label>
+      <p className="mt-1 font-serif text-sm text-ink-soft">{hint}</p>
+      <textarea
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        rows={6}
+        placeholder="One term per line"
+        className="mt-3 w-full border border-line bg-paper px-3 py-2 font-serif text-sm text-ink focus-visible:border-ink"
+      />
+    </div>
+  );
+}
+
+function RedactionRules() {
+  const [saved, setSaved] = useState<Preferences>({ always_redact: [], never_flag: [] });
+  const [always, setAlways] = useState('');
+  const [never, setNever] = useState('');
+  const [status, setStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [message, setMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    documentRedactionAPI
+      .getPreferences()
+      .then((prefs) => {
+        setSaved(prefs);
+        setAlways(toLines(prefs.always_redact));
+        setNever(toLines(prefs.never_flag));
+      })
+      .catch(() => setMessage('Could not load your rules.'));
+  }, []);
+
+  const dirty = toLines(fromLines(always)) !== toLines(saved.always_redact) || toLines(fromLines(never)) !== toLines(saved.never_flag);
+
+  const save = async () => {
+    setStatus('saving');
+    setMessage(null);
+    try {
+      const prefs = await documentRedactionAPI.savePreferences({
+        always_redact: fromLines(always),
+        never_flag: fromLines(never),
+      });
+      setSaved(prefs);
+      setAlways(toLines(prefs.always_redact));
+      setNever(toLines(prefs.never_flag));
+      setStatus('saved');
+      setTimeout(() => setStatus('idle'), 3000);
+    } catch (err) {
+      setStatus('error');
+      setMessage(err instanceof Error ? err.message : 'Failed to save');
+    }
+  };
+
+  return (
+    <Panel tab="YOUR REDACTION RULES — THIS BROWSER" className="p-6 sm:p-8">
+      <div className="grid gap-8 sm:grid-cols-2">
+        <TermsField
+          label="Always redact"
+          hint="Names or codes the detector might not know — a client, a project codename. Every occurrence is pre-ticked."
+          value={always}
+          onChange={setAlways}
+        />
+        <TermsField
+          label="Never flag"
+          hint="Terms that are never sensitive for you, such as your own company name. They won't be suggested."
+          value={never}
+          onChange={setNever}
+        />
+      </div>
+      <div className="mt-6 flex flex-wrap items-center gap-4 border-t border-line pt-6">
+        <Button variant="flag" onClick={save} disabled={!dirty || status === 'saving'}>
+          {status === 'saving' ? 'Saving…' : 'Save rules'}
+        </Button>
+        {status === 'saved' && (
+          <span className="flex items-center gap-1.5 font-display text-[11px] uppercase tracking-[0.06em] text-confirm">
+            <CheckCircle2 className="h-3.5 w-3.5" />
+            Saved
+          </span>
+        )}
+        {message && <span className="font-display text-[11px] uppercase tracking-[0.06em] text-alert">{message}</span>}
+        <span className="font-serif text-sm text-ink-faint">
+          Applied to documents you upload from now on. Stored encrypted on the server and tied to this browser.
+        </span>
+      </div>
+    </Panel>
   );
 }
 
@@ -130,6 +237,9 @@ export default function Settings() {
 
       {!loading && !error && config && (
         <div className="mt-10 space-y-8">
+          <RedactionRules />
+
+          {config.config_editable && (
           <Panel tab="LIVE — TAKES EFFECT IMMEDIATELY" className="p-6 sm:p-8">
             <div className="grid gap-8 sm:grid-cols-2">
               <NumberField
@@ -148,7 +258,7 @@ export default function Settings() {
                 value={uploadLimitInput}
                 onChange={setUploadLimitInput}
                 min={0.1}
-                max={500}
+                max={100}
                 step={1}
                 suffix="MB"
               />
@@ -172,6 +282,7 @@ export default function Settings() {
               </span>
             </div>
           </Panel>
+          )}
 
           <Panel tab="READ-ONLY — SET VIA BACKEND/.ENV" className="p-6 sm:p-8">
             <div className="grid gap-6 sm:grid-cols-2">
@@ -195,6 +306,14 @@ export default function Settings() {
               </div>
               <div>
                 <p className="font-display text-[11px] font-medium uppercase tracking-[0.08em] text-ink">
+                  Retention
+                </p>
+                <p className="mt-2 font-serif text-[15px] text-ink-soft">
+                  Documents are deleted {config.retention_hours} hours after upload, or immediately when you delete them.
+                </p>
+              </div>
+              <div>
+                <p className="font-display text-[11px] font-medium uppercase tracking-[0.08em] text-ink">
                   Cleanup sweep
                 </p>
                 <p className="mt-2 font-serif text-[15px] text-ink-soft">
@@ -209,6 +328,8 @@ export default function Settings() {
                   <Badge tone={health?.features.pdf ? 'confirm' : 'muted'}>PDF</Badge>
                   <Badge tone={health?.features.docx ? 'confirm' : 'muted'}>DOCX</Badge>
                   <Badge tone={health?.features.ocr ? 'confirm' : 'muted'}>OCR (scanned pages)</Badge>
+                  <Badge tone={health?.features.transformer_model ? 'confirm' : 'muted'}>Transformer model</Badge>
+                  <Badge tone={health?.features.encryption_at_rest ? 'confirm' : 'muted'}>Encrypted at rest</Badge>
                 </div>
               </div>
             </div>

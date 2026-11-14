@@ -9,7 +9,7 @@ interface UploadSectionProps {
   selectedFile: File | null;
 }
 
-const ACCEPTED = '.pdf,.docx,.doc,image/*';
+const ACCEPTED = '.pdf,.docx,.txt,image/*';
 const MAX_SIZE_MB = 20;
 
 export default function UploadSection({ onFileSelect, selectedFile }: UploadSectionProps) {

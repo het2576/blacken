@@ -1,0 +1,794 @@
+{
+  "split": "test",
+  "model": "en_core_web_lg_pruned",
+  "pii_model": "gliner-pii-edge",
+  "pii_threshold": 0.5,
+  "spacy_ner": true,
+  "datasets": {
+    "blacken_gold": {
+      "detected": {
+        "documents": 44,
+        "gold_entities": 249,
+        "predicted_entities": 257,
+        "token": {
+          "precision": 0.8927444794952681,
+          "recall": 0.9658703071672355,
+          "f1": 0.9278688524590163,
+          "f2": 0.9503022162525184,
+          "tp": 566,
+          "fp": 68,
+          "fn": 20
+        },
+        "overlap": {
+          "precision": 0.8365758754863813,
+          "recall": 0.9598393574297188,
+          "missed": 10,
+          "false_alarms": 42,
+          "f1": 0.8939786704709546,
+          "f2": 0.932363924039149
+        },
+        "full_coverage_recall": 0.9397590361445783,
+        "strict": {
+          "precision": 0.6964980544747081,
+          "recall": 0.7188755020080321,
+          "f1": 0.7075098814229249,
+          "f2": 0.7142857142857143,
+          "tp": 179,
+          "fp": 78,
+          "fn": 70
+        },
+        "per_class": {
+          "ADDRESS": {
+            "gold": 66,
+            "pred": 42,
+            "recall": 0.9696969696969697,
+            "full_coverage_recall": 0.9545454545454546,
+            "precision": 0.8809523809523809,
+            "strict_recall": 0.3484848484848485,
+            "f1": 0.9231968810916179,
+            "f2": 0.9505459216441877
+          },
+          "AGE": {
+            "gold": 7,
+            "pred": 5,
+            "recall": 0.8571428571428571,
+            "full_coverage_recall": 0.8571428571428571,
+            "precision": 1.0,
+            "strict_recall": 0.5714285714285714,
+            "f1": 0.923076923076923,
+            "f2": 0.8823529411764707
+          },
+          "DATE": {
+            "gold": 30,
+            "pred": 51,
+            "recall": 1.0,
+            "full_coverage_recall": 1.0,
+            "precision": 0.6666666666666666,
+            "strict_recall": 0.9333333333333333,
+            "f1": 0.8,
+            "f2": 0.9090909090909091
+          },
+          "EMAIL": {
+            "gold": 17,
+            "pred": 17,
+            "recall": 1.0,
+            "full_coverage_recall": 1.0,
+            "precision": 1.0,
+            "strict_recall": 0.8235294117647058,
+            "f1": 1.0,
+            "f2": 1.0
+          },
+          "FINANCIAL": {
+            "gold": 11,
+            "pred": 8,
+            "recall": 0.9090909090909091,
+            "full_coverage_recall": 0.9090909090909091,
+            "precision": 1.0,
+            "strict_recall": 0.7272727272727273,
+            "f1": 0.9523809523809523,
+            "f2": 0.9259259259259258
+          },
+          "GOV_ID": {
+            "gold": 18,
+            "pred": 20,
+            "recall": 0.9444444444444444,
+            "full_coverage_recall": 0.9444444444444444,
+            "precision": 0.9,
+            "strict_recall": 0.9444444444444444,
+            "f1": 0.9216867469879517,
+            "f2": 0.9352078239608802
+          },
+          "NETWORK": {
+            "gold": 6,
+            "pred": 8,
+            "recall": 1.0,
+            "full_coverage_recall": 1.0,
+            "precision": 0.875,
+            "strict_recall": 1.0,
+            "f1": 0.9333333333333333,
+            "f2": 0.9722222222222222
+          },
+          "OTHER_ID": {
+            "gold": 9,
+            "pred": 7,
+            "recall": 0.7777777777777778,
+            "full_coverage_recall": 0.7777777777777778,
+            "precision": 1.0,
+            "strict_recall": 0.7777777777777778,
+            "f1": 0.8750000000000001,
+            "f2": 0.813953488372093
+          },
+          "PERSON": {
+            "gold": 64,
+            "pred": 80,
+            "recall": 0.96875,
+            "full_coverage_recall": 0.9375,
+            "precision": 0.7875,
+            "strict_recall": 0.859375,
+            "f1": 0.8687722419928824,
+            "f2": 0.9261191198786038
+          },
+          "PHONE": {
+            "gold": 21,
+            "pred": 19,
+            "recall": 0.9523809523809523,
+            "full_coverage_recall": 0.8571428571428571,
+            "precision": 1.0,
+            "strict_recall": 0.8095238095238095,
+            "f1": 0.975609756097561,
+            "f2": 0.9615384615384615
+          }
+        },
+        "negative_documents": 12,
+        "negative_false_alarm_rate": 0.5833333333333334,
+        "top_misses": [
+          [
+            "ADDRESS",
+            "Round Rock",
+            1
+          ],
+          [
+            "ADDRESS",
+            "Reading",
+            1
+          ],
+          [
+            "OTHER_ID",
+            "ZF-20931",
+            1
+          ],
+          [
+            "FINANCIAL",
+            "NWBKGB2L",
+            1
+          ],
+          [
+            "PHONE",
+            "+44 7700 900461",
+            1
+          ],
+          [
+            "OTHER_ID",
+            "4471",
+            1
+          ],
+          [
+            "AGE",
+            "34",
+            1
+          ],
+          [
+            "GOV_ID",
+            "CV 48213",
+            1
+          ],
+          [
+            "PERSON",
+            "Julia",
+            1
+          ],
+          [
+            "PERSON",
+            "Lukas",
+            1
+          ]
+        ],
+        "top_false_alarms": [
+          [
+            "PERSON",
+            "Kafka",
+            2
+          ],
+          [
+            "PERSON",
+            "Docker",
+            2
+          ],
+          [
+            "ADDRESS",
+            "Kubernetes",
+            2
+          ],
+          [
+            "PERSON",
+            "Grafana",
+            2
+          ],
+          [
+            "PERSON",
+            "Streamlit",
+            2
+          ],
+          [
+            "PERSON",
+            "Postman",
+            2
+          ],
+          [
+            "NETWORK",
+            "B.Tech",
+            1
+          ],
+          [
+            "DATE",
+            "7 days",
+            1
+          ],
+          [
+            "DATE",
+            "3 days",
+            1
+          ],
+          [
+            "PERSON",
+            "Tab",
+            1
+          ],
+          [
+            "DATE",
+            "5 days",
+            1
+          ],
+          [
+            "PERSON",
+            "Tab Paracetamol",
+            1
+          ],
+          [
+            "DATE",
+            "one week",
+            1
+          ],
+          [
+            "ADDRESS",
+            "MD",
+            1
+          ],
+          [
+            "PERSON",
+            "L. Repeat",
+            1
+          ],
+          [
+            "DATE",
+            "Monthly",
+            1
+          ],
+          [
+            "DATE",
+            "48 months",
+            1
+          ],
+          [
+            "DATE",
+            "annual",
+            1
+          ],
+          [
+            "DATE",
+            "yesterday",
+            1
+          ],
+          [
+            "DATE",
+            "last week",
+            1
+          ],
+          [
+            "DATE",
+            "weekly",
+            1
+          ],
+          [
+            "DATE",
+            "11 months",
+            1
+          ],
+          [
+            "DATE",
+            "monthly",
+            1
+          ],
+          [
+            "ADDRESS",
+            "RN",
+            1
+          ],
+          [
+            "ADDRESS",
+            "UK",
+            1
+          ]
+        ],
+        "ci95": {},
+        "organization": {
+          "gold": 26,
+          "recall": 0.6923076923076923,
+          "precision": 0.32727272727272727
+        },
+        "by_group": {
+          "clinical": {
+            "documents": 5,
+            "token_recall": 0.9880952380952381,
+            "token_precision": 0.8217821782178217,
+            "entity_recall": 0.9743589743589743
+          },
+          "education": {
+            "documents": 1,
+            "token_recall": 0.9473684210526315,
+            "token_precision": 0.9473684210526315,
+            "entity_recall": 1.0
+          },
+          "email": {
+            "documents": 1,
+            "token_recall": 0.9230769230769231,
+            "token_precision": 0.8,
+            "entity_recall": 0.8571428571428571
+          },
+          "finance": {
+            "documents": 4,
+            "token_recall": 0.9850746268656716,
+            "token_precision": 0.9565217391304348,
+            "entity_recall": 0.9655172413793104
+          },
+          "hr": {
+            "documents": 3,
+            "token_recall": 0.9636363636363636,
+            "token_precision": 0.9814814814814815,
+            "entity_recall": 0.96
+          },
+          "immigration": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 0.9411764705882353,
+            "entity_recall": 1.0
+          },
+          "insurance": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "invoice": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "it": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 0.9166666666666666,
+            "entity_recall": 1.0
+          },
+          "kyc": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "legal": {
+            "documents": 5,
+            "token_recall": 0.941747572815534,
+            "token_precision": 0.97,
+            "entity_recall": 0.9285714285714286
+          },
+          "letter": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 0.9230769230769231,
+            "entity_recall": 1.0
+          },
+          "negative": {
+            "documents": 12,
+            "token_recall": 0.0,
+            "token_precision": 0.0,
+            "entity_recall": 0.0
+          },
+          "resume": {
+            "documents": 3,
+            "token_recall": 0.9137931034482759,
+            "token_precision": 0.8548387096774194,
+            "entity_recall": 0.9166666666666666
+          },
+          "support": {
+            "documents": 2,
+            "token_recall": 0.9166666666666666,
+            "token_precision": 0.9428571428571428,
+            "entity_recall": 0.9375
+          },
+          "tax": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "travel": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          }
+        }
+      },
+      "auto": {
+        "documents": 44,
+        "gold_entities": 249,
+        "predicted_entities": 214,
+        "token": {
+          "precision": 0.9653379549393414,
+          "recall": 0.9505119453924915,
+          "f1": 0.9578675838349098,
+          "f2": 0.9534406025333789,
+          "tp": 557,
+          "fp": 20,
+          "fn": 29
+        },
+        "overlap": {
+          "precision": 0.9672897196261683,
+          "recall": 0.927710843373494,
+          "missed": 18,
+          "false_alarms": 7,
+          "f1": 0.9470869603969221,
+          "f2": 0.935365367010164
+        },
+        "full_coverage_recall": 0.9076305220883534,
+        "strict": {
+          "precision": 0.8084112149532711,
+          "recall": 0.6947791164658634,
+          "f1": 0.7473002159827214,
+          "f2": 0.7148760330578512,
+          "tp": 173,
+          "fp": 41,
+          "fn": 76
+        },
+        "per_class": {
+          "ADDRESS": {
+            "gold": 66,
+            "pred": 37,
+            "recall": 0.9242424242424242,
+            "full_coverage_recall": 0.9090909090909091,
+            "precision": 0.9459459459459459,
+            "strict_recall": 0.3181818181818182,
+            "f1": 0.9349682504926647,
+            "f2": 0.9285030877620248
+          },
+          "AGE": {
+            "gold": 7,
+            "pred": 5,
+            "recall": 0.8571428571428571,
+            "full_coverage_recall": 0.8571428571428571,
+            "precision": 1.0,
+            "strict_recall": 0.5714285714285714,
+            "f1": 0.923076923076923,
+            "f2": 0.8823529411764707
+          },
+          "DATE": {
+            "gold": 30,
+            "pred": 35,
+            "recall": 1.0,
+            "full_coverage_recall": 1.0,
+            "precision": 0.9714285714285714,
+            "strict_recall": 0.9333333333333333,
+            "f1": 0.9855072463768115,
+            "f2": 0.9941520467836256
+          },
+          "EMAIL": {
+            "gold": 17,
+            "pred": 17,
+            "recall": 1.0,
+            "full_coverage_recall": 1.0,
+            "precision": 1.0,
+            "strict_recall": 0.8235294117647058,
+            "f1": 1.0,
+            "f2": 1.0
+          },
+          "FINANCIAL": {
+            "gold": 11,
+            "pred": 8,
+            "recall": 0.9090909090909091,
+            "full_coverage_recall": 0.9090909090909091,
+            "precision": 1.0,
+            "strict_recall": 0.7272727272727273,
+            "f1": 0.9523809523809523,
+            "f2": 0.9259259259259258
+          },
+          "GOV_ID": {
+            "gold": 18,
+            "pred": 18,
+            "recall": 0.8888888888888888,
+            "full_coverage_recall": 0.8888888888888888,
+            "precision": 0.9444444444444444,
+            "strict_recall": 0.8888888888888888,
+            "f1": 0.9158249158249158,
+            "f2": 0.8994708994708995
+          },
+          "NETWORK": {
+            "gold": 6,
+            "pred": 7,
+            "recall": 1.0,
+            "full_coverage_recall": 1.0,
+            "precision": 1.0,
+            "strict_recall": 1.0,
+            "f1": 1.0,
+            "f2": 1.0
+          },
+          "OTHER_ID": {
+            "gold": 9,
+            "pred": 7,
+            "recall": 0.7777777777777778,
+            "full_coverage_recall": 0.7777777777777778,
+            "precision": 1.0,
+            "strict_recall": 0.7777777777777778,
+            "f1": 0.8750000000000001,
+            "f2": 0.813953488372093
+          },
+          "PERSON": {
+            "gold": 64,
+            "pred": 61,
+            "recall": 0.90625,
+            "full_coverage_recall": 0.875,
+            "precision": 0.9508196721311475,
+            "strict_recall": 0.8125,
+            "f1": 0.9279999999999999,
+            "f2": 0.9148264984227129
+          },
+          "PHONE": {
+            "gold": 21,
+            "pred": 19,
+            "recall": 0.9523809523809523,
+            "full_coverage_recall": 0.8571428571428571,
+            "precision": 1.0,
+            "strict_recall": 0.8095238095238095,
+            "f1": 0.975609756097561,
+            "f2": 0.9615384615384615
+          }
+        },
+        "negative_documents": 12,
+        "negative_false_alarm_rate": 0.25,
+        "top_misses": [
+          [
+            "PERSON",
+            "Neha",
+            4
+          ],
+          [
+            "ADDRESS",
+            "Austin",
+            2
+          ],
+          [
+            "ADDRESS",
+            "Round Rock",
+            1
+          ],
+          [
+            "ADDRESS",
+            "Reading",
+            1
+          ],
+          [
+            "OTHER_ID",
+            "ZF-20931",
+            1
+          ],
+          [
+            "FINANCIAL",
+            "NWBKGB2L",
+            1
+          ],
+          [
+            "GOV_ID",
+            "M4829106",
+            1
+          ],
+          [
+            "PHONE",
+            "+44 7700 900461",
+            1
+          ],
+          [
+            "ADDRESS",
+            "M14 5TQ",
+            1
+          ],
+          [
+            "OTHER_ID",
+            "4471",
+            1
+          ],
+          [
+            "AGE",
+            "34",
+            1
+          ],
+          [
+            "GOV_ID",
+            "CV 48213",
+            1
+          ],
+          [
+            "PERSON",
+            "Julia",
+            1
+          ],
+          [
+            "PERSON",
+            "Lukas",
+            1
+          ]
+        ],
+        "top_false_alarms": [
+          [
+            "ADDRESS",
+            "Kubernetes",
+            2
+          ],
+          [
+            "PERSON",
+            "Tab",
+            1
+          ],
+          [
+            "PERSON",
+            "Tab Paracetamol",
+            1
+          ],
+          [
+            "PERSON",
+            "L. Repeat",
+            1
+          ],
+          [
+            "GOV_ID",
+            "v1",
+            1
+          ],
+          [
+            "DATE",
+            "6 minutes 14 seconds",
+            1
+          ]
+        ],
+        "ci95": {},
+        "organization": {
+          "gold": 26,
+          "recall": 0.0,
+          "precision": 0.0
+        },
+        "by_group": {
+          "clinical": {
+            "documents": 5,
+            "token_recall": 0.9880952380952381,
+            "token_precision": 0.9120879120879121,
+            "entity_recall": 0.9743589743589743
+          },
+          "education": {
+            "documents": 1,
+            "token_recall": 0.9473684210526315,
+            "token_precision": 0.9473684210526315,
+            "entity_recall": 1.0
+          },
+          "email": {
+            "documents": 1,
+            "token_recall": 0.9230769230769231,
+            "token_precision": 0.9230769230769231,
+            "entity_recall": 0.8571428571428571
+          },
+          "finance": {
+            "documents": 4,
+            "token_recall": 0.9850746268656716,
+            "token_precision": 1.0,
+            "entity_recall": 0.9655172413793104
+          },
+          "hr": {
+            "documents": 3,
+            "token_recall": 0.9636363636363636,
+            "token_precision": 1.0,
+            "entity_recall": 0.96
+          },
+          "immigration": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "insurance": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "invoice": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "it": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 0.9166666666666666,
+            "entity_recall": 1.0
+          },
+          "kyc": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "legal": {
+            "documents": 5,
+            "token_recall": 0.9320388349514563,
+            "token_precision": 1.0,
+            "entity_recall": 0.9047619047619048
+          },
+          "letter": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "negative": {
+            "documents": 12,
+            "token_recall": 0.0,
+            "token_precision": 0.0,
+            "entity_recall": 0.0
+          },
+          "resume": {
+            "documents": 3,
+            "token_recall": 0.8793103448275862,
+            "token_precision": 0.9807692307692307,
+            "entity_recall": 0.8333333333333334
+          },
+          "support": {
+            "documents": 2,
+            "token_recall": 0.75,
+            "token_precision": 1.0,
+            "entity_recall": 0.625
+          },
+          "tax": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "travel": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          }
+        }
+      },
+      "latency": {
+        "docs": 44,
+        "mean_chars": 363.22727272727275,
+        "p50_ms": 99.70929150586016,
+        "p95_ms": 154.21287500066683,
+        "p99_ms": 169.77895802119747,
+        "chars_per_sec": 3424.635430861193
+      }
+    }
+  }
+}

@@ -35,8 +35,12 @@ def pixmap_to_pil(pix: "fitz.Pixmap") -> Image.Image:
     return Image.frombytes("RGB", (pix.width, pix.height), pix.samples)
 
 
-def _ocr_pdf_page(page: "fitz.Page", dpi: int = 200) -> str:
-    pix = page.get_pixmap(dpi=dpi)
+def _ocr_pdf_page(page: "fitz.Page", dpi: int | None = None) -> str:
+    from app.config import settings
+
+    # Same DPI as the scanned-page redactor (settings.ocr_dpi) so OCR text at
+    # redaction time matches what detection saw.
+    pix = page.get_pixmap(dpi=dpi or settings.ocr_dpi)
     image = pixmap_to_pil(pix)
     return ocr_extract_text(image)
 
@@ -54,8 +58,12 @@ def extract_text_from_pdf(file_path: str) -> str:
 
 
 def extract_text_from_docx(file_path: str) -> str:
+    # Same traversal the redactor uses (body + tables + headers/footers):
+    # text that detection never sees can never be redacted.
+    from app.redaction.docx_redactor import iter_docx_paragraphs, paragraph_text
+
     doc = DocxDocument(file_path)
-    return "\n".join(paragraph.text for paragraph in doc.paragraphs)
+    return "\n".join(paragraph_text(p) for p in iter_docx_paragraphs(doc))
 
 
 def extract_text_from_image(file_path: str) -> str:

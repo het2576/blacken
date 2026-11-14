@@ -16,11 +16,30 @@ from typing import Dict, List, Tuple
 import pytesseract
 from PIL import Image, ImageDraw
 
+from app.redaction.matching import find_matches, selected_texts
+
 logger = logging.getLogger("blacken")
 
 Bbox = Tuple[int, int, int, int]
 
-MIN_OCR_CONFIDENCE = 30
+def _default_min_confidence() -> int:
+    """Words Tesseract reads with low confidence used to be dropped (<30) from
+    *both* extraction and box lookup - so a low-confidence surname could never
+    be detected or redacted, and stayed visible in the output. They are now
+    kept by default (OCR_MIN_CONFIDENCE=0): an extra word in the text is
+    harmless, an unredactable PII word is not."""
+    from app.config import settings
+
+    return settings.ocr_min_confidence
+
+
+def _preprocess(image: Image.Image) -> Image.Image:
+    """Grayscale + autocontrast: cheap, geometry-preserving (boxes stay in
+    the original pixel space), and noticeably better Tesseract recall on
+    phone photos and faded scans."""
+    from PIL import ImageOps
+
+    return ImageOps.autocontrast(image.convert("L"), cutoff=1)
 
 
 def _ocr_lines(
@@ -35,7 +54,7 @@ def _ocr_lines(
     tokenize/space text slightly differently, so an entity found at
     upload time can silently fail to match a substring at redact time.
     """
-    ocr_data = pytesseract.image_to_data(image, output_type=pytesseract.Output.DICT)
+    ocr_data = pytesseract.image_to_data(_preprocess(image), output_type=pytesseract.Output.DICT)
     lines: Dict[tuple, List[int]] = {}
     for i in range(len(ocr_data["text"])):
         word = ocr_data["text"][i].strip()
@@ -76,10 +95,12 @@ def _line_text_and_spans(
     return "".join(text_parts), spans
 
 
-def ocr_extract_text(image: Image.Image, min_confidence: int = MIN_OCR_CONFIDENCE) -> str:
+def ocr_extract_text(image: Image.Image, min_confidence: int | None = None) -> str:
     """OCR `image` and reconstruct its text using the exact same
     line-grouping `find_redaction_boxes` uses, so any entity found in this
     text is guaranteed findable as a substring when redaction runs later."""
+    if min_confidence is None:
+        min_confidence = _default_min_confidence()
     ocr_data, ordered_lines = _ocr_lines(image, min_confidence)
     line_texts = [
         _line_text_and_spans(ocr_data, indices)[0] for _key, indices in ordered_lines
@@ -88,31 +109,22 @@ def ocr_extract_text(image: Image.Image, min_confidence: int = MIN_OCR_CONFIDENC
 
 
 def find_redaction_boxes(
-    image: Image.Image, entities: List[dict], min_confidence: int = MIN_OCR_CONFIDENCE
+    image: Image.Image, entities: List[dict], min_confidence: int | None = None
 ) -> List[Bbox]:
     """Return bounding boxes covering every occurrence of every selected
     entity's text, found by reconstructing OCR'd lines (not single words)."""
+    if min_confidence is None:
+        min_confidence = _default_min_confidence()
     ocr_data, ordered_lines = _ocr_lines(image, min_confidence)
+    needles = selected_texts(entities)
 
     boxes: List[Bbox] = []
     for _key, indices in ordered_lines:
         line_text, spans = _line_text_and_spans(ocr_data, indices)
-        line_lower = line_text.lower()
-
-        for entity in entities:
-            needle = entity.get("text", "").strip().lower()
-            if not needle:
-                continue
-            search_from = 0
-            while True:
-                idx = line_lower.find(needle, search_from)
-                if idx == -1:
-                    break
-                match_end = idx + len(needle)
-                for span_start, span_end, bbox in spans:
-                    if span_start < match_end and span_end > idx:
-                        boxes.append(bbox)
-                search_from = idx + 1
+        for match_start, match_end in find_matches(line_text, needles):
+            for span_start, span_end, bbox in spans:
+                if span_start < match_end and span_end > match_start:
+                    boxes.append(bbox)
 
     return boxes
 

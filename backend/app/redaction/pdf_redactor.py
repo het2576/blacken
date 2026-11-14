@@ -26,13 +26,13 @@ from app.extraction.text_extractor import (
     pixmap_to_pil,
 )
 from app.redaction.image_redactor import draw_boxes, find_redaction_boxes
+from app.redaction.matching import find_matches, selected_texts
 
 logger = logging.getLogger("blacken")
 
 Bbox = Tuple[float, float, float, float]
 Span = Tuple[int, int, Bbox]
 
-SCAN_RENDER_DPI = 200
 
 
 def _page_text_and_spans(page: "fitz.Page") -> Tuple[str, List[Span]]:
@@ -64,31 +64,45 @@ def _page_text_and_spans(page: "fitz.Page") -> Tuple[str, List[Span]]:
 def _boxes_for_page_text(
     page_text: str, spans: List[Span], entities: List[dict]
 ) -> List[Bbox]:
-    page_lower = page_text.lower()
     boxes: List[Bbox] = []
-
-    for entity in entities:
-        needle = entity.get("text", "").strip().lower()
-        if not needle:
-            continue
-        search_from = 0
-        while True:
-            idx = page_lower.find(needle, search_from)
-            if idx == -1:
-                break
-            match_end = idx + len(needle)
-            boxes.extend(
-                bbox for (s, e, bbox) in spans if s < match_end and e > idx
-            )
-            search_from = idx + 1
-
+    for match_start, match_end in find_matches(page_text, selected_texts(entities)):
+        boxes.extend(bbox for (s, e, bbox) in spans if s < match_end and e > match_start)
     return boxes
+
+
+# Word boxes from PyMuPDF span the font's full ascender-to-descender height,
+# which on tightly leaded text overlaps the glyph boxes of the lines above
+# and below. apply_redactions() deletes every character whose box touches
+# the redaction rect, so full-height rects silently deleted words on
+# neighbouring lines. Removal uses a vertically inset rect (still covering
+# the middle of every target glyph); the visible black bar is drawn at full
+# height afterwards as plain vector content, which removes nothing.
+_REMOVAL_INSET = 0.3
+
+
+def _removal_rect(bbox: Bbox) -> "fitz.Rect":
+    x0, y0, x1, y1 = bbox
+    inset = (y1 - y0) * _REMOVAL_INSET
+    return fitz.Rect(x0, y0 + inset, x1, y1 - inset)
+
+
+def _scrub_metadata(doc: "fitz.Document") -> None:
+    """Author/title/subject/keywords and XMP metadata routinely carry the
+    very names being redacted from the page content."""
+    doc.set_metadata({})
+    try:
+        doc.del_xml_metadata()
+    except Exception:  # noqa: BLE001 - absent XMP is fine
+        pass
 
 
 def _redact_scanned_page(page: "fitz.Page", entities: List[dict]) -> int:
     """Rasterize a page with no usable text layer, OCR + redact it as an
     image, and replace the page's content with the redacted rasterization."""
-    pix = page.get_pixmap(dpi=SCAN_RENDER_DPI)
+    from app.config import settings
+
+    # Must equal the extraction DPI so OCR text matches what detection saw.
+    pix = page.get_pixmap(dpi=settings.ocr_dpi)
     image = pixmap_to_pil(pix)
 
     boxes = find_redaction_boxes(image, entities)
@@ -116,14 +130,16 @@ def _redact_scanned_page(page: "fitz.Page", entities: List[dict]) -> int:
 
 
 def redact_pdf(original_path: str, entities: List[dict], output_path: str) -> int:
+    """Always writes `output_path` - even with nothing selected the output is
+    a metadata-scrubbed copy. (Returning early without saving made the API
+    answer 500 "Redaction produced no output file" for any document where the
+    user deselected everything or nothing was auto-selected.)"""
     selected = [e for e in entities if e.get("selected", True) and e.get("text", "").strip()]
-    if not selected:
-        return 0
 
     total_redactions = 0
     doc = fitz.open(original_path)
     try:
-        for page in doc:
+        for page in doc if selected else []:
             page_text, spans = _page_text_and_spans(page)
 
             if len(page_text.strip()) < MIN_TEXT_CHARS_PER_PAGE:
@@ -132,11 +148,14 @@ def redact_pdf(original_path: str, entities: List[dict], output_path: str) -> in
 
             boxes = _boxes_for_page_text(page_text, spans, selected)
             for bbox in boxes:
-                page.add_redact_annot(fitz.Rect(bbox), fill=(0, 0, 0))
+                page.add_redact_annot(_removal_rect(bbox), fill=False)
             if boxes:
                 page.apply_redactions()
+                for bbox in boxes:
+                    page.draw_rect(fitz.Rect(bbox), color=(0, 0, 0), fill=(0, 0, 0), width=0)
             total_redactions += len(boxes)
 
+        _scrub_metadata(doc)
         doc.save(output_path, garbage=4, deflate=True, clean=True)
     finally:
         doc.close()

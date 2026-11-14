@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { documentRedactionAPI, DocumentPreviewResponse, RedactedPreviewResponse } from '@/services/api';
-import { AlertCircle, Download, Maximize2, X } from 'lucide-react';
+import { AlertCircle, ChevronLeft, ChevronRight, Download, Maximize2, X } from 'lucide-react';
 import { Panel } from './ui/panel';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
@@ -12,6 +12,123 @@ interface PreviewSectionProps {
     avgConfidence: number;
   };
   refreshTrigger?: number;
+}
+
+type FileKind = 'pdf' | 'image' | 'text';
+
+function fileKind(filename: string): FileKind {
+  const name = filename.toLowerCase();
+  if (name.endsWith('.pdf')) return 'pdf';
+  if (/\.(jpg|jpeg|png|gif|bmp|webp|tiff)$/.test(name)) return 'image';
+  return 'text';
+}
+
+/**
+ * One page at a time, rendered to PNG by the server - so what the reviewer
+ * sees is exactly the rasterised output file, identical on every browser
+ * (iframe'd PDF blobs render poorly or not at all on mobile Safari).
+ */
+function PageViewer({
+  documentId,
+  redacted,
+  refreshKey,
+  onExpand,
+}: {
+  documentId: string;
+  redacted: boolean;
+  refreshKey?: number;
+  onExpand: (url: string) => void;
+}) {
+  const [page, setPage] = useState(1);
+  const [pageCount, setPageCount] = useState(1);
+  const [url, setUrl] = useState<string | null>(null);
+  const [failed, setFailed] = useState(false);
+  const urlRef = useRef<string | null>(null);
+
+  useEffect(() => setPage(1), [documentId, refreshKey]);
+
+  useEffect(() => {
+    let cancelled = false;
+    setFailed(false);
+    documentRedactionAPI
+      .getPageImage(documentId, page, redacted)
+      .then(({ url: next, pageCount: count }) => {
+        if (cancelled) return URL.revokeObjectURL(next);
+        if (urlRef.current) URL.revokeObjectURL(urlRef.current);
+        urlRef.current = next;
+        setUrl(next);
+        setPageCount(count);
+      })
+      .catch(() => !cancelled && setFailed(true));
+    return () => {
+      cancelled = true;
+    };
+  }, [documentId, page, redacted, refreshKey]);
+
+  useEffect(() => () => {
+    if (urlRef.current) URL.revokeObjectURL(urlRef.current);
+  }, []);
+
+  if (failed) {
+    return (
+      <div className="flex flex-1 items-center justify-center border border-line bg-paper px-4 text-center font-display text-[11px] uppercase tracking-[0.08em] text-ink-faint">
+        Preview unavailable
+      </div>
+    );
+  }
+  return (
+    <div className="flex flex-1 flex-col overflow-hidden">
+      <div className="group relative flex-1 overflow-auto border border-line bg-paper">
+        {url ? (
+          <img src={url} alt={`${redacted ? 'Redacted' : 'Original'} page ${page}`} className="mx-auto w-full" />
+        ) : (
+          <div className="flex h-full items-center justify-center font-display text-[11px] uppercase tracking-[0.08em] text-ink-faint">
+            Rendering page…
+          </div>
+        )}
+        {url && (
+          <button
+            onClick={() => onExpand(url)}
+            className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center border border-ink bg-paper-raised/90 text-ink opacity-100 transition-colors hover:bg-ink hover:text-paper-raised sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
+            aria-label="Open page fullscreen"
+          >
+            <Maximize2 className="h-4 w-4" />
+          </button>
+        )}
+      </div>
+      {pageCount > 1 && (
+        <div className="mt-2 flex items-center justify-between font-display text-[11px] uppercase tracking-[0.06em] text-ink-faint">
+          <button
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page <= 1}
+            className="flex items-center gap-1 disabled:opacity-40"
+            aria-label="Previous page"
+          >
+            <ChevronLeft className="h-3.5 w-3.5" /> Prev
+          </button>
+          <span>
+            Page {page} / {pageCount}
+          </span>
+          <button
+            onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+            disabled={page >= pageCount}
+            className="flex items-center gap-1 disabled:opacity-40"
+            aria-label="Next page"
+          >
+            Next <ChevronRight className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function TextPreview({ text }: { text: string }) {
+  return (
+    <pre className="flex-1 overflow-auto whitespace-pre-wrap border border-line bg-paper p-4 font-serif text-sm leading-relaxed text-ink">
+      {text || 'No text extracted.'}
+    </pre>
+  );
 }
 
 export default function PreviewSection({ documentId, summary, refreshTrigger }: PreviewSectionProps) {
@@ -58,21 +175,26 @@ export default function PreviewSection({ documentId, summary, refreshTrigger }: 
         const preview = await documentRedactionAPI.getDocumentPreview(documentId);
         if (cancelled) return;
         setDocumentPreview(preview);
+        const kind = fileKind(preview.filename);
 
-        documentRedactionAPI
-          .getDocumentUrl(documentId, false)
-          .then((url) => (cancelled ? URL.revokeObjectURL(url) : putOriginal(url)))
-          .catch(() => !cancelled && setOriginalError(true));
+        if (kind === 'image') {
+          documentRedactionAPI
+            .getDocumentUrl(documentId, false)
+            .then((url) => (cancelled ? URL.revokeObjectURL(url) : putOriginal(url)))
+            .catch(() => !cancelled && setOriginalError(true));
+        }
 
         if (preview.status === 'redacted') {
           try {
             const redacted = await documentRedactionAPI.getRedactedPreview(documentId);
             if (cancelled) return;
             setRedactedPreview(redacted);
-            documentRedactionAPI
-              .getDocumentUrl(documentId, true)
-              .then((url) => (cancelled ? URL.revokeObjectURL(url) : putRedacted(url)))
-              .catch(() => !cancelled && setRedactedError(true));
+            if (kind === 'image') {
+              documentRedactionAPI
+                .getDocumentUrl(documentId, true)
+                .then((url) => (cancelled ? URL.revokeObjectURL(url) : putRedacted(url)))
+                .catch(() => !cancelled && setRedactedError(true));
+            }
           } catch {
             // redacted preview not ready yet — original still renders
           }
@@ -87,7 +209,7 @@ export default function PreviewSection({ documentId, summary, refreshTrigger }: 
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [documentId, refreshTrigger]);
 
   useEffect(
@@ -108,14 +230,35 @@ export default function PreviewSection({ documentId, summary, refreshTrigger }: 
     }
   };
 
-  const isImage = /\.(jpg|jpeg|png|gif|bmp|webp)$/.test((documentPreview?.filename ?? '').toLowerCase());
+  const kind = fileKind(documentPreview?.filename ?? '');
 
-  const renderViewer = (url: string, label: string) =>
-    isImage ? (
-      <img src={url} alt={label} className="h-full w-full object-contain" />
-    ) : (
-      <iframe src={url} className="h-full w-full" title={label} />
-    );
+  const renderViewer = (url: string, label: string) => (
+    <img src={url} alt={label} className="h-full w-full object-contain" />
+  );
+
+  const renderExhibit = (redacted: boolean) => {
+    if (!documentId) return null;
+    if (kind === 'pdf') {
+      return (
+        <PageViewer
+          documentId={documentId}
+          redacted={redacted}
+          refreshKey={refreshTrigger}
+          onExpand={(url) => setFullscreen({ url, label: redacted ? 'Redacted document' : 'Original document' })}
+        />
+      );
+    }
+    if (kind === 'text') {
+      return (
+        <TextPreview
+          text={(redacted ? redactedPreview?.redacted_text_preview : documentPreview?.extracted_text_preview) ?? ''}
+        />
+      );
+    }
+    return redacted
+      ? renderInline(redactedUrl, redactedError, 'Redacted document')
+      : renderInline(originalUrl, originalError, 'Original document');
+  };
 
   const renderInline = (url: string | null, failed: boolean, label: string) => {
     if (failed) {
@@ -203,7 +346,7 @@ export default function PreviewSection({ documentId, summary, refreshTrigger }: 
                 </span>
                 <Badge tone="muted">{documentPreview.entity_count} found</Badge>
               </div>
-              {renderInline(originalUrl, originalError, 'Original document')}
+              {renderExhibit(false)}
             </>
           ) : (
             <div className="flex flex-1 items-center justify-center font-display text-xs uppercase tracking-[0.08em] text-ink-faint">
@@ -221,7 +364,7 @@ export default function PreviewSection({ documentId, summary, refreshTrigger }: 
                 </span>
                 <Badge tone="flag">{redactedPreview.redacted_count} redacted</Badge>
               </div>
-              {renderInline(redactedUrl, redactedError, 'Redacted document')}
+              {renderExhibit(true)}
               <Button size="sm" className="mt-3 w-full" onClick={handleDownload}>
                 <Download className="h-3.5 w-3.5" />
                 Download

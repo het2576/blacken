@@ -1,0 +1,2349 @@
+{
+  "split": "dev",
+  "model": "en_core_web_sm",
+  "pii_model": "gliner-pii-edge",
+  "pii_threshold": 0.5,
+  "spacy_ner": false,
+  "datasets": {
+    "ai4privacy": {
+      "detected": {
+        "documents": 1000,
+        "gold_entities": 1060,
+        "predicted_entities": 1355,
+        "token": {
+          "precision": 0.4219342604298357,
+          "recall": 0.6953125,
+          "f1": 0.525177025963808,
+          "f2": 0.6155477683511619,
+          "tp": 1335,
+          "fp": 1829,
+          "fn": 585
+        },
+        "overlap": {
+          "precision": 0.4981549815498155,
+          "recall": 0.6698113207547169,
+          "missed": 350,
+          "false_alarms": 680,
+          "f1": 0.5713689606867157,
+          "f2": 0.6266262208914632
+        },
+        "full_coverage_recall": 0.6396226415094339,
+        "strict": {
+          "precision": 0.3151291512915129,
+          "recall": 0.4028301886792453,
+          "f1": 0.3536231884057971,
+          "f2": 0.38159070598748884,
+          "tp": 427,
+          "fp": 928,
+          "fn": 633
+        },
+        "per_class": {
+          "ADDRESS": {
+            "gold": 277,
+            "pred": 225,
+            "recall": 0.5703971119133574,
+            "full_coverage_recall": 0.5595667870036101,
+            "precision": 0.5555555555555556,
+            "strict_recall": 0.30324909747292417,
+            "f1": 0.5628785179907375,
+            "f2": 0.5673656995116345
+          },
+          "AGE": {
+            "gold": 0,
+            "pred": 35,
+            "recall": null,
+            "full_coverage_recall": null,
+            "precision": 0.0,
+            "strict_recall": null
+          },
+          "DATE": {
+            "gold": 47,
+            "pred": 121,
+            "recall": 0.5957446808510638,
+            "full_coverage_recall": 0.5957446808510638,
+            "precision": 0.23140495867768596,
+            "strict_recall": 0.5957446808510638,
+            "f1": 0.33333333333333337,
+            "f2": 0.45307443365695793
+          },
+          "EMAIL": {
+            "gold": 92,
+            "pred": 92,
+            "recall": 1.0,
+            "full_coverage_recall": 0.9891304347826086,
+            "precision": 1.0,
+            "strict_recall": 0.9891304347826086,
+            "f1": 1.0,
+            "f2": 1.0
+          },
+          "FINANCIAL": {
+            "gold": 77,
+            "pred": 90,
+            "recall": 0.4805194805194805,
+            "full_coverage_recall": 0.4805194805194805,
+            "precision": 0.4222222222222222,
+            "strict_recall": 0.42857142857142855,
+            "f1": 0.44948849104859334,
+            "f2": 0.4676067580151656
+          },
+          "GOV_ID": {
+            "gold": 177,
+            "pred": 132,
+            "recall": 0.6892655367231638,
+            "full_coverage_recall": 0.5706214689265536,
+            "precision": 0.49242424242424243,
+            "strict_recall": 0.2655367231638418,
+            "f1": 0.5744503603897281,
+            "f2": 0.6382396497327925
+          },
+          "NETWORK": {
+            "gold": 0,
+            "pred": 208,
+            "recall": null,
+            "full_coverage_recall": null,
+            "precision": 0.09134615384615384,
+            "strict_recall": null
+          },
+          "OTHER_ID": {
+            "gold": 0,
+            "pred": 30,
+            "recall": null,
+            "full_coverage_recall": null,
+            "precision": 0.36666666666666664,
+            "strict_recall": null
+          },
+          "PERSON": {
+            "gold": 308,
+            "pred": 234,
+            "recall": 0.6688311688311688,
+            "full_coverage_recall": 0.6688311688311688,
+            "precision": 0.7905982905982906,
+            "strict_recall": 0.2922077922077922,
+            "f1": 0.7246349254639488,
+            "f2": 0.6900885109588444
+          },
+          "PHONE": {
+            "gold": 82,
+            "pred": 188,
+            "recall": 0.8170731707317073,
+            "full_coverage_recall": 0.7317073170731707,
+            "precision": 0.5957446808510638,
+            "strict_recall": 0.6585365853658537,
+            "f1": 0.6890725436179982,
+            "f2": 0.7605610962458444
+          }
+        },
+        "negative_documents": 375,
+        "negative_false_alarm_rate": 0.5306666666666666,
+        "top_misses": [
+          [
+            "ADDRESS",
+            "Mayfield Rushers Cross",
+            2
+          ],
+          [
+            "PERSON",
+            "Memik",
+            2
+          ],
+          [
+            "PERSON",
+            "T\u00fckenmez",
+            2
+          ],
+          [
+            "PERSON",
+            "Suhua",
+            2
+          ],
+          [
+            "PERSON",
+            "Ma\u00ebllys",
+            2
+          ],
+          [
+            "PERSON",
+            "Cristov\u00e3o",
+            2
+          ],
+          [
+            "ADDRESS",
+            "5",
+            1
+          ],
+          [
+            "ADDRESS",
+            "Highfields Road",
+            1
+          ],
+          [
+            "ADDRESS",
+            "LE12",
+            1
+          ],
+          [
+            "PERSON",
+            "Sureyya",
+            1
+          ],
+          [
+            "PERSON",
+            "Anti",
+            1
+          ],
+          [
+            "DATE",
+            "October/74",
+            1
+          ],
+          [
+            "PERSON",
+            "Tarcis",
+            1
+          ],
+          [
+            "PERSON",
+            "Almos",
+            1
+          ],
+          [
+            "ADDRESS",
+            "Randleman",
+            1
+          ],
+          [
+            "PHONE",
+            "+164-542.557.6727",
+            1
+          ],
+          [
+            "GOV_ID",
+            "JUM99.803168.9.882",
+            1
+          ],
+          [
+            "ADDRESS",
+            "1717",
+            1
+          ],
+          [
+            "ADDRESS",
+            "21120",
+            1
+          ],
+          [
+            "PERSON",
+            "Ferihane",
+            1
+          ],
+          [
+            "PERSON",
+            "Hendrica",
+            1
+          ],
+          [
+            "DATE",
+            "October/57",
+            1
+          ],
+          [
+            "DATE",
+            "September/08",
+            1
+          ],
+          [
+            "ADDRESS",
+            "1226",
+            1
+          ],
+          [
+            "DATE",
+            "2007-02-18T00:00:00",
+            1
+          ]
+        ],
+        "top_false_alarms": [
+          [
+            "ADDRESS",
+            "US",
+            4
+          ],
+          [
+            "ADDRESS",
+            "South",
+            3
+          ],
+          [
+            "PERSON",
+            "Male",
+            3
+          ],
+          [
+            "PERSON",
+            "Business Account",
+            3
+          ],
+          [
+            "NETWORK",
+            "https://taylor.net/",
+            2
+          ],
+          [
+            "PERSON",
+            "Dr. Madame",
+            2
+          ],
+          [
+            "NETWORK",
+            "1.9.6.20",
+            2
+          ],
+          [
+            "AGE",
+            "57-year-old",
+            2
+          ],
+          [
+            "AGE",
+            "73",
+            2
+          ],
+          [
+            "AGE",
+            "30",
+            2
+          ],
+          [
+            "AGE",
+            "77",
+            2
+          ],
+          [
+            "DATE",
+            "27/05/2028",
+            2
+          ],
+          [
+            "ADDRESS",
+            "United Kingdom",
+            2
+          ],
+          [
+            "PHONE",
+            "202010-3043",
+            2
+          ],
+          [
+            "ADDRESS",
+            "IPV4_2",
+            2
+          ],
+          [
+            "AGE",
+            "21",
+            2
+          ],
+          [
+            "FINANCIAL",
+            "833040600216336",
+            2
+          ],
+          [
+            "NETWORK",
+            "http://clayton.net/",
+            2
+          ],
+          [
+            "NETWORK",
+            "7c:92:13:ae:d6:3e",
+            1
+          ],
+          [
+            "NETWORK",
+            "d0:35:d5:3b:dc:12",
+            1
+          ],
+          [
+            "PHONE",
+            "201506-3402",
+            1
+          ],
+          [
+            "DATE",
+            "June 15th, 2020",
+            1
+          ],
+          [
+            "NETWORK",
+            "https://www.carr-bradley.net/",
+            1
+          ],
+          [
+            "NETWORK",
+            "http://ward.com/",
+            1
+          ],
+          [
+            "FINANCIAL",
+            "808616124806586",
+            1
+          ]
+        ],
+        "ci95": {},
+        "organization": {
+          "gold": 0,
+          "recall": 0.0,
+          "precision": 0.0
+        },
+        "by_group": {
+          "GB": {
+            "documents": 483,
+            "token_recall": 0.6588693957115009,
+            "token_precision": 0.4297520661157025,
+            "entity_recall": 0.6629213483146067
+          },
+          "US": {
+            "documents": 517,
+            "token_recall": 0.7371364653243848,
+            "token_precision": 0.4142049025769956,
+            "entity_recall": 0.6768060836501901
+          }
+        }
+      },
+      "auto": {
+        "documents": 1000,
+        "gold_entities": 1060,
+        "predicted_entities": 973,
+        "token": {
+          "precision": 0.41332804442681476,
+          "recall": 0.5427083333333333,
+          "f1": 0.46926367935149743,
+          "f2": 0.5107342417410058,
+          "tp": 1042,
+          "fp": 1479,
+          "fn": 878
+        },
+        "overlap": {
+          "precision": 0.48612538540596095,
+          "recall": 0.47358490566037736,
+          "missed": 558,
+          "false_alarms": 500,
+          "f1": 0.4797732126656604,
+          "f2": 0.47604097249120486
+        },
+        "full_coverage_recall": 0.4547169811320755,
+        "strict": {
+          "precision": 0.3114080164439877,
+          "recall": 0.2858490566037736,
+          "f1": 0.2980816527299557,
+          "f2": 0.2906196048340686,
+          "tp": 303,
+          "fp": 670,
+          "fn": 757
+        },
+        "per_class": {
+          "ADDRESS": {
+            "gold": 277,
+            "pred": 109,
+            "recall": 0.3104693140794224,
+            "full_coverage_recall": 0.30685920577617326,
+            "precision": 0.5871559633027523,
+            "strict_recall": 0.13357400722021662,
+            "f1": 0.40616928639952776,
+            "f2": 0.3427745808733777
+          },
+          "AGE": {
+            "gold": 0,
+            "pred": 35,
+            "recall": null,
+            "full_coverage_recall": null,
+            "precision": 0.0,
+            "strict_recall": null
+          },
+          "DATE": {
+            "gold": 47,
+            "pred": 121,
+            "recall": 0.5957446808510638,
+            "full_coverage_recall": 0.5957446808510638,
+            "precision": 0.23140495867768596,
+            "strict_recall": 0.5957446808510638,
+            "f1": 0.33333333333333337,
+            "f2": 0.45307443365695793
+          },
+          "EMAIL": {
+            "gold": 92,
+            "pred": 92,
+            "recall": 1.0,
+            "full_coverage_recall": 0.9891304347826086,
+            "precision": 1.0,
+            "strict_recall": 0.9891304347826086,
+            "f1": 1.0,
+            "f2": 1.0
+          },
+          "FINANCIAL": {
+            "gold": 77,
+            "pred": 51,
+            "recall": 0.2987012987012987,
+            "full_coverage_recall": 0.2987012987012987,
+            "precision": 0.45098039215686275,
+            "strict_recall": 0.2727272727272727,
+            "f1": 0.35937500000000006,
+            "f2": 0.3203342618384401
+          },
+          "GOV_ID": {
+            "gold": 177,
+            "pred": 55,
+            "recall": 0.4915254237288136,
+            "full_coverage_recall": 0.4180790960451977,
+            "precision": 0.4909090909090909,
+            "strict_recall": 0.13559322033898305,
+            "f1": 0.49121706398996234,
+            "f2": 0.49140203338772437
+          },
+          "NETWORK": {
+            "gold": 0,
+            "pred": 166,
+            "recall": null,
+            "full_coverage_recall": null,
+            "precision": 0.06626506024096386,
+            "strict_recall": null
+          },
+          "OTHER_ID": {
+            "gold": 0,
+            "pred": 22,
+            "recall": null,
+            "full_coverage_recall": null,
+            "precision": 0.36363636363636365,
+            "strict_recall": null
+          },
+          "PERSON": {
+            "gold": 308,
+            "pred": 134,
+            "recall": 0.39935064935064934,
+            "full_coverage_recall": 0.39935064935064934,
+            "precision": 0.8059701492537313,
+            "strict_recall": 0.15584415584415584,
+            "f1": 0.5340730913038234,
+            "f2": 0.4441680375556714
+          },
+          "PHONE": {
+            "gold": 82,
+            "pred": 188,
+            "recall": 0.7682926829268293,
+            "full_coverage_recall": 0.7073170731707317,
+            "precision": 0.5957446808510638,
+            "strict_recall": 0.6585365853658537,
+            "f1": 0.6711051930758988,
+            "f2": 0.7262247838616714
+          }
+        },
+        "negative_documents": 375,
+        "negative_false_alarm_rate": 0.4,
+        "top_misses": [
+          [
+            "ADDRESS",
+            "Mayfield Rushers Cross",
+            2
+          ],
+          [
+            "ADDRESS",
+            "York",
+            2
+          ],
+          [
+            "PERSON",
+            "Kadire",
+            2
+          ],
+          [
+            "PERSON",
+            "Memik",
+            2
+          ],
+          [
+            "PERSON",
+            "T\u00fckenmez",
+            2
+          ],
+          [
+            "PERSON",
+            "Ganesalingam",
+            2
+          ],
+          [
+            "PERSON",
+            "Suhua",
+            2
+          ],
+          [
+            "PERSON",
+            "Ma\u00ebllys",
+            2
+          ],
+          [
+            "PERSON",
+            "Cristov\u00e3o",
+            2
+          ],
+          [
+            "ADDRESS",
+            "5",
+            1
+          ],
+          [
+            "ADDRESS",
+            "Highfields Road",
+            1
+          ],
+          [
+            "ADDRESS",
+            "LE12",
+            1
+          ],
+          [
+            "PERSON",
+            "Curdin",
+            1
+          ],
+          [
+            "PERSON",
+            "G\u00e9rardin",
+            1
+          ],
+          [
+            "PERSON",
+            "Sureyya",
+            1
+          ],
+          [
+            "PERSON",
+            "Anti",
+            1
+          ],
+          [
+            "PERSON",
+            "Caldas",
+            1
+          ],
+          [
+            "DATE",
+            "October/74",
+            1
+          ],
+          [
+            "FINANCIAL",
+            "3899342695750922",
+            1
+          ],
+          [
+            "PERSON",
+            "Tarcis",
+            1
+          ],
+          [
+            "PERSON",
+            "Almos",
+            1
+          ],
+          [
+            "ADDRESS",
+            "Randleman",
+            1
+          ],
+          [
+            "PHONE",
+            "+164-542.557.6727",
+            1
+          ],
+          [
+            "PERSON",
+            "Jum",
+            1
+          ],
+          [
+            "PERSON",
+            "Jaouada",
+            1
+          ]
+        ],
+        "top_false_alarms": [
+          [
+            "PERSON",
+            "Business Account",
+            3
+          ],
+          [
+            "NETWORK",
+            "https://taylor.net/",
+            2
+          ],
+          [
+            "PERSON",
+            "Dr. Madame",
+            2
+          ],
+          [
+            "NETWORK",
+            "1.9.6.20",
+            2
+          ],
+          [
+            "AGE",
+            "57-year-old",
+            2
+          ],
+          [
+            "AGE",
+            "73",
+            2
+          ],
+          [
+            "AGE",
+            "30",
+            2
+          ],
+          [
+            "AGE",
+            "77",
+            2
+          ],
+          [
+            "DATE",
+            "27/05/2028",
+            2
+          ],
+          [
+            "PHONE",
+            "202010-3043",
+            2
+          ],
+          [
+            "AGE",
+            "21",
+            2
+          ],
+          [
+            "NETWORK",
+            "http://clayton.net/",
+            2
+          ],
+          [
+            "NETWORK",
+            "7c:92:13:ae:d6:3e",
+            1
+          ],
+          [
+            "NETWORK",
+            "d0:35:d5:3b:dc:12",
+            1
+          ],
+          [
+            "PHONE",
+            "201506-3402",
+            1
+          ],
+          [
+            "DATE",
+            "June 15th, 2020",
+            1
+          ],
+          [
+            "NETWORK",
+            "https://www.carr-bradley.net/",
+            1
+          ],
+          [
+            "NETWORK",
+            "http://ward.com/",
+            1
+          ],
+          [
+            "DATE",
+            "27th July 1983",
+            1
+          ],
+          [
+            "DATE",
+            "22/11/2060",
+            1
+          ],
+          [
+            "NETWORK",
+            "http://figueroa-thornton.net/",
+            1
+          ],
+          [
+            "FINANCIAL",
+            "612881343215185",
+            1
+          ],
+          [
+            "DATE",
+            "5th April 2058",
+            1
+          ],
+          [
+            "FINANCIAL",
+            "150200104850403",
+            1
+          ],
+          [
+            "NETWORK",
+            "http://dean-ward.org/",
+            1
+          ]
+        ],
+        "ci95": {},
+        "organization": {
+          "gold": 0,
+          "recall": 0.0,
+          "precision": 0.0
+        },
+        "by_group": {
+          "GB": {
+            "documents": 483,
+            "token_recall": 0.543859649122807,
+            "token_precision": 0.4359375,
+            "entity_recall": 0.48314606741573035
+          },
+          "US": {
+            "documents": 517,
+            "token_recall": 0.5413870246085011,
+            "token_precision": 0.39000805801772764,
+            "entity_recall": 0.46387832699619774
+          }
+        }
+      },
+      "latency": {
+        "docs": 1000,
+        "mean_chars": 152.059,
+        "p50_ms": 43.475437501911074,
+        "p95_ms": 86.06716600479558,
+        "p99_ms": 109.8426670068875,
+        "chars_per_sec": 3125.9112368139076
+      }
+    },
+    "gretel": {
+      "detected": {
+        "documents": 1000,
+        "gold_entities": 3374,
+        "predicted_entities": 4977,
+        "token": {
+          "precision": 0.4467424342539976,
+          "recall": 0.6384324834749764,
+          "f1": 0.5256569740320323,
+          "f2": 0.5879743973284169,
+          "tp": 6761,
+          "fp": 8373,
+          "fn": 3829
+        },
+        "overlap": {
+          "precision": 0.45248141450673096,
+          "recall": 0.6597510373443983,
+          "missed": 1148,
+          "false_alarms": 2725,
+          "f1": 0.5368034031070217,
+          "f2": 0.604380895603407
+        },
+        "full_coverage_recall": 0.5524599881446355,
+        "strict": {
+          "precision": 0.3263009845288326,
+          "recall": 0.48132780082987553,
+          "f1": 0.3889354568315172,
+          "f2": 0.4395604395604395,
+          "tp": 1624,
+          "fp": 3353,
+          "fn": 1750
+        },
+        "per_class": {
+          "ADDRESS": {
+            "gold": 793,
+            "pred": 872,
+            "recall": 0.7213114754098361,
+            "full_coverage_recall": 0.4262295081967213,
+            "precision": 0.6594036697247706,
+            "strict_recall": 0.2849936948297604,
+            "f1": 0.6889696771646038,
+            "f2": 0.7080171043499675
+          },
+          "AGE": {
+            "gold": 0,
+            "pred": 6,
+            "recall": null,
+            "full_coverage_recall": null,
+            "precision": 0.0,
+            "strict_recall": null
+          },
+          "DATE": {
+            "gold": 512,
+            "pred": 1257,
+            "recall": 0.740234375,
+            "full_coverage_recall": 0.69921875,
+            "precision": 0.2951471758154336,
+            "strict_recall": 0.69140625,
+            "f1": 0.42202429635854766,
+            "f2": 0.5687095487744406
+          },
+          "EMAIL": {
+            "gold": 98,
+            "pred": 291,
+            "recall": 0.9387755102040817,
+            "full_coverage_recall": 0.8979591836734694,
+            "precision": 0.30927835051546393,
+            "strict_recall": 0.8571428571428571,
+            "f1": 0.4652730950775456,
+            "f2": 0.667182363179269
+          },
+          "FINANCIAL": {
+            "gold": 175,
+            "pred": 174,
+            "recall": 0.44,
+            "full_coverage_recall": 0.44,
+            "precision": 0.3850574712643678,
+            "strict_recall": 0.37142857142857144,
+            "f1": 0.4106993591529674,
+            "f2": 0.4277919665660553
+          },
+          "GOV_ID": {
+            "gold": 91,
+            "pred": 376,
+            "recall": 0.8901098901098901,
+            "full_coverage_recall": 0.8241758241758241,
+            "precision": 0.26595744680851063,
+            "strict_recall": 0.6593406593406593,
+            "f1": 0.409545960157751,
+            "f2": 0.6057795859758286
+          },
+          "NETWORK": {
+            "gold": 59,
+            "pred": 508,
+            "recall": 0.9322033898305084,
+            "full_coverage_recall": 0.9322033898305084,
+            "precision": 0.19488188976377951,
+            "strict_recall": 0.847457627118644,
+            "f1": 0.32237056333441877,
+            "f2": 0.5306603773584905
+          },
+          "OTHER_ID": {
+            "gold": 90,
+            "pred": 93,
+            "recall": 0.26666666666666666,
+            "full_coverage_recall": 0.23333333333333334,
+            "precision": 0.22580645161290322,
+            "strict_recall": 0.13333333333333333,
+            "f1": 0.24454148471615722,
+            "f2": 0.25735294117647056
+          },
+          "PERSON": {
+            "gold": 1372,
+            "pred": 925,
+            "recall": 0.5670553935860059,
+            "full_coverage_recall": 0.5029154518950437,
+            "precision": 0.8086486486486486,
+            "strict_recall": 0.45335276967930027,
+            "f1": 0.6666384100862246,
+            "f2": 0.6030915249403379
+          },
+          "PHONE": {
+            "gold": 184,
+            "pred": 475,
+            "recall": 0.9130434782608695,
+            "full_coverage_recall": 0.8804347826086957,
+            "precision": 0.38105263157894737,
+            "strict_recall": 0.8206521739130435,
+            "f1": 0.5376998160984581,
+            "f2": 0.7137492019378826
+          }
+        },
+        "negative_documents": 183,
+        "negative_false_alarm_rate": 0.6174863387978142,
+        "top_misses": [
+          [
+            "PERSON",
+            "John Doe",
+            42
+          ],
+          [
+            "PERSON",
+            "Jane",
+            13
+          ],
+          [
+            "PERSON",
+            "Zoe",
+            12
+          ],
+          [
+            "DATE",
+            "1st day of January, 2023",
+            11
+          ],
+          [
+            "DATE",
+            "15 minutes",
+            10
+          ],
+          [
+            "PERSON",
+            "arbiter",
+            10
+          ],
+          [
+            "DATE",
+            "Date",
+            9
+          ],
+          [
+            "OTHER_ID",
+            "Qe-80189",
+            8
+          ],
+          [
+            "PERSON",
+            "Ralf10",
+            7
+          ],
+          [
+            "OTHER_ID",
+            "D7433255",
+            7
+          ],
+          [
+            "PERSON",
+            "Sarah",
+            6
+          ],
+          [
+            "PERSON",
+            "Marcantonio Medici",
+            6
+          ],
+          [
+            "PERSON",
+            "Jane Doe",
+            6
+          ],
+          [
+            "PERSON",
+            "neutral",
+            6
+          ],
+          [
+            "PERSON",
+            "Callahan",
+            6
+          ],
+          [
+            "OTHER_ID",
+            "Iz93233-Q",
+            6
+          ],
+          [
+            "PERSON",
+            "Investors",
+            5
+          ],
+          [
+            "DATE",
+            "1st day of August, 2021",
+            5
+          ],
+          [
+            "PHONE",
+            "Phone Number",
+            5
+          ],
+          [
+            "PERSON",
+            "Counterparty A and Counterparty B",
+            5
+          ],
+          [
+            "DATE",
+            "________, 20__",
+            5
+          ],
+          [
+            "PERSON",
+            "Angelo",
+            5
+          ],
+          [
+            "PERSON",
+            "Rigo Segebahn",
+            5
+          ],
+          [
+            "OTHER_ID",
+            "B7376V851",
+            5
+          ],
+          [
+            "PERSON",
+            "Troy Rose Maldonado",
+            5
+          ]
+        ],
+        "top_false_alarms": [
+          [
+            "PHONE",
+            "1234567890",
+            180
+          ],
+          [
+            "NETWORK",
+            "http://www.w3.org/2001/XMLSchema-instance",
+            46
+          ],
+          [
+            "NETWORK",
+            "http://www.xbrl.org/2003/instance",
+            31
+          ],
+          [
+            "DATE",
+            "2022-03-15",
+            31
+          ],
+          [
+            "FINANCIAL",
+            "123456789",
+            28
+          ],
+          [
+            "NETWORK",
+            "http://www.xbrl.org/2003/linkbase",
+            27
+          ],
+          [
+            "DATE",
+            "December 31, 2021",
+            24
+          ],
+          [
+            "DATE",
+            "2022-03-14",
+            21
+          ],
+          [
+            "OTHER_ID",
+            "123456789",
+            20
+          ],
+          [
+            "GOV_ID",
+            "123456789",
+            19
+          ],
+          [
+            "DATE",
+            "01/01/2023",
+            16
+          ],
+          [
+            "NETWORK",
+            "http://www.xbrl.org/2003/iso4217",
+            16
+          ],
+          [
+            "DATE",
+            "2023-03-15",
+            15
+          ],
+          [
+            "GOV_ID",
+            "9876543210",
+            15
+          ],
+          [
+            "ADDRESS",
+            "London",
+            14
+          ],
+          [
+            "GOV_ID",
+            "Borrower",
+            14
+          ],
+          [
+            "DATE",
+            "2023-03-14",
+            14
+          ],
+          [
+            "DATE",
+            "2023-02-22",
+            14
+          ],
+          [
+            "DATE",
+            "2022-01-01",
+            13
+          ],
+          [
+            "GOV_ID",
+            "registered",
+            12
+          ],
+          [
+            "ADDRESS",
+            "1234 Main Street",
+            12
+          ],
+          [
+            "NETWORK",
+            "http://www.fpml.org/FpML-5/reporting",
+            12
+          ],
+          [
+            "DATE",
+            "2022-12-31",
+            11
+          ],
+          [
+            "ADDRESS",
+            "Toronto",
+            11
+          ],
+          [
+            "PHONE",
+            "20220315-12",
+            10
+          ]
+        ],
+        "ci95": {},
+        "organization": {
+          "gold": 1224,
+          "recall": 0.0,
+          "precision": 0.0
+        },
+        "by_group": {
+          "Annual Report": {
+            "documents": 6,
+            "token_recall": 0.43478260869565216,
+            "token_precision": 0.4,
+            "entity_recall": 0.6666666666666666
+          },
+          "Audit Report": {
+            "documents": 11,
+            "token_recall": 0.6372549019607843,
+            "token_precision": 0.6632653061224489,
+            "entity_recall": 0.6666666666666666
+          },
+          "BAI Format": {
+            "documents": 22,
+            "token_recall": 0.7477477477477478,
+            "token_precision": 0.49700598802395207,
+            "entity_recall": 0.7721518987341772
+          },
+          "Bank Statement": {
+            "documents": 9,
+            "token_recall": 0.7982456140350878,
+            "token_precision": 0.41935483870967744,
+            "entity_recall": 0.8157894736842105
+          },
+          "Bill of Lading": {
+            "documents": 32,
+            "token_recall": 0.509594882729211,
+            "token_precision": 0.5128755364806867,
+            "entity_recall": 0.5694444444444444
+          },
+          "Business Plan": {
+            "documents": 12,
+            "token_recall": 0.24719101123595505,
+            "token_precision": 0.7857142857142857,
+            "entity_recall": 0.20588235294117646
+          },
+          "CSV": {
+            "documents": 40,
+            "token_recall": 0.6136363636363636,
+            "token_precision": 0.47957371225577267,
+            "entity_recall": 0.674074074074074
+          },
+          "Compliance Certificate": {
+            "documents": 10,
+            "token_recall": 0.6190476190476191,
+            "token_precision": 0.639344262295082,
+            "entity_recall": 0.6818181818181818
+          },
+          "Corporate Governance Guidelines": {
+            "documents": 8,
+            "token_recall": 0.46153846153846156,
+            "token_precision": 0.41379310344827586,
+            "entity_recall": 0.5555555555555556
+          },
+          "Corporate Tax Return": {
+            "documents": 13,
+            "token_recall": 0.8,
+            "token_precision": 0.591715976331361,
+            "entity_recall": 0.9166666666666666
+          },
+          "Credit Application": {
+            "documents": 8,
+            "token_recall": 0.8971428571428571,
+            "token_precision": 0.7370892018779343,
+            "entity_recall": 0.864406779661017
+          },
+          "Credit Card Application": {
+            "documents": 5,
+            "token_recall": 0.6888888888888889,
+            "token_precision": 0.8157894736842105,
+            "entity_recall": 0.6153846153846154
+          },
+          "Credit Card Statement": {
+            "documents": 7,
+            "token_recall": 0.6888888888888889,
+            "token_precision": 0.22794117647058823,
+            "entity_recall": 0.8076923076923077
+          },
+          "Cryptocurrency Transaction Report": {
+            "documents": 9,
+            "token_recall": 0.65,
+            "token_precision": 0.12322274881516587,
+            "entity_recall": 0.5625
+          },
+          "Currency Exchange Rate Sheet": {
+            "documents": 17,
+            "token_recall": 0.5990338164251208,
+            "token_precision": 0.775,
+            "entity_recall": 0.6363636363636364
+          },
+          "Customer Agreement": {
+            "documents": 10,
+            "token_recall": 0.5657894736842105,
+            "token_precision": 0.6615384615384615,
+            "entity_recall": 0.5555555555555556
+          },
+          "Customer support conversational log": {
+            "documents": 33,
+            "token_recall": 0.682,
+            "token_precision": 0.38838268792710706,
+            "entity_recall": 0.6964285714285714
+          },
+          "Dispute Resolution Policy": {
+            "documents": 11,
+            "token_recall": 0.3018867924528302,
+            "token_precision": 0.3333333333333333,
+            "entity_recall": 0.14285714285714285
+          },
+          "EDI": {
+            "documents": 39,
+            "token_recall": 0.42727272727272725,
+            "token_precision": 0.4577922077922078,
+            "entity_recall": 0.4444444444444444
+          },
+          "Email": {
+            "documents": 30,
+            "token_recall": 0.5255972696245734,
+            "token_precision": 0.5855513307984791,
+            "entity_recall": 0.5306122448979592
+          },
+          "Employment Contract": {
+            "documents": 10,
+            "token_recall": 0.38509316770186336,
+            "token_precision": 0.7209302325581395,
+            "entity_recall": 0.4523809523809524
+          },
+          "FIX Protocol": {
+            "documents": 19,
+            "token_recall": 0.5698324022346368,
+            "token_precision": 0.5340314136125655,
+            "entity_recall": 0.6451612903225806
+          },
+          "Financial Aid Application": {
+            "documents": 8,
+            "token_recall": 0.8444444444444444,
+            "token_precision": 0.7651006711409396,
+            "entity_recall": 0.8571428571428571
+          },
+          "Financial Data Feed": {
+            "documents": 7,
+            "token_recall": 0.6666666666666666,
+            "token_precision": 0.24761904761904763,
+            "entity_recall": 0.7142857142857143
+          },
+          "Financial Disclosure Statement": {
+            "documents": 10,
+            "token_recall": 0.6035502958579881,
+            "token_precision": 0.8717948717948718,
+            "entity_recall": 0.6274509803921569
+          },
+          "Financial Forecast": {
+            "documents": 8,
+            "token_recall": 0.5806451612903226,
+            "token_precision": 0.8571428571428571,
+            "entity_recall": 0.5806451612903226
+          },
+          "Financial Regulatory Compliance Report": {
+            "documents": 9,
+            "token_recall": 0.6268656716417911,
+            "token_precision": 0.6268656716417911,
+            "entity_recall": 0.7368421052631579
+          },
+          "Financial Risk Assessment": {
+            "documents": 12,
+            "token_recall": 0.5079365079365079,
+            "token_precision": 0.7804878048780488,
+            "entity_recall": 0.5227272727272727
+          },
+          "Financial Statement": {
+            "documents": 30,
+            "token_recall": 0.6,
+            "token_precision": 0.375,
+            "entity_recall": 0.6923076923076923
+          },
+          "FpML": {
+            "documents": 28,
+            "token_recall": 0.5867768595041323,
+            "token_precision": 0.06184668989547038,
+            "entity_recall": 0.6190476190476191
+          },
+          "Health Insurance Claim Form": {
+            "documents": 22,
+            "token_recall": 0.8780487804878049,
+            "token_precision": 0.7370078740157481,
+            "entity_recall": 0.896969696969697
+          },
+          "ISDA Definition": {
+            "documents": 24,
+            "token_recall": 0.313953488372093,
+            "token_precision": 0.6377952755905512,
+            "entity_recall": 0.2967032967032967
+          },
+          "IT support ticket": {
+            "documents": 31,
+            "token_recall": 0.6763005780346821,
+            "token_precision": 0.5416666666666666,
+            "entity_recall": 0.6885245901639344
+          },
+          "Insurance Claim Form": {
+            "documents": 9,
+            "token_recall": 0.8557692307692307,
+            "token_precision": 0.717741935483871,
+            "entity_recall": 0.8823529411764706
+          },
+          "Insurance Policy": {
+            "documents": 31,
+            "token_recall": 0.7111111111111111,
+            "token_precision": 0.8050314465408805,
+            "entity_recall": 0.7464788732394366
+          },
+          "Investment Prospectus": {
+            "documents": 17,
+            "token_recall": 0.36666666666666664,
+            "token_precision": 0.5409836065573771,
+            "entity_recall": 0.4642857142857143
+          },
+          "Loan Agreement": {
+            "documents": 9,
+            "token_recall": 0.6435643564356436,
+            "token_precision": 0.8125,
+            "entity_recall": 0.68
+          },
+          "Loan Application": {
+            "documents": 25,
+            "token_recall": 0.850356294536817,
+            "token_precision": 0.6729323308270677,
+            "entity_recall": 0.8571428571428571
+          },
+          "MT940": {
+            "documents": 45,
+            "token_recall": 0.48514851485148514,
+            "token_precision": 0.35,
+            "entity_recall": 0.4642857142857143
+          },
+          "Mortgage Amortization Schedule": {
+            "documents": 7,
+            "token_recall": 0.7575757575757576,
+            "token_precision": 0.12562814070351758,
+            "entity_recall": 0.9
+          },
+          "Mortgage Contract": {
+            "documents": 6,
+            "token_recall": 0.5306122448979592,
+            "token_precision": 0.6046511627906976,
+            "entity_recall": 0.5384615384615384
+          },
+          "Payment Confirmation": {
+            "documents": 22,
+            "token_recall": 0.6524216524216524,
+            "token_precision": 0.613941018766756,
+            "entity_recall": 0.6857142857142857
+          },
+          "Pension Plan Agreement": {
+            "documents": 10,
+            "token_recall": 0.323943661971831,
+            "token_precision": 0.696969696969697,
+            "entity_recall": 0.3333333333333333
+          },
+          "Policyholder's Report": {
+            "documents": 26,
+            "token_recall": 0.7393767705382436,
+            "token_precision": 0.7150684931506849,
+            "entity_recall": 0.7672413793103449
+          },
+          "Privacy Policy": {
+            "documents": 7,
+            "token_recall": 0.7317073170731707,
+            "token_precision": 0.5084745762711864,
+            "entity_recall": 0.75
+          },
+          "Product Disclosure Statement": {
+            "documents": 11,
+            "token_recall": 0.7027027027027027,
+            "token_precision": 0.3333333333333333,
+            "entity_recall": 0.7
+          },
+          "Real Estate Loan Agreement": {
+            "documents": 11,
+            "token_recall": 0.4774193548387097,
+            "token_precision": 0.6727272727272727,
+            "entity_recall": 0.5609756097560976
+          },
+          "Regulatory Compliance Guide": {
+            "documents": 6,
+            "token_recall": 0.7777777777777778,
+            "token_precision": 0.6363636363636364,
+            "entity_recall": 1.0
+          },
+          "Regulatory Filing": {
+            "documents": 10,
+            "token_recall": 0.449438202247191,
+            "token_precision": 0.8888888888888888,
+            "entity_recall": 0.5185185185185185
+          },
+          "Renewal Reminder": {
+            "documents": 11,
+            "token_recall": 0.8272727272727273,
+            "token_precision": 0.7165354330708661,
+            "entity_recall": 0.8787878787878788
+          },
+          "SWIFT Message": {
+            "documents": 30,
+            "token_recall": 0.39903846153846156,
+            "token_precision": 0.25075528700906347,
+            "entity_recall": 0.47540983606557374
+          },
+          "Safety Data Sheet": {
+            "documents": 33,
+            "token_recall": 0.7809187279151943,
+            "token_precision": 0.6368876080691642,
+            "entity_recall": 0.7560975609756098
+          },
+          "Securities Prospectus": {
+            "documents": 7,
+            "token_recall": 0.45,
+            "token_precision": 0.7297297297297297,
+            "entity_recall": 0.5789473684210527
+          },
+          "Shareholder Agreement": {
+            "documents": 10,
+            "token_recall": 0.4626865671641791,
+            "token_precision": 0.7209302325581395,
+            "entity_recall": 0.3793103448275862
+          },
+          "Supply Chain Management Agreement": {
+            "documents": 10,
+            "token_recall": 0.5267857142857143,
+            "token_precision": 0.8428571428571429,
+            "entity_recall": 0.43243243243243246
+          },
+          "Tax Assessment Notice": {
+            "documents": 16,
+            "token_recall": 0.8364485981308412,
+            "token_precision": 0.46134020618556704,
+            "entity_recall": 0.8833333333333333
+          },
+          "Tax Return": {
+            "documents": 12,
+            "token_recall": 0.6625,
+            "token_precision": 0.6309523809523809,
+            "entity_recall": 0.7647058823529411
+          },
+          "Trade Confirmation": {
+            "documents": 25,
+            "token_recall": 0.6992481203007519,
+            "token_precision": 0.48947368421052634,
+            "entity_recall": 0.775
+          },
+          "Transaction Confirmation": {
+            "documents": 18,
+            "token_recall": 0.7003367003367004,
+            "token_precision": 0.7222222222222222,
+            "entity_recall": 0.7040816326530612
+          },
+          "XBRL": {
+            "documents": 26,
+            "token_recall": 0.4594594594594595,
+            "token_precision": 0.009194159004867496,
+            "entity_recall": 0.42105263157894735
+          }
+        }
+      },
+      "auto": {
+        "documents": 1000,
+        "gold_entities": 3374,
+        "predicted_entities": 4031,
+        "token": {
+          "precision": 0.42417680878070635,
+          "recall": 0.5364494806421152,
+          "f1": 0.47375224117082937,
+          "f2": 0.509479310530375,
+          "tp": 5681,
+          "fp": 7712,
+          "fn": 4909
+        },
+        "overlap": {
+          "precision": 0.4487720168692632,
+          "recall": 0.536158861885003,
+          "missed": 1565,
+          "false_alarms": 2222,
+          "f1": 0.4885887913571911,
+          "f2": 0.5160609345581103
+        },
+        "full_coverage_recall": 0.45020746887966806,
+        "strict": {
+          "precision": 0.3381294964028777,
+          "recall": 0.4039715471250741,
+          "f1": 0.3681296421336935,
+          "f2": 0.38882866434643704,
+          "tp": 1363,
+          "fp": 2668,
+          "fn": 2011
+        },
+        "per_class": {
+          "ADDRESS": {
+            "gold": 793,
+            "pred": 639,
+            "recall": 0.5863808322824716,
+            "full_coverage_recall": 0.35561160151324084,
+            "precision": 0.7261345852895149,
+            "strict_recall": 0.24968474148802017,
+            "f1": 0.648817372764766,
+            "f2": 0.609855716097127
+          },
+          "AGE": {
+            "gold": 0,
+            "pred": 6,
+            "recall": null,
+            "full_coverage_recall": null,
+            "precision": 0.0,
+            "strict_recall": null
+          },
+          "DATE": {
+            "gold": 512,
+            "pred": 1249,
+            "recall": 0.736328125,
+            "full_coverage_recall": 0.697265625,
+            "precision": 0.29703763010408324,
+            "strict_recall": 0.69140625,
+            "f1": 0.4233102561192449,
+            "f2": 0.568250423952267
+          },
+          "EMAIL": {
+            "gold": 98,
+            "pred": 290,
+            "recall": 0.9081632653061225,
+            "full_coverage_recall": 0.8979591836734694,
+            "precision": 0.3103448275862069,
+            "strict_recall": 0.8571428571428571,
+            "f1": 0.46260467802483396,
+            "f2": 0.6555901129481092
+          },
+          "FINANCIAL": {
+            "gold": 175,
+            "pred": 116,
+            "recall": 0.34285714285714286,
+            "full_coverage_recall": 0.34285714285714286,
+            "precision": 0.49137931034482757,
+            "strict_recall": 0.3142857142857143,
+            "f1": 0.4038972542072631,
+            "f2": 0.36491677336747763
+          },
+          "GOV_ID": {
+            "gold": 91,
+            "pred": 112,
+            "recall": 0.7362637362637363,
+            "full_coverage_recall": 0.6813186813186813,
+            "precision": 0.5535714285714286,
+            "strict_recall": 0.5164835164835165,
+            "f1": 0.6319793092956033,
+            "f2": 0.6906757116254324
+          },
+          "NETWORK": {
+            "gold": 59,
+            "pred": 450,
+            "recall": 0.9322033898305084,
+            "full_coverage_recall": 0.9322033898305084,
+            "precision": 0.14,
+            "strict_recall": 0.847457627118644,
+            "f1": 0.24343977236800507,
+            "f2": 0.4373012267151295
+          },
+          "OTHER_ID": {
+            "gold": 90,
+            "pred": 81,
+            "recall": 0.18888888888888888,
+            "full_coverage_recall": 0.16666666666666666,
+            "precision": 0.2222222222222222,
+            "strict_recall": 0.13333333333333333,
+            "f1": 0.20420420420420418,
+            "f2": 0.19473081328751435
+          },
+          "PERSON": {
+            "gold": 1372,
+            "pred": 613,
+            "recall": 0.3739067055393586,
+            "full_coverage_recall": 0.3206997084548105,
+            "precision": 0.8205546492659054,
+            "strict_recall": 0.30029154518950435,
+            "f1": 0.5137225819617056,
+            "f2": 0.41958475192792816
+          },
+          "PHONE": {
+            "gold": 184,
+            "pred": 475,
+            "recall": 0.9021739130434783,
+            "full_coverage_recall": 0.8695652173913043,
+            "precision": 0.38105263157894737,
+            "strict_recall": 0.8206521739130435,
+            "f1": 0.5357989906735382,
+            "f2": 0.708411532258825
+          }
+        },
+        "negative_documents": 183,
+        "negative_false_alarm_rate": 0.5300546448087432,
+        "top_misses": [
+          [
+            "PERSON",
+            "John Doe",
+            64
+          ],
+          [
+            "PERSON",
+            "Jane",
+            14
+          ],
+          [
+            "PERSON",
+            "Zoe",
+            12
+          ],
+          [
+            "DATE",
+            "1st day of January, 2023",
+            11
+          ],
+          [
+            "DATE",
+            "15 minutes",
+            10
+          ],
+          [
+            "PERSON",
+            "arbiter",
+            10
+          ],
+          [
+            "DATE",
+            "Date",
+            9
+          ],
+          [
+            "PERSON",
+            "Sarah",
+            8
+          ],
+          [
+            "PERSON",
+            "Jane Doe",
+            8
+          ],
+          [
+            "OTHER_ID",
+            "Qe-80189",
+            8
+          ],
+          [
+            "PERSON",
+            "Jane Smith",
+            7
+          ],
+          [
+            "PERSON",
+            "Ralf10",
+            7
+          ],
+          [
+            "OTHER_ID",
+            "D7433255",
+            7
+          ],
+          [
+            "PERSON",
+            "Dani Jonas Neuteboom",
+            6
+          ],
+          [
+            "PERSON",
+            "Marcantonio Medici",
+            6
+          ],
+          [
+            "PERSON",
+            "John Smith",
+            6
+          ],
+          [
+            "PERSON",
+            "neutral",
+            6
+          ],
+          [
+            "PERSON",
+            "Callahan",
+            6
+          ],
+          [
+            "OTHER_ID",
+            "Iz93233-Q",
+            6
+          ],
+          [
+            "PERSON",
+            "Investors",
+            5
+          ],
+          [
+            "ADDRESS",
+            "address",
+            5
+          ],
+          [
+            "DATE",
+            "1st day of August, 2021",
+            5
+          ],
+          [
+            "PHONE",
+            "Phone Number",
+            5
+          ],
+          [
+            "ADDRESS",
+            "Address",
+            5
+          ],
+          [
+            "PERSON",
+            "Gaetano Prei\u00df",
+            5
+          ]
+        ],
+        "top_false_alarms": [
+          [
+            "PHONE",
+            "1234567890",
+            180
+          ],
+          [
+            "NETWORK",
+            "http://www.w3.org/2001/XMLSchema-instance",
+            46
+          ],
+          [
+            "NETWORK",
+            "http://www.xbrl.org/2003/instance",
+            31
+          ],
+          [
+            "DATE",
+            "2022-03-15",
+            31
+          ],
+          [
+            "NETWORK",
+            "http://www.xbrl.org/2003/linkbase",
+            27
+          ],
+          [
+            "DATE",
+            "December 31, 2021",
+            24
+          ],
+          [
+            "FINANCIAL",
+            "123456789",
+            23
+          ],
+          [
+            "DATE",
+            "2022-03-14",
+            21
+          ],
+          [
+            "OTHER_ID",
+            "123456789",
+            19
+          ],
+          [
+            "DATE",
+            "01/01/2023",
+            16
+          ],
+          [
+            "NETWORK",
+            "http://www.xbrl.org/2003/iso4217",
+            16
+          ],
+          [
+            "DATE",
+            "2023-03-15",
+            15
+          ],
+          [
+            "GOV_ID",
+            "9876543210",
+            15
+          ],
+          [
+            "DATE",
+            "2023-03-14",
+            14
+          ],
+          [
+            "DATE",
+            "2023-02-22",
+            14
+          ],
+          [
+            "DATE",
+            "2022-01-01",
+            13
+          ],
+          [
+            "ADDRESS",
+            "1234 Main Street",
+            12
+          ],
+          [
+            "NETWORK",
+            "http://www.fpml.org/FpML-5/reporting",
+            12
+          ],
+          [
+            "DATE",
+            "2022-12-31",
+            11
+          ],
+          [
+            "PHONE",
+            "20220315-12",
+            10
+          ],
+          [
+            "DATE",
+            "2022-03-21",
+            10
+          ],
+          [
+            "DATE",
+            "2022-08-15",
+            10
+          ],
+          [
+            "NETWORK",
+            "http://www.fpml.org/FpML-5-3",
+            9
+          ],
+          [
+            "DATE",
+            "01/12/2023",
+            9
+          ],
+          [
+            "DATE",
+            "2022-06-15",
+            9
+          ]
+        ],
+        "ci95": {},
+        "organization": {
+          "gold": 1224,
+          "recall": 0.0,
+          "precision": 0.0
+        },
+        "by_group": {
+          "Annual Report": {
+            "documents": 6,
+            "token_recall": 0.13043478260869565,
+            "token_precision": 0.2,
+            "entity_recall": 0.16666666666666666
+          },
+          "Audit Report": {
+            "documents": 11,
+            "token_recall": 0.6372549019607843,
+            "token_precision": 0.7558139534883721,
+            "entity_recall": 0.6666666666666666
+          },
+          "BAI Format": {
+            "documents": 22,
+            "token_recall": 0.6126126126126126,
+            "token_precision": 0.4981684981684982,
+            "entity_recall": 0.569620253164557
+          },
+          "Bank Statement": {
+            "documents": 9,
+            "token_recall": 0.7982456140350878,
+            "token_precision": 0.4232558139534884,
+            "entity_recall": 0.8157894736842105
+          },
+          "Bill of Lading": {
+            "documents": 32,
+            "token_recall": 0.47974413646055436,
+            "token_precision": 0.569620253164557,
+            "entity_recall": 0.5208333333333334
+          },
+          "Business Plan": {
+            "documents": 12,
+            "token_recall": 0.12359550561797752,
+            "token_precision": 0.9166666666666666,
+            "entity_recall": 0.08823529411764706
+          },
+          "CSV": {
+            "documents": 40,
+            "token_recall": 0.3386363636363636,
+            "token_precision": 0.35903614457831323,
+            "entity_recall": 0.362962962962963
+          },
+          "Compliance Certificate": {
+            "documents": 10,
+            "token_recall": 0.38095238095238093,
+            "token_precision": 0.6666666666666666,
+            "entity_recall": 0.4090909090909091
+          },
+          "Corporate Governance Guidelines": {
+            "documents": 8,
+            "token_recall": 0.46153846153846156,
+            "token_precision": 0.631578947368421,
+            "entity_recall": 0.5555555555555556
+          },
+          "Corporate Tax Return": {
+            "documents": 13,
+            "token_recall": 0.8,
+            "token_precision": 0.6211180124223602,
+            "entity_recall": 0.9166666666666666
+          },
+          "Credit Application": {
+            "documents": 8,
+            "token_recall": 0.8971428571428571,
+            "token_precision": 0.7511961722488039,
+            "entity_recall": 0.864406779661017
+          },
+          "Credit Card Application": {
+            "documents": 5,
+            "token_recall": 0.6888888888888889,
+            "token_precision": 0.8378378378378378,
+            "entity_recall": 0.6153846153846154
+          },
+          "Credit Card Statement": {
+            "documents": 7,
+            "token_recall": 0.5777777777777777,
+            "token_precision": 0.2047244094488189,
+            "entity_recall": 0.6923076923076923
+          },
+          "Cryptocurrency Transaction Report": {
+            "documents": 9,
+            "token_recall": 0.65,
+            "token_precision": 0.12560386473429952,
+            "entity_recall": 0.5625
+          },
+          "Currency Exchange Rate Sheet": {
+            "documents": 17,
+            "token_recall": 0.5169082125603864,
+            "token_precision": 0.7535211267605634,
+            "entity_recall": 0.5303030303030303
+          },
+          "Customer Agreement": {
+            "documents": 10,
+            "token_recall": 0.40789473684210525,
+            "token_precision": 0.5849056603773585,
+            "entity_recall": 0.37037037037037035
+          },
+          "Customer support conversational log": {
+            "documents": 33,
+            "token_recall": 0.546,
+            "token_precision": 0.3649732620320856,
+            "entity_recall": 0.5476190476190477
+          },
+          "Dispute Resolution Policy": {
+            "documents": 11,
+            "token_recall": 0.2641509433962264,
+            "token_precision": 0.358974358974359,
+            "entity_recall": 0.14285714285714285
+          },
+          "EDI": {
+            "documents": 39,
+            "token_recall": 0.2909090909090909,
+            "token_precision": 0.39344262295081966,
+            "entity_recall": 0.2727272727272727
+          },
+          "Email": {
+            "documents": 30,
+            "token_recall": 0.40273037542662116,
+            "token_precision": 0.5700483091787439,
+            "entity_recall": 0.3877551020408163
+          },
+          "Employment Contract": {
+            "documents": 10,
+            "token_recall": 0.36024844720496896,
+            "token_precision": 0.7733333333333333,
+            "entity_recall": 0.38095238095238093
+          },
+          "FIX Protocol": {
+            "documents": 19,
+            "token_recall": 0.4134078212290503,
+            "token_precision": 0.46835443037974683,
+            "entity_recall": 0.41935483870967744
+          },
+          "Financial Aid Application": {
+            "documents": 8,
+            "token_recall": 0.7851851851851852,
+            "token_precision": 0.75177304964539,
+            "entity_recall": 0.7857142857142857
+          },
+          "Financial Data Feed": {
+            "documents": 7,
+            "token_recall": 0.41025641025641024,
+            "token_precision": 0.17204301075268819,
+            "entity_recall": 0.5
+          },
+          "Financial Disclosure Statement": {
+            "documents": 10,
+            "token_recall": 0.5739644970414202,
+            "token_precision": 0.9150943396226415,
+            "entity_recall": 0.6078431372549019
+          },
+          "Financial Forecast": {
+            "documents": 8,
+            "token_recall": 0.3870967741935484,
+            "token_precision": 0.8571428571428571,
+            "entity_recall": 0.3548387096774194
+          },
+          "Financial Regulatory Compliance Report": {
+            "documents": 9,
+            "token_recall": 0.5671641791044776,
+            "token_precision": 0.6129032258064516,
+            "entity_recall": 0.631578947368421
+          },
+          "Financial Risk Assessment": {
+            "documents": 12,
+            "token_recall": 0.3333333333333333,
+            "token_precision": 0.9333333333333333,
+            "entity_recall": 0.3181818181818182
+          },
+          "Financial Statement": {
+            "documents": 30,
+            "token_recall": 0.48695652173913045,
+            "token_precision": 0.34146341463414637,
+            "entity_recall": 0.5384615384615384
+          },
+          "FpML": {
+            "documents": 28,
+            "token_recall": 0.4297520661157025,
+            "token_precision": 0.04663677130044843,
+            "entity_recall": 0.42857142857142855
+          },
+          "Health Insurance Claim Form": {
+            "documents": 22,
+            "token_recall": 0.8292682926829268,
+            "token_precision": 0.7378964941569283,
+            "entity_recall": 0.8303030303030303
+          },
+          "ISDA Definition": {
+            "documents": 24,
+            "token_recall": 0.22868217054263565,
+            "token_precision": 0.6344086021505376,
+            "entity_recall": 0.1978021978021978
+          },
+          "IT support ticket": {
+            "documents": 31,
+            "token_recall": 0.5375722543352601,
+            "token_precision": 0.493368700265252,
+            "entity_recall": 0.5327868852459017
+          },
+          "Insurance Claim Form": {
+            "documents": 9,
+            "token_recall": 0.7211538461538461,
+            "token_precision": 0.7109004739336493,
+            "entity_recall": 0.7205882352941176
+          },
+          "Insurance Policy": {
+            "documents": 31,
+            "token_recall": 0.6203703703703703,
+            "token_precision": 0.7976190476190477,
+            "entity_recall": 0.6126760563380281
+          },
+          "Investment Prospectus": {
+            "documents": 17,
+            "token_recall": 0.2777777777777778,
+            "token_precision": 0.7142857142857143,
+            "entity_recall": 0.32142857142857145
+          },
+          "Loan Agreement": {
+            "documents": 9,
+            "token_recall": 0.504950495049505,
+            "token_precision": 0.85,
+            "entity_recall": 0.48
+          },
+          "Loan Application": {
+            "documents": 25,
+            "token_recall": 0.7980997624703088,
+            "token_precision": 0.6899383983572895,
+            "entity_recall": 0.8045112781954887
+          },
+          "MT940": {
+            "documents": 45,
+            "token_recall": 0.25742574257425743,
+            "token_precision": 0.24644549763033174,
+            "entity_recall": 0.2571428571428571
+          },
+          "Mortgage Amortization Schedule": {
+            "documents": 7,
+            "token_recall": 0.7575757575757576,
+            "token_precision": 0.12562814070351758,
+            "entity_recall": 0.9
+          },
+          "Mortgage Contract": {
+            "documents": 6,
+            "token_recall": 0.4489795918367347,
+            "token_precision": 0.7096774193548387,
+            "entity_recall": 0.5384615384615384
+          },
+          "Payment Confirmation": {
+            "documents": 22,
+            "token_recall": 0.5811965811965812,
+            "token_precision": 0.591304347826087,
+            "entity_recall": 0.5904761904761905
+          },
+          "Pension Plan Agreement": {
+            "documents": 10,
+            "token_recall": 0.19718309859154928,
+            "token_precision": 0.8235294117647058,
+            "entity_recall": 0.23809523809523808
+          },
+          "Policyholder's Report": {
+            "documents": 26,
+            "token_recall": 0.6572237960339944,
+            "token_precision": 0.7272727272727273,
+            "entity_recall": 0.6551724137931034
+          },
+          "Privacy Policy": {
+            "documents": 7,
+            "token_recall": 0.4634146341463415,
+            "token_precision": 0.4418604651162791,
+            "entity_recall": 0.4375
+          },
+          "Product Disclosure Statement": {
+            "documents": 11,
+            "token_recall": 0.7027027027027027,
+            "token_precision": 0.4,
+            "entity_recall": 0.7
+          },
+          "Real Estate Loan Agreement": {
+            "documents": 11,
+            "token_recall": 0.38064516129032255,
+            "token_precision": 0.6704545454545454,
+            "entity_recall": 0.43902439024390244
+          },
+          "Regulatory Compliance Guide": {
+            "documents": 6,
+            "token_recall": 0.4444444444444444,
+            "token_precision": 0.5,
+            "entity_recall": 0.6666666666666666
+          },
+          "Regulatory Filing": {
+            "documents": 10,
+            "token_recall": 0.2696629213483146,
+            "token_precision": 0.8888888888888888,
+            "entity_recall": 0.2962962962962963
+          },
+          "Renewal Reminder": {
+            "documents": 11,
+            "token_recall": 0.7454545454545455,
+            "token_precision": 0.7454545454545455,
+            "entity_recall": 0.7878787878787878
+          },
+          "SWIFT Message": {
+            "documents": 30,
+            "token_recall": 0.25,
+            "token_precision": 0.2047244094488189,
+            "entity_recall": 0.26229508196721313
+          },
+          "Safety Data Sheet": {
+            "documents": 33,
+            "token_recall": 0.7243816254416962,
+            "token_precision": 0.6487341772151899,
+            "entity_recall": 0.6829268292682927
+          },
+          "Securities Prospectus": {
+            "documents": 7,
+            "token_recall": 0.36666666666666664,
+            "token_precision": 0.7586206896551724,
+            "entity_recall": 0.47368421052631576
+          },
+          "Shareholder Agreement": {
+            "documents": 10,
+            "token_recall": 0.2835820895522388,
+            "token_precision": 0.6333333333333333,
+            "entity_recall": 0.20689655172413793
+          },
+          "Supply Chain Management Agreement": {
+            "documents": 10,
+            "token_recall": 0.44642857142857145,
+            "token_precision": 0.819672131147541,
+            "entity_recall": 0.3783783783783784
+          },
+          "Tax Assessment Notice": {
+            "documents": 16,
+            "token_recall": 0.8084112149532711,
+            "token_precision": 0.46883468834688347,
+            "entity_recall": 0.8333333333333334
+          },
+          "Tax Return": {
+            "documents": 12,
+            "token_recall": 0.5375,
+            "token_precision": 0.6056338028169014,
+            "entity_recall": 0.5882352941176471
+          },
+          "Trade Confirmation": {
+            "documents": 25,
+            "token_recall": 0.6766917293233082,
+            "token_precision": 0.4918032786885246,
+            "entity_recall": 0.7375
+          },
+          "Transaction Confirmation": {
+            "documents": 18,
+            "token_recall": 0.6430976430976431,
+            "token_precision": 0.7126865671641791,
+            "entity_recall": 0.6428571428571429
+          },
+          "XBRL": {
+            "documents": 26,
+            "token_recall": 0.21621621621621623,
+            "token_precision": 0.004362050163576881,
+            "entity_recall": 0.21052631578947367
+          }
+        }
+      },
+      "latency": {
+        "docs": 1000,
+        "mean_chars": 1351.786,
+        "p50_ms": 420.38585399859585,
+        "p95_ms": 631.1627920367755,
+        "p99_ms": 1069.065083982423,
+        "chars_per_sec": 3262.316128694195
+      }
+    }
+  }
+}

@@ -11,25 +11,57 @@ recognizers, and confidence boosting from nearby context words. We only
 add a light per-type minimum-score filter on top, in one place.
 """
 
+import json
 import logging
+import re
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Optional, Set
 
 import spacy
 
 from presidio_analyzer import AnalyzerEngine
 from presidio_analyzer.nlp_engine import NlpEngineProvider
+from presidio_analyzer.predefined_recognizers import (
+    AbaRoutingRecognizer,
+    InAadhaarRecognizer,
+    InGstinRecognizer,
+    InPanRecognizer,
+    InPassportRecognizer,
+    InVehicleRegistrationRecognizer,
+    InVoterRecognizer,
+    UkNinoRecognizer,
+    UkPostcodeRecognizer,
+)
 
+from app.detection.gazetteers import is_non_identifying_place
 from app.detection.recognizers import ALL_CUSTOM_RECOGNIZERS
 
 logger = logging.getLogger("blacken")
 
-# Deliberately no entity allowlist here: Presidio ships recognizers for
-# dozens of country-specific ID formats (US_SSN, UK_NHS, IN_AADHAAR,
-# ES_NIF, SG_NRIC, ...), and this is a general personal-data tool used on
-# real documents from anywhere, not just US-formatted ones. Restricting to
-# a "common" subset would silently stop catching things like an Aadhaar or
-# NHS number entirely. The rare cost is a cosmetic one - two country
+# Presidio ships these checksum/format-validated recognizers but does NOT
+# register them in its default registry, so before this list existed an
+# Aadhaar, PAN, GSTIN, UK National Insurance number or UK postcode was never
+# detected at all - despite the README claiming coverage. Each was checked
+# against the dev split for precision before being enabled; noisier ones
+# (generic 9-digit UK passport, US NPI, AU/CA IDs) stay off until measured.
+EXTRA_PREDEFINED_RECOGNIZERS = (
+    InAadhaarRecognizer,
+    InPanRecognizer,
+    InGstinRecognizer,
+    InPassportRecognizer,
+    InVoterRecognizer,
+    InVehicleRegistrationRecognizer,
+    UkNinoRecognizer,
+    UkPostcodeRecognizer,
+    AbaRoutingRecognizer,
+)
+
+# Deliberately no entity allowlist here: this is a general personal-data
+# tool used on real documents from anywhere, not just US-formatted ones.
+# Note that Presidio's *default* registry only loads a subset of its
+# country recognizers (US_SSN, UK_NHS, ...); India/UK formats such as
+# IN_AADHAAR, IN_PAN and UK_NINO must be registered explicitly - see
+# EXTRA_PREDEFINED_RECOGNIZERS. The rare cost is a cosmetic one - two country
 # recognizers can occasionally tie on an ambiguous digit string and the
 # entity gets the "wrong" country label - but it still gets flagged and
 # redacted either way, which is what actually matters.
@@ -75,6 +107,22 @@ DEFAULT_MIN_SCORE = 0.35
 # action (blacking out text) - the user should opt in, not opt out.
 AUTO_SELECT_MIN_SCORE = 0.6
 
+# Optional per-type overrides fitted on dev data by evals/calibrate.py. Kept
+# out of code so a re-fit is a reviewed data change, and deleting the file
+# reverts to the single global threshold above.
+CALIBRATED_THRESHOLDS_PATH = Path(__file__).resolve().parent / "thresholds.json"
+
+
+def _load_calibrated_thresholds() -> Dict[str, float]:
+    try:
+        data = json.loads(CALIBRATED_THRESHOLDS_PATH.read_text())
+    except FileNotFoundError:
+        return {}
+    except (OSError, ValueError):
+        logger.warning("Ignoring unreadable %s", CALIBRATED_THRESHOLDS_PATH.name)
+        return {}
+    return {str(k): float(v) for k, v in (data.get("per_type") or {}).items()}
+
 # Real full names in documents are overwhelmingly multi-word and every
 # word is capitalized ("Het Limbachiya"). A single bare capitalized word
 # spaCy tags PERSON is, in practice on real documents, at least as likely
@@ -86,6 +134,11 @@ AUTO_SELECT_MIN_SCORE = 0.6
 # just not pre-selected, and short ALL-CAPS tokens (likely acronyms, e.g.
 # "API", "NLP", "CI") get the same treatment even inside a multi-word span.
 PERSON_CONFIDENCE_PENALTY = 0.5
+
+# Recognizers whose PERSON output already reflects context (a "Name:" label,
+# or a transformer reading the whole sentence), so the bare-single-word
+# penalty - which exists because spaCy tags "Docker" PERSON - doesn't apply.
+CONTEXTUAL_PERSON_RECOGNIZERS = {"LabeledPersonRecognizer", "GlinerOnnxRecognizer"}
 
 
 def _looks_like_a_name(entity_text: str) -> bool:
@@ -100,10 +153,57 @@ def _looks_like_a_name(entity_text: str) -> bool:
     return True
 
 
-def _adjust_person_confidence(entity_text: str, score: float) -> float:
+# Contexts that make a single capitalised word a person rather than a tool
+# or brand: an honorific right before it ("Mr. Hayes"), a greeting or
+# sign-off ("Dear Sam", "Thanks Rahul", "Cheers,\nMegan"), or a possessive
+# ("Julia's place"). These are closed, document-independent vocabularies.
+_HONORIFIC_BEFORE = re.compile(
+    r"\b(?:Mr|Mrs|Ms|Miss|Mx|Dr|Prof|Sir|Madam|Shri|Smt|Sri|Officer|Agent|Nurse)\.?\s+$"
+)
+_GREETING_BEFORE = re.compile(
+    r"(?:^|\b)(?:Hi|Hello|Hey|Dear|Thanks|Thank\s+you|Regards|Best|Cheers|Sincerely|"
+    r"Warmly|Yours|Love|Bye)[\s,!]+$",
+    re.IGNORECASE,
+)
+_POSSESSIVE_AFTER = re.compile(r"^'s\b")
+
+
+def _adjust_person_confidence(
+    entity_text: str,
+    score: float,
+    text: str = "",
+    start: int = 0,
+    end: int = 0,
+    known_name_parts: Set[str] = frozenset(),
+) -> float:
     if _looks_like_a_name(entity_text):
         return score
+    word = entity_text.strip()
+    if word[:1].isupper() and not (word.isupper() and len(word) <= 5):
+        before = text[max(0, start - 24) : start]
+        after = text[end : end + 3]
+        if (
+            _HONORIFIC_BEFORE.search(before)
+            or _GREETING_BEFORE.search(before)
+            or _POSSESSIVE_AFTER.match(after)
+            # Same document already names this person in full ("Robert Allen
+            # Hayes" ... "Mr. Hayes" / "Hayes said"): a later bare mention of
+            # one of those words is that person, not a product.
+            or word.lower() in known_name_parts
+        ):
+            return score
     return score * PERSON_CONFIDENCE_PENALTY
+
+
+# Not identifying on its own (HIPAA Safe Harbor permits geography at state
+# level and above) - see gazetteers.py.
+LOCATION_CONFIDENCE_PENALTY = 0.6
+
+
+def _adjust_location_confidence(entity_text: str, score: float) -> float:
+    if is_non_identifying_place(entity_text):
+        return score * LOCATION_CONFIDENCE_PENALTY
+    return score
 
 
 # Same problem as PERSON above, different type: spaCy tags plenty of
@@ -124,7 +224,35 @@ _WEEKDAY_NAMES = {
 }
 
 
+# spaCy's DATE label also covers durations ("7 days", "48 months"),
+# frequencies ("monthly", "annual"), relative expressions ("last week",
+# "yesterday") and bare years ("2018") - none of which pin down a date tied
+# to a person (HIPAA explicitly allows the year alone). Down-weighted so
+# they are shown but not pre-selected.
+_NUMBER_WORD = (
+    r"(?:\d+(?:\.\d+)?|a|an|one|two|three|four|five|six|seven|eight|nine|ten|eleven|"
+    r"twelve|fifteen|twenty|thirty|few|several|many|couple\s+of)"
+)
+_DURATION = re.compile(
+    rf"^(?:(?:the\s+)?(?:last|next|past|first|previous|coming|over\s+the)\s+)?(?:{_NUMBER_WORD}[\s-]+)?"
+    r"(?:days?|weeks?|months?|years?|yrs?|hours?|hrs?|minutes?|mins?|seconds?|secs?|decades?|"
+    r"quarters?|fortnights?|semesters?)(?:'s)?(?:\s+(?:ago|old|later|earlier|long))?$",
+    re.IGNORECASE,
+)
+_FREQUENCY_OR_RELATIVE = re.compile(
+    r"^(?:daily|weekly|bi-?weekly|monthly|bi-?monthly|quarterly|annual|annually|yearly|"
+    r"hourly|nightly|fortnightly|today|tonight|tomorrow|yesterday|now|recently|"
+    r"currently|present|this\s+\w+|last\s+\w+|next\s+\w+|the\s+\w+\s+before|"
+    r"(?:the\s+)?(?:morning|afternoon|evening|night|weekend|day)s?)$",
+    re.IGNORECASE,
+)
+_BARE_YEAR = re.compile(r"^(?:FY\s?)?(?:19|20)\d{2}(?:\s*[-–/]\s*(?:(?:19|20)?\d{2}|present))?$", re.IGNORECASE)
+
+
 def _looks_like_a_date(entity_text: str) -> bool:
+    stripped = entity_text.strip()
+    if _DURATION.match(stripped) or _FREQUENCY_OR_RELATIVE.match(stripped) or _BARE_YEAR.match(stripped):
+        return False
     # A bare run of 6+ digits with no separator at all is virtually never
     # how anyone writes a date - it's exactly the shape of a phone number,
     # account number, or other ID instead, and spaCy mislabels those as
@@ -164,6 +292,66 @@ PHONE_CONFIDENCE_FLOOR = 0.75
 
 def _adjust_phone_confidence(score: float) -> float:
     return max(score, PHONE_CONFIDENCE_FLOOR)
+
+
+# Same reasoning as the phone floor, for identifiers whose format is
+# distinctive enough that a structural match alone is strong evidence.
+# Presidio scores UK_NINO 0.5 and relies on context words to lift it, but its
+# multi-word context ("national insurance") rarely triggers the boost - so a
+# correctly formatted NINO right after "National Insurance Number:" was shown
+# unticked. The NINO pattern already enforces the valid prefix letters and
+# an A-D suffix, so it is floored to just above the auto-select bar.
+VALIDATED_ID_CONFIDENCE_FLOOR = {"UK_NINO": 0.65}
+
+
+ADDRESS_FAMILY = {"ADDRESS", "LOCATION", "ZIP_CODE", "UK_POSTCODE"}
+
+
+def _merge_address_family(entities: List[dict], text: str) -> List[dict]:
+    """Overlapping address-type spans are pieces of one address, so they are
+    merged into a single ADDRESS span rather than competing.
+
+    Without this, a labelled address "B-204, Shanti Nagar Society,
+    Navrangpura, Ahmedabad" (0.70) loses overlap resolution to the higher
+    scored spaCy sub-span LOCATION "Navrangpura" (0.85), and the rest of the
+    address - the flat number and society name - silently leaks. Only
+    clusters that contain a structured ADDRESS match are merged; a lone
+    LOCATION (a city mention) is left as is.
+    """
+    family = sorted(
+        (e for e in entities if e["type"] in ADDRESS_FAMILY), key=lambda e: e["start"]
+    )
+    others = [e for e in entities if e["type"] not in ADDRESS_FAMILY]
+    merged: List[dict] = []
+    cluster: List[dict] = []
+
+    def flush():
+        if not cluster:
+            return
+        if len(cluster) == 1 or not any(e["type"] == "ADDRESS" for e in cluster):
+            merged.extend(cluster)
+        else:
+            start = min(e["start"] for e in cluster)
+            end = max(e["end"] for e in cluster)
+            best = max(cluster, key=lambda e: e["confidence"])
+            merged.append(
+                {
+                    **best,
+                    "type": "ADDRESS",
+                    "start": start,
+                    "end": end,
+                    "text": text[start:end],
+                    "selected": any(e["selected"] for e in cluster),
+                }
+            )
+        cluster.clear()
+
+    for e in family:
+        if cluster and e["start"] >= max(c["end"] for c in cluster):
+            flush()
+        cluster.append(e)
+    flush()
+    return others + merged
 
 
 def _resolve_overlaps(entities: List[dict]) -> List[dict]:
@@ -214,8 +402,28 @@ def _assert_model_available(spacy_model: str) -> None:
 class PiiDetectionEngine:
     """Loads spaCy + Presidio once at startup and reuses it across requests."""
 
-    def __init__(self, spacy_model: str = "en_core_web_lg", language: str = "en"):
+    def __init__(
+        self,
+        spacy_model: str = "en_core_web_lg",
+        language: str = "en",
+        pii_model_dir: Optional[str] = None,
+        pii_model_threshold: float = 0.5,
+        use_spacy_ner: bool = True,
+        use_calibrated_thresholds: bool = True,
+    ):
         self.language = language
+
+        # Load the transformer first: onnxruntime briefly holds two copies of
+        # the weights while building the session, and doing that before spaCy
+        # is resident keeps the process's *peak* memory (what an OOM killer
+        # sees) well below steady state + transient.
+        gliner = None
+        if pii_model_dir:
+            from app.detection.gliner_onnx import GlinerOnnxRecognizer
+
+            gliner = GlinerOnnxRecognizer(
+                pii_model_dir, threshold=pii_model_threshold, supported_language=language
+            )
         _assert_model_available(spacy_model)
         logger.info("Loading spaCy model '%s' for PII detection...", spacy_model)
 
@@ -253,8 +461,24 @@ class PiiDetectionEngine:
             nlp_engine=nlp_engine, supported_languages=[language]
         )
 
+        for recognizer_cls in EXTRA_PREDEFINED_RECOGNIZERS:
+            self.analyzer.registry.add_recognizer(recognizer_cls(supported_language=language))
         for recognizer in ALL_CUSTOM_RECOGNIZERS:
             self.analyzer.registry.add_recognizer(recognizer)
+
+        self.auto_select_thresholds = (
+            _load_calibrated_thresholds() if use_calibrated_thresholds else {}
+        )
+
+        self.pii_model_enabled = gliner is not None
+        if gliner is not None:
+            self.analyzer.registry.add_recognizer(gliner)
+        if not use_spacy_ner:
+            # spaCy stays loaded for tokens/lemmas (Presidio's context-word
+            # boosting needs them) but its statistical NER no longer emits
+            # PERSON/LOCATION/ORG - the transformer covers those. Lets a small
+            # spaCy pipeline replace the large one on memory-constrained hosts.
+            self.analyzer.registry.remove_recognizer("SpacyRecognizer")
 
         logger.info(
             "PII detection engine ready. Supported entities: %s",
@@ -273,20 +497,38 @@ class PiiDetectionEngine:
         # built-in recognizer - including country-specific ID formats - in play.
         results = self.analyzer.analyze(text=text, language=self.language)
 
-        entities = []
+        clipped = []
         for result in results:
             span = self._clip_to_single_line(text, result.start, result.end)
-            if span is None:
-                continue
-            start, end, entity_text = span
+            if span is not None:
+                clipped.append((result, span))
 
+        # Words of every full (multi-word) name found anywhere in the document,
+        # so a later bare "Hayes" or "Fatima" is recognised as the same person.
+        known_name_parts = {
+            word.lower().strip(".,")
+            for result, (_s, _e, entity_text) in clipped
+            if result.entity_type == "PERSON" and _looks_like_a_name(entity_text)
+            for word in entity_text.split()
+            if len(word.strip(".,")) > 1
+        }
+
+        entities = []
+        for result, (start, end, entity_text) in clipped:
             score = float(result.score)
-            if result.entity_type == "PERSON":
-                score = _adjust_person_confidence(entity_text, score)
+            recognizer = (result.recognition_metadata or {}).get("recognizer_name", "")
+            if result.entity_type == "PERSON" and recognizer not in CONTEXTUAL_PERSON_RECOGNIZERS:
+                score = _adjust_person_confidence(
+                    entity_text, score, text, start, end, known_name_parts
+                )
+            elif result.entity_type == "LOCATION":
+                score = _adjust_location_confidence(entity_text, score)
             elif result.entity_type == "DATE_TIME":
                 score = _adjust_date_confidence(entity_text, score)
-            elif result.entity_type == "PHONE_NUMBER":
+            elif result.entity_type == "PHONE_NUMBER" and recognizer != "LabeledPhoneRecognizer":
                 score = _adjust_phone_confidence(score)
+            elif result.entity_type in VALIDATED_ID_CONFIDENCE_FLOOR:
+                score = max(score, VALIDATED_ID_CONFIDENCE_FLOOR[result.entity_type])
 
             min_score = MIN_SCORE_BY_TYPE.get(result.entity_type, DEFAULT_MIN_SCORE)
             if score < min_score:
@@ -300,11 +542,12 @@ class PiiDetectionEngine:
                     "end": end,
                     "confidence": round(score, 4),
                     "source": "presidio",
-                    "selected": score >= AUTO_SELECT_MIN_SCORE,
+                    "selected": score
+                    >= self.auto_select_thresholds.get(result.entity_type, AUTO_SELECT_MIN_SCORE),
                 }
             )
 
-        return _resolve_overlaps(entities)
+        return _resolve_overlaps(_merge_address_family(entities, text))
 
     @staticmethod
     def _clip_to_single_line(text: str, start: int, end: int):

@@ -1,0 +1,119 @@
+{
+  "samples": 32,
+  "formats": {
+    "pdf_scanned": {
+      "documents": 32,
+      "gold_values": 249,
+      "observable_values": 241,
+      "leak_rate_auto": 0.0995850622406639,
+      "leak_rate_oracle": 0.016597510373443983,
+      "redaction_recall_auto": 0.9004149377593361,
+      "over_redaction_rate": 0.047107438016528926,
+      "metadata_leak_docs": 0,
+      "errors": {},
+      "latency_ms_p50": 905.9959795267787,
+      "latency_ms_p95": 1067.3723749932833,
+      "leak_rate_by_class_auto": {
+        "ADDRESS": 0.1076923076923077,
+        "AGE": 0.14285714285714285,
+        "DATE": 0.03333333333333333,
+        "EMAIL": 0.0,
+        "FINANCIAL": 0.09090909090909091,
+        "GOV_ID": 0.1111111111111111,
+        "NETWORK": 0.0,
+        "OTHER_ID": 0.2222222222222222,
+        "PERSON": 0.15,
+        "PHONE": 0.047619047619047616
+      },
+      "leak_rate_by_class_oracle": {
+        "ADDRESS": 0.015384615384615385,
+        "AGE": 0.0,
+        "DATE": 0.06666666666666667,
+        "EMAIL": 0.0,
+        "FINANCIAL": 0.0,
+        "GOV_ID": 0.0,
+        "NETWORK": 0.0,
+        "OTHER_ID": 0.0,
+        "PERSON": 0.016666666666666666,
+        "PHONE": 0.0
+      },
+      "top_leaks": [
+        [
+          "PERSON",
+          "Neha",
+          4
+        ],
+        [
+          "ADDRESS",
+          "Austin",
+          2
+        ],
+        [
+          "ADDRESS",
+          "Reading",
+          2
+        ],
+        [
+          "ADDRESS",
+          "Round Rock",
+          1
+        ],
+        [
+          "DATE",
+          "1 September 2025",
+          1
+        ],
+        [
+          "OTHER_ID",
+          "ZF-20931",
+          1
+        ],
+        [
+          "FINANCIAL",
+          "NWBKGB2L",
+          1
+        ],
+        [
+          "ADDRESS",
+          "Lyon",
+          1
+        ],
+        [
+          "PERSON",
+          "Sofia Ramirez",
+          1
+        ],
+        [
+          "ADDRESS",
+          "80211",
+          1
+        ],
+        [
+          "GOV_ID",
+          "M4829106",
+          1
+        ],
+        [
+          "PERSON",
+          "Priyanka Chawla",
+          1
+        ],
+        [
+          "PERSON",
+          "Gareth Lloyd",
+          1
+        ],
+        [
+          "PHONE",
+          "+44 7700 900461",
+          1
+        ],
+        [
+          "OTHER_ID",
+          "4471",
+          1
+        ]
+      ]
+    }
+  }
+}

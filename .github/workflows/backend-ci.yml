@@ -1,0 +1,34 @@
+name: backend-ci
+
+on:
+  push:
+    paths: ["backend/**", ".github/workflows/backend-ci.yml"]
+  pull_request:
+    paths: ["backend/**", ".github/workflows/backend-ci.yml"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      # The committed pruned model - the one production ships - so CI needs
+      # no 560MB download and tests exactly what is deployed.
+      SPACY_MODEL: models/en_core_web_lg_pruned
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+      - name: Install Tesseract
+        run: sudo apt-get update && sudo apt-get install -y tesseract-ocr
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      # Unit + API + regression tests, plus the gold-set quality gate
+      # (tests/test_quality_gate.py) that fails the build on recall/precision
+      # regressions.
+      - name: Run tests
+        run: pytest -q

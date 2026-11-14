@@ -45,6 +45,25 @@ COPY . .
 # an unpinned spacy would eventually resolve to 4.x and refuse to load it.
 ENV SPACY_MODEL=/app/models/en_core_web_lg_pruned
 
+# Optional transformer profile (see evals/RESULTS.md, "Model choice"):
+#   docker build --build-arg PII_PROFILE=edge .
+# bakes in the GLiNER-PII edge model (~46 MB int8 ONNX, SHA-256 pinned) plus
+# the small spaCy pipeline it pairs with. The default build is unchanged.
+# Activate at runtime with (measured best recall that fits 512 MB, ~215 MB):
+#   PII_MODEL_DIR=/app/models/gliner-pii-edge SPACY_MODEL=en_core_web_sm
+# or, on >= 1 GB hosts, keep the pruned lg model and only set PII_MODEL_DIR.
+ARG PII_PROFILE=none
+RUN if [ "$PII_PROFILE" = "edge" ]; then \
+      python scripts/fetch_pii_model.py --dest /app/models/gliner-pii-edge && \
+      pip install --no-cache-dir \
+        https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl ; \
+    fi
+
+# Never run as root: a parser exploit in an uploaded file should not own the
+# container.
+RUN useradd --create-home --uid 10001 blacken && chown -R blacken /app
+USER blacken
+
 EXPOSE 8000
 
 # Shell form (not exec-array form) so ${PORT} actually expands - Railway

@@ -179,3 +179,5 @@ dmypy.json
 
 # Development scripts
 start-dev.sh
+# Eval harness: downloaded third-party datasets
+backend/evals/.cache/

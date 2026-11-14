@@ -1,0 +1,41 @@
+{
+  "_comment": "Detection-engine memory per configuration, measured 2026-11-14 on Apple Silicon as macOS *physical footprint* (`footprint -p`, includes compressed pages - the closest macOS analogue of Linux RSS; plain `ps` RSS excludes compressed pages and understated full en_core_web_lg at ~340 MB vs 705 MB here). Peak sampled every 150 ms during load + detection of the gold set. Speed is per 10k characters on arm64, where onnxruntime int8 kernels are slow; x86 hosts should run the GLiNER configs faster. Re-measure on the target host with `python -m evals.run_latency`.",
+  "configs": {
+    "A_lgpruned": {
+      "label": "spaCy lg-pruned + rules (shipped)",
+      "steady_mb": 335,
+      "peak_mb": 335,
+      "ms_per_10k_chars": 369
+    },
+    "E_fulllg": {
+      "label": "spaCy lg (full) + rules",
+      "steady_mb": 705,
+      "peak_mb": 703,
+      "ms_per_10k_chars": 311
+    },
+    "D_sm": {
+      "label": "spaCy sm + rules",
+      "steady_mb": 124,
+      "peak_mb": 124,
+      "ms_per_10k_chars": 272
+    },
+    "B_lgpruned_edge": {
+      "label": "spaCy lg-pruned + rules + GLiNER-edge",
+      "steady_mb": 410,
+      "peak_mb": 431,
+      "ms_per_10k_chars": 3227
+    },
+    "C_sm_edge_noner": {
+      "label": "spaCy sm (no NER) + rules + GLiNER-edge",
+      "steady_mb": 208,
+      "peak_mb": 245,
+      "ms_per_10k_chars": 3326
+    },
+    "F_sm_edge_ner": {
+      "label": "spaCy sm + rules + GLiNER-edge",
+      "steady_mb": 179,
+      "peak_mb": 215,
+      "ms_per_10k_chars": 3165
+    }
+  }
+}

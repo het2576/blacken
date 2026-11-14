@@ -24,3 +24,6 @@ models/*
 .gitignore
 README.md
 tests/
+
+# Evaluation harness and its downloaded benchmark datasets - dev-only
+evals/
