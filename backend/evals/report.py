@@ -186,7 +186,7 @@ def main():
         parts.append("")
     if local and "local" in local:
         l = local["local"]
-        parts += ["## Latency & memory (local, Apple Silicon, single process)", "",
+        parts += [f"## Latency & memory (local, Apple Silicon, single process, {l.get('model', 'default model')})", "",
                   f"- Model load: {l['model_load_s']:.1f}s; peak RSS after load: {l['peak_rss_after_load_mb']:.0f} MB", ""]
         parts += ["| Document size | p50 | p95 | Throughput |", "|---:|---:|---:|---:|"]
         for size, s in l["detect_by_chars"].items():
@@ -197,7 +197,15 @@ def main():
         parts.append("")
     if live and "live" in live:
         lv = live["live"]
+        feats = lv.get("deployed_features") or {}
+        profile = ""
+        if feats:
+            profile = ("Deployed profile: " + ("spaCy + rules + GLiNER-PII transformer" if feats.get("transformer_model")
+                       else "spaCy + rules") + ("; encryption at rest on" if feats.get("encryption_at_rest") else "")
+                       + (f"; {lv['entities_detected']} entities detected in the benchmark PDF" if "entities_detected" in lv else "")
+                       + ".")
         parts += [f"## Live production ({lv['url']}, {lv['health']['n']} sequential requests)", "",
+                  *([profile, ""] if profile else []),
                   "| Call | p50 | p95 |", "|---|---:|---:|"]
         for k in ("health", "upload_detect", "redact", "download"):
             parts.append(f"| {k} | {lv[k]['p50_ms']:.0f} ms | {lv[k]['p95_ms']:.0f} ms |")

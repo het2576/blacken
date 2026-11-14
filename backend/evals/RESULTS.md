@@ -97,26 +97,28 @@ Per-type auto-select thresholds fitted on dev splits (`evals/calibrate.py`, toke
 | ai4privacy pii-masking-400k (EN val) | 59.3% / 40.3% / 54.2% | 61.6% / 50.5% / 59.0% |
 | Gretel synthetic PII finance (EN test) | 69.1% / 42.9% / 61.6% | 68.4% / 53.2% / 64.7% |
 
-## Latency & memory (local, Apple Silicon, single process)
+## Latency & memory (local, Apple Silicon, single process, en_core_web_lg_pruned)
 
-- Model load: 1.4s; peak RSS after load: 331 MB
+- Model load: 1.7s; peak RSS after load: 361 MB
 
 | Document size | p50 | p95 | Throughput |
 |---:|---:|---:|---:|
-| 500 chars | 12 ms | 13 ms | 40,475 chars/s |
-| 2,000 chars | 52 ms | 56 ms | 38,475 chars/s |
-| 10,000 chars | 292 ms | 317 ms | 34,256 chars/s |
-| 50,000 chars | 2133 ms | 2206 ms | 23,442 chars/s |
+| 500 chars | 12 ms | 14 ms | 42,749 chars/s |
+| 2,000 chars | 47 ms | 50 ms | 42,744 chars/s |
+| 10,000 chars | 281 ms | 306 ms | 35,547 chars/s |
+| 50,000 chars | 2062 ms | 2129 ms | 24,249 chars/s |
 
-Full upload→detect→redact→download, 5-page PDF: p50 588 ms, p95 619 ms
+Full upload→detect→redact→download, 5-page PDF: p50 577 ms, p95 595 ms
 
 ## Live production (https://blacken-production.up.railway.app, 10 sequential requests)
 
+Deployed profile: spaCy + rules + GLiNER-PII transformer; encryption at rest on; 8 entities detected in the benchmark PDF.
+
 | Call | p50 | p95 |
 |---|---:|---:|
-| health | 265 ms | 288 ms |
-| upload_detect | 302 ms | 319 ms |
-| redact | 322 ms | 430 ms |
-| download | 268 ms | 346 ms |
+| health | 277 ms | 570 ms |
+| upload_detect | 361 ms | 463 ms |
+| redact | 296 ms | 350 ms |
+| download | 261 ms | 282 ms |
 
-Cold start (first request): 6.3s · errors: 0. `health` p50 is network round-trip; server-side processing ≈ upload p50 − health p50.
+Cold start (first request): 0.6s · errors: 0. `health` p50 is network round-trip; server-side processing ≈ upload p50 − health p50.

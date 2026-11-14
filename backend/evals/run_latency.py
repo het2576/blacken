@@ -125,8 +125,9 @@ def bench_live(url: str, n: int):
     out = {"url": url, "health": [], "upload_detect": [], "redact": [], "download": [], "errors": 0}
     with httpx.Client(base_url=url, timeout=60) as c:
         t = time.perf_counter()
-        c.get("/api/health")
+        h = c.get("/api/health")
         out["first_health_ms"] = (time.perf_counter() - t) * 1000  # may include cold start
+        out["deployed_features"] = h.json().get("features", {}) if h.status_code == 200 else {}
         for _ in range(n):
             t = time.perf_counter()
             c.get("/api/health")
@@ -142,11 +143,12 @@ def bench_live(url: str, n: int):
             doc_id = body["document_id"]
             out.setdefault("entities_detected", body["entity_count"])
             t = time.perf_counter()
-            c.post("/api/redact", json={"document_id": doc_id}, headers=owner)
+            rr = c.post("/api/redact", json={"document_id": doc_id}, headers=owner)
             out["redact"].append((time.perf_counter() - t) * 1000)
             t = time.perf_counter()
-            c.get(f"/api/download/{doc_id}", headers=owner)
+            rd = c.get(f"/api/download/{doc_id}", headers=owner)
             out["download"].append((time.perf_counter() - t) * 1000)
+            out["errors"] += (rr.status_code != 200) + (rd.status_code != 200)
             c.delete(f"/api/document/{doc_id}", headers=owner)
             time.sleep(0.5)  # be gentle with a free-tier host
     for k in ("health", "upload_detect", "redact", "download"):
@@ -169,17 +171,21 @@ def main(argv=None):
     ap.add_argument("--skip-local", action="store_true")
     args = ap.parse_args(argv)
 
-    results = {}
-    if not args.skip_local:
-        _, results["local"] = bench_local(args.model, args.repeats)
-        results["local_api_pdf"] = bench_local_api(args.pdf_pages, max(3, args.repeats // 4))
-    if args.live_url:
-        results["live"] = bench_live(args.live_url.rstrip("/"), args.live_n)
-
+    # Local and live results go to separate files so a live-only run never
+    # overwrites the local numbers (evals.report reads both).
     RESULTS_DIR.mkdir(exist_ok=True)
-    out = RESULTS_DIR / "latency.json"
-    out.write_text(json.dumps(results, indent=2))
-    print(f"wrote {out}")
+    if not args.skip_local:
+        local = {}
+        _, local["local"] = bench_local(args.model, args.repeats)
+        local["local_api_pdf"] = bench_local_api(args.pdf_pages, max(3, args.repeats // 4))
+        out = RESULTS_DIR / "latency.json"
+        out.write_text(json.dumps(local, indent=2))
+        print(f"wrote {out}")
+    if args.live_url:
+        live = {"live": bench_live(args.live_url.rstrip("/"), args.live_n)}
+        out = RESULTS_DIR / "latency_live.json"
+        out.write_text(json.dumps(live, indent=2))
+        print(f"wrote {out}")
 
 
 if __name__ == "__main__":

@@ -574,12 +574,13 @@ pie showData
 | Operation | p50 | Notes |
 |---|---:|---|
 | Detect 500 chars | 12 ms | ~40k chars/s single-threaded |
-| Detect 10k chars (~4 pages) | 292 ms | |
+| Detect 10k chars (~4 pages) | 281 ms | default profile (pruned lg + rules) |
 | Detect 50k chars | 2.1 s | |
-| Upload → detect → redact → download, 5-page PDF | 588 ms | local, API in-process |
+| Upload → detect → redact → download, 5-page PDF | 577 ms | local, API in-process |
 | Scanned page / image (OCR) | ~1 s | Tesseract dominates |
-| Live production, server-side processing | ~40 ms | small PDF; 10/10 requests succeeded |
-| Railway cold start | ~6.3 s | free-tier container wake-up |
+| Live production, upload + detect (server-side) | ~85 ms | GLiNER profile + encryption on, small 1-page PDF; 40/40 calls succeeded |
+| Live production, end-to-end p50 | 361 ms upload · 296 ms redact · 261 ms download | measured from a laptop over the internet; ~280 ms of each is network round trip |
+| Railway cold start | ~6.3 s | free-tier container wake-up (measured on the earlier deploy) |
 
 ### 14.3 Concurrency model
 - **Event loop** handles HTTP; **worker threads** do CPU work (`asyncio.to_thread`).
@@ -881,7 +882,7 @@ Full list: `backend/README.md` → Configuration.
 - Leakage: DOCX forms **74.3% → 9.2%**, PDF **18.5% → 10.4%**, false redactions **22.8% → 1.9%**, metadata **100% → 0%**.
 - Transformer (GLiNER-edge, 46 MB int8 ONNX): with pruned `lg` **+5.7 pts** ai4privacy recall and **+1.4** on gold; with small spaCy **+8.4 / +5.8 pts** on public sets at **215 MB** total.
 - Rejected with evidence: dev-fitted thresholds (gold recall −4.3 pts), 300 DPI OCR (no gain, 2.25× memory).
-- Speed: **~40k chars/s**, 5-page PDF round trip **~0.6 s**, live server-side **~40 ms**.
+- Speed: **~40k chars/s**, 5-page PDF round trip **~0.6 s**, live server-side **~85 ms** with the transformer on (0 errors).
 - Scale of evaluation: **~20k documents, ~27k entities**.
 
 ---
