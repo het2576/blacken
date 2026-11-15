@@ -49,7 +49,7 @@ ENV SPACY_MODEL=/app/models/en_core_web_lg_pruned
 #   docker build --build-arg PII_PROFILE=edge .
 # bakes in the GLiNER-PII edge model (~46 MB int8 ONNX, SHA-256 pinned) plus
 # the small spaCy pipeline it pairs with. The default build is unchanged.
-# Activate at runtime with (measured best recall that fits 512 MB, ~215 MB):
+# Activate at runtime with (measured best recall that fits 512 MB, ~445 MB peak per scanned-PDF request):
 #   PII_MODEL_DIR=/app/models/gliner-pii-edge SPACY_MODEL=en_core_web_sm
 # or, on >= 1 GB hosts, keep the pruned lg model and only set PII_MODEL_DIR.
 ARG PII_PROFILE=none

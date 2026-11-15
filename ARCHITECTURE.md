@@ -569,6 +569,15 @@ pie showData
 | lg-pruned + rules + GLiNER-edge (**most accurate on gold**) | 410 MB | 431 MB |
 | sm + rules + GLiNER-edge (**recommended for 512 MB**) | 179 MB | 215 MB |
 
+Those are the **detection engine alone**. A container limit sees the whole app plus Tesseract, so the deployment decision uses a full scanned-PDF request (upload → OCR → detect → redact → download, `MAX_CONCURRENT_JOBS=1`):
+
+| Profile (whole process + Tesseract) | Idle | Peak, scanned PDF |
+|---|---:|---:|
+| sm + rules + GLiNER-edge (**deployed**) | 256 MB | **~445 MB** — fits 512 MB with ~70 MB headroom |
+| lg-pruned + rules + GLiNER-edge | 495 MB | **~640 MB** — does not fit 512 MB |
+
+(macOS physical footprint + child RSS, `evals/results/memory_request.json`; watch the Railway memory graph, Linux differs somewhat.)
+
 ### 14.2 Latency (measured)
 
 | Operation | p50 | Notes |
@@ -689,7 +698,7 @@ flowchart TB
 
 **Takeaways**
 - GLiNER-edge **complements** spaCy but **doesn't replace** it: removing spaCy's NER loses 8–14 recall points.
-- **Best recall that fits 512 MB:** `sm` + rules + GLiNER-edge — on the full held-out test splits it gains **+6.5 / +5.4 points** of token recall over the default (ai4privacy 59.3% → 65.8%, Gretel 69.1% → 74.5%; the dev-sample estimate of +8.4 / +5.8 was optimistic) at *less* memory (215 MB vs 335 MB). Cost: more false alarms (gold precision 94.8% vs 96.5%; pre-ticked false alarms on 33% vs 25% of PII-free documents).
+- **Best recall that fits 512 MB:** `sm` + rules + GLiNER-edge — on the full held-out test splits it gains **+6.5 / +5.4 points** of token recall over the default (ai4privacy 59.3% → 65.8%, Gretel 69.1% → 74.5%; the dev-sample estimate of +8.4 / +5.8 was optimistic) at *less* memory (engine 215 MB vs 335 MB; whole scanned-PDF request ~445 MB). Cost: more false alarms (gold precision 94.8% vs 96.5%; pre-ticked false alarms on 33% vs 25% of PII-free documents).
 - **Best on the fully annotated gold set:** pruned `lg` + GLiNER-edge (95.1% recall, 96.5% precision) — needs ~1 GB to run comfortably.
 - Pruned vs full `lg` is **not free**: ~2–4 recall points on public sets, for ~370 MB saved.
 - Speed cost of the transformer: ~0.4 s → ~3.2 s per 10k characters (measured on arm64; x86 int8 is typically faster).
@@ -734,7 +743,7 @@ Each decision: context → decision → alternatives → consequences.
 
 **ADR-5 · Optional transformer via ONNX, without PyTorch**
 - *Why:* PyTorch alone exceeds the memory budget; GLiNER's pre/post-processing is small enough to own.
-- *Consequence:* ~150 lines of model-specific code to maintain; a 46 MB model. Paired with the small spaCy pipeline it gives the best measured recall on public data (held-out: +6.5 pts on ai4privacy) at 215 MB.
+- *Consequence:* ~150 lines of model-specific code to maintain; a 46 MB model. Paired with the small spaCy pipeline it gives the best measured recall on public data (held-out: +6.5 pts on ai4privacy) at ~215 MB engine memory.
 - *Off by default* (no model download needed); enabled via a build arg + two env vars.
 
 **ADR-6 · Redact all boundary-respecting occurrences of the selected text**
@@ -775,9 +784,20 @@ Each decision: context → decision → alternatives → consequences.
 - *Lesson:* an optimiser will happily learn your dataset's annotation holes — a guard set with complete labels is what catches it.
 
 **ADR-15 · 512 MB profile = small spaCy + GLiNER-edge**
-- *Context:* the pruned-`lg` + GLiNER combination is best on the gold set but peaks at ~431 MB, leaving too little headroom for OCR on 512 MB.
-- *Decision:* recommend `sm` + rules + GLiNER-edge for the free tier (215 MB, best public recall); pruned-`lg` + GLiNER for ≥ 1 GB.
-- *Trade-off:* a few more false alarms in exchange for recall and a large memory safety margin.
+- *Context:* the pruned-`lg` + GLiNER combination is ~1–1.5 points more accurate, but a whole scanned-PDF request peaks at ~640 MB (engine alone ~431 MB).
+- *Decision:* deploy `sm` + rules + GLiNER-edge on the free tier (engine ~215 MB, whole request ~445 MB, best public recall); pruned-`lg` + GLiNER on ≥ 1 GB hosts.
+- *Trade-off:* slightly lower gold-set accuracy in exchange for not being OOM-killed. ~70 MB headroom, so `MAX_CONCURRENT_JOBS=1`.
+
+**ADR-16 · Indian-format name recognition: fix the pipeline first, then add closed vocabularies**
+- *Context:* real uploads (resumes, KYC forms, screenshots) showed names missed and first names labelled LOCATION. An Indian-format suite confirmed it: name recall **52.9%**, and ~5% on ALL-CAPS documents.
+- *Decision:* (1) fix engine bugs that lost names regardless of model (see ADR-17); (2) re-read ALL-CAPS stretches in Title Case so the *same* NER models get a casing signal; (3) add `indian_names.py` — Indian first-name / surname lists, honorific, relation-marker (S/o, W/o, Son of) and colon-less field-label patterns, a "First Surname" rule for distinctively Indian surname endings, type correction (a known first name tagged LOCATION becomes PERSON) and a tech-term filter (React, PyMuPDF are not places).
+- *Evidence discipline:* a held-out set was written **after** the rules were frozen, with names deliberately absent from the lists (1 of 81 name words overlaps). Clean result: **54.5% → 80.5%** name recall on unseen names; the in-domain suite reaches 97.9% but overlaps the lists, so it is not the headline.
+- *Trade-off:* vocabularies need maintenance and cannot cover every name — context-free unseen names remain the main miss. The ML path past this is fine-tuning GLiNER-edge on Indian-name data (same 46 MB footprint), using an offline LLM labeller to build training data.
+
+**ADR-17 · Overlap resolution: union for people, specific beats generic**
+- *Context:* three bugs from first-match-wins resolution: Presidio de-duplication dropped an exact rule match contained in a sloppier NER span ("Ashwath Hegdekatte / Male / 29"); two detectors finding "Babu Naidu" (0.85) and "Suresh Babu Naidu" (0.75) left "Suresh" visible; a generic DATE guess (0.85) inside a validated UK NINO (0.65) won, so NINOs were missed on the deployed profile.
+- *Decision:* run the name recognizers outside Presidio's de-duplication; trim NER person spans at separators, digits and form labels; merge overlapping PERSON spans into their union; generic NER types (DATE_TIME, LOCATION, ORGANIZATION, NRP) take a 0.3 penalty when competing with an overlapping specific entity.
+- *Lesson:* model-agnostic plumbing bugs cost more recall than model choice — original-gold name recall went 84.4% → 96.9% mostly from these.
 
 ---
 
@@ -811,7 +831,7 @@ flowchart LR
 | Profile | Build | Runtime env | Use when |
 |---|---|---|---|
 | **Default** | `docker build .` | `SPACY_MODEL=/app/models/en_core_web_lg_pruned` | Any host; no model download (335 MB) |
-| **Best recall on 512 MB** (recommended for Railway free) | `--build-arg PII_PROFILE=edge` | `PII_MODEL_DIR=/app/models/gliner-pii-edge`, `SPACY_MODEL=en_core_web_sm`, `MAX_CONCURRENT_JOBS=1` | Railway free (215 MB) |
+| **Best recall on 512 MB** (recommended for Railway free) | `--build-arg PII_PROFILE=edge` | `PII_MODEL_DIR=/app/models/gliner-pii-edge`, `SPACY_MODEL=en_core_web_sm`, `MAX_CONCURRENT_JOBS=1` | Railway free (~445 MB peak per scanned-PDF request) |
 | **Best on gold** | `--build-arg PII_PROFILE=edge` | `PII_MODEL_DIR=/app/models/gliner-pii-edge` (keep pruned `lg`) | ≥ 1 GB (431 MB peak) |
 | **Max accuracy** | HF Space script | full `en_core_web_lg` + GLiNER | 16 GB Space |
 
@@ -840,7 +860,8 @@ Full list: `backend/README.md` → Configuration.
 ## 22. Known limitations
 
 - English-first detection; non-English names and addresses are weaker.
-- Remaining leak rate ≈ 9–11% in output files is **detection misses** (text-layer redaction itself is 0% in oracle tests): mainly bare city names, unusual ID formats, single-token names without context.
+- Remaining leak rate in output files is **detection misses** (text-layer redaction itself is 0% in oracle tests): mainly bare city names, unusual ID formats, single-token names without context.
+- Names never seen before with no surrounding context (a lone "Ojasvi", many North-Eastern names) — 80.5% name recall on the unseen-name held-out set before bug fixes. Lower-case surnames (social media, "Zevrin huang") are suggested for review, not pre-ticked.
 - OCR quality bounds scans and photos (1.7–2.5% leak even with perfect detection).
 - Entities that span a line break in extracted text are clipped to one line by design (prevents header/next-line merges) — a wrapped name can be partially caught.
 - DOCX page previews aren't rendered (no layout engine); a text preview is shown instead.
@@ -851,7 +872,7 @@ Full list: `backend/README.md` → Configuration.
 ## 23. Interview guide
 
 ### 60-second pitch
-> "Blacken is a privacy-first document redaction platform. It detects PII in PDFs, scans, Word files and images using a layered ensemble — checksum validators, label-anchored rules, spaCy NER and an optional GLiNER transformer I run on ONNX without PyTorch so it fits a 512 MB container. A human reviews the suggestions, then format-specific redactors physically remove the text and scrub metadata. I built an evaluation harness over 20,000 documents plus an end-to-end leakage test, which took recall from 76% to 94% at 96.5% precision and cut PII left in redacted Word forms from 74% to 9%."
+> "Blacken is a privacy-first document redaction platform. It detects PII in PDFs, scans, Word files and images using a layered ensemble — checksum validators, label-anchored rules, spaCy NER and an optional GLiNER transformer I run on ONNX without PyTorch so it fits a 512 MB container. A human reviews the suggestions, then format-specific redactors physically remove the text and scrub metadata. I built an evaluation harness over 20,000 documents plus an end-to-end leakage test, which took recall on a hand-annotated set from 76% to 95% at 96% precision, Indian-name recall from 53% to 98% (81% on unseen names), and cut PII left in redacted Word forms from 74% to 7%."
 
 ### Two-minute deep dive (pick one thread)
 1. **Measurement found the real bugs:** the oracle mode (feeding perfect entities to the redactor) proved DOCX tables were never visited — 66% leak with perfect detection. That's not a model problem, it's a traversal bug no accuracy metric would show.
@@ -866,6 +887,7 @@ Full list: `backend/README.md` → Configuration.
 - **How would you scale it?** Async jobs + worker pool, Postgres, object storage, Redis for limits/queue, model as a separate service — the in-process pieces are already isolated behind small interfaces.
 - **What's the biggest remaining risk?** Detection misses on context-free single tokens (a lone city name). Levers: the GLiNER profile (already +5–8 recall points), then threshold refits from reviewer feedback.
 - **How is user data protected?** Owner-scoped queries, encryption at rest, short retention, metadata scrubbing, masked audit logs, PII-free telemetry, non-root container, validated uploads, rate limits.
+- **Aren't the name fixes just hardcoded rules?** Partly — and I measured how much each kind contributed. The largest gain came from pipeline bugs (a de-duplication step deleting exact matches, overlapping detectors cutting names short), which are model-agnostic. The ALL-CAPS fix re-runs the same ML models on re-cased text. The vocabularies are the rule part; I tested them on a held-out set written after freezing them, with names not in the lists: 54.5% → 80.5%. On a 512 MB box that's the right first step; the ML step after it is fine-tuning the small transformer on Indian names.
 - **What would you do differently?** Build the evaluation harness first — it surfaced the cross-tenant bug, the missing Indian ID recognizers and the DOCX traversal bug, none of which a single accuracy number would have shown.
 
 ### War stories (bugs found by the harness)
@@ -875,14 +897,20 @@ Full list: `backend/README.md` → Configuration.
 4. **`id()` reuse (caught in my own fix)** — the first version of the new DOCX table traversal deduped cells by Python `id()` of lxml proxies; ids are reused after garbage collection, so later rows were silently skipped. The e2e oracle test caught it before it shipped.
 5. **Neighbour-line deletion** — PDF redaction boxes deleted words on adjacent lines; substring matching blacked out 22.8% of non-PII words.
 6. **Metric artifact** — RSS on macOS understated memory 2×; switched to physical footprint before making a deployment decision.
+7. **Benchmarks looked fine, users didn't** — real uploads missed Indian names and ALL-CAPS forms. A targeted suite showed 52.9% name recall (≈5% on ALL-CAPS) hidden behind good headline numbers.
+8. **De-duplication deleting the right answer** — Presidio drops a result contained in a higher-scoring one of the same type, so a sloppy NER span ("Ashwath Hegdekatte / Male / 29") erased the exact name match, and the bloated span then fell below the pre-tick threshold.
+9. **A date beat an ID** — on the deployed profile spaCy tagged "10 37" inside "JG 10 37 72 D" as a date at 0.85, outscoring the validated NINO; UK National Insurance numbers were silently not redacted in production.
+10. **Engine-only memory** — the deployment table quoted 215 MB for the engine; a whole scanned-PDF request peaks ~445 MB. Measured end to end before choosing a profile.
 
 ### Numbers cheat sheet
-- Gold set: **93.7% recall / 96.5% precision / 94.2% F2** (CI on recall 89.7–97.2).
-- Public: ai4privacy recall **59.3%** (+6.9 pts), Gretel **69.1%** (+7.0 pts).
-- Leakage: DOCX forms **74.3% → 9.2%**, PDF **18.5% → 10.4%**, false redactions **22.8% → 1.9%**, metadata **100% → 0%**.
-- Transformer (GLiNER-edge, 46 MB int8 ONNX): with pruned `lg` **+5.7 pts** ai4privacy recall and **+1.4** on gold; with small spaCy **+6.5 / +5.4 pts** on the held-out public test splits (65.8% / 74.5% recall) at **215 MB** total; gold recall 91.1% (−2.6 pts), leakage unchanged at 8.8–10.8% across formats.
+- Gold set, deployed profile: **94.9% recall / 95.9% precision / 95.1% F2** (was 91.1 / 94.8 / 91.8 before the name work; default profile 95.1 / 97.0).
+- Names: Indian-format suite **52.9% → 97.9%** recall; held-out unseen names **54.5% → 80.5%** (clean) → 89.6% after bug fixes; original-gold name recall **84.4% → 96.9%**.
+- Public held-out test splits, deployed profile: ai4privacy recall **66.8%** (from 52.4% originally), Gretel **75.5%** (from 62.1%).
+- Leakage (deployed profile, final): DOCX forms **74.3% → 7.2%**, PDF **18.5% → 7.2%**, scanned PDF **26.6% → 7.9%**, PNG **29.8% → 7.9%**, PDF false redactions **22.8% → 2.6%**, metadata **100% → 0%**.
+- Transformer (GLiNER-edge, 46 MB int8 ONNX): with pruned `lg` **+5.7 pts** ai4privacy recall and **+1.4** on gold; with small spaCy **+6.5 / +5.4 pts** on the held-out public test splits (65.8% / 74.5% recall) at **~215 MB** engine / **~445 MB** whole-request peak; gold recall 91.1% (−2.6 pts), leakage unchanged at 8.8–10.8% across formats.
 - Rejected with evidence: dev-fitted thresholds (gold recall −4.3 pts), 300 DPI OCR (no gain, 2.25× memory).
-- Speed: **~40k chars/s**, 5-page PDF round trip **~0.6 s**, live server-side **~85 ms** with the transformer on (0 errors).
+- Speed: **~40k chars/s** default profile; deployed profile ~2.2–2.7k chars/s locally (ALL-CAPS re-read adds +7% p50 / +36% p95 on short docs, +32% p50 on long ones); live server-side **~85 ms** per small PDF (0 errors).
+- Memory: deployed engine ~215 MB; **whole scanned-PDF request ~445 MB** of 512 MB.
 - Scale of evaluation: **~20k documents, ~27k entities**.
 
 ---

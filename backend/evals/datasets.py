@@ -189,8 +189,49 @@ def load(name: str, split: str = "test", limit: Optional[int] = None, seed: int 
         return load_gretel(split, limit, seed)
     if name == "blacken_gold":
         return _subsample(load_blacken_gold(), limit, seed)
+    if name == "indian_gold":
+        return _subsample(load_indian_gold(), limit, seed)
+    if name == "indian_heldout":
+        # Written after the name rules were frozen, with names chosen to be
+        # absent from app/detection/indian_names.py - measures generalisation.
+        return _subsample(load_indian_gold(DATA_DIR / "indian_heldout.txt", "indian_heldout"), limit, seed)
     raise ValueError(f"unknown dataset {name!r}")
 
 
 def iter_core_spans(sample: Sample) -> Iterator[GoldSpan]:
     return (s for s in sample.spans if s[2] != IGNORE)
+
+
+# Documents in these domains are commonly printed / scanned in ALL CAPS (KYC
+# forms, IDs, tickets), so each is also evaluated as an upper-cased twin.
+_CAPS_TWIN_DOMAINS = {"kyc", "legal", "hr", "education", "medical", "travel", "finance", "ocr", "negative"}
+
+
+def load_indian_gold(path: Optional[Path] = None, dataset: str = "indian_gold") -> List[Sample]:
+    """Indian-format documents (KYC, rent/affidavit text with S/o and W/o,
+    payslips, ID/OCR-style run-on text, chats) with hard negatives such as
+    "Jawaharlal Nehru Port". Written to expose name-recognition failures on
+    Indian names; each forms-style document also appears as an ALL-CAPS twin
+    (`-caps`). Only PERSON is annotated carefully - addresses and dates are
+    IGNORE - so read the PERSON per-class numbers, not the overall token rate.
+    Honorifics (Mr, Dr, Smt, Shri, Late) are outside the name span."""
+    path = path or DATA_DIR / "indian_gold.txt"
+    raw = path.read_text(encoding="utf-8")
+    headers = list(_HEADER.finditer(raw))
+    samples: List[Sample] = []
+    for i, h in enumerate(headers):
+        body_end = headers[i + 1].start() if i + 1 < len(headers) else len(raw)
+        text, spans = parse_markup(raw[h.end() : body_end].strip("\n"))
+        domain = h.group("domain")
+        samples.append(Sample(id=h.group("id"), text=text, spans=spans, dataset=dataset, meta={"domain": domain}))
+        if domain in _CAPS_TWIN_DOMAINS:
+            samples.append(
+                Sample(
+                    id=h.group("id") + "-caps",
+                    text=text.upper(),  # ASCII only, so every offset is unchanged
+                    spans=spans,
+                    dataset=dataset,
+                    meta={"domain": domain + "-caps"},
+                )
+            )
+    return samples

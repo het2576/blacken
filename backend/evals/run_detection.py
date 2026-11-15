@@ -29,6 +29,7 @@ DEFAULT_MODEL = os.environ.get(
     "SPACY_MODEL", str(Path(__file__).resolve().parent.parent / "models" / "en_core_web_lg_pruned")
 )
 ALL_DATASETS = ("blacken_gold", "ai4privacy", "gretel")
+CHOICES = ALL_DATASETS + ("indian_gold", "indian_heldout")  # indian_gold is opt-in (name-recognition suite)
 
 
 def to_spans(entities):
@@ -114,7 +115,7 @@ def print_summary(name, res):
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument("--datasets", nargs="+", default=list(ALL_DATASETS), choices=ALL_DATASETS)
+    ap.add_argument("--datasets", nargs="+", default=list(ALL_DATASETS), choices=CHOICES)
     ap.add_argument("--split", default="test", choices=("dev", "test"))
     ap.add_argument("--limit", type=int, default=None, help="random subsample per dataset (seeded)")
     ap.add_argument("--model", default=DEFAULT_MODEL)
@@ -144,11 +145,11 @@ def main(argv=None):
         "calibrated_thresholds": bool(engine.auto_select_thresholds),
         "datasets": {},
     }
-    group_keys = {"blacken_gold": "domain", "gretel": "document_type", "ai4privacy": "locale"}
+    group_keys = {"blacken_gold": "domain", "indian_gold": "domain", "indian_heldout": "domain", "gretel": "document_type", "ai4privacy": "locale"}
 
     for name in args.datasets:
-        if name == "blacken_gold" and args.split == "dev":
-            print("[evals] blacken_gold is test-only; skipping on dev split")
+        if name in ("blacken_gold", "indian_gold", "indian_heldout") and args.split == "dev":
+            print(f"[evals] {name} is test-only; skipping on dev split")
             continue
         samples = ds.load(name, split=args.split, limit=args.limit)
         res = evaluate_dataset(engine, samples, bootstrap=args.bootstrap, group_key=group_keys[name])

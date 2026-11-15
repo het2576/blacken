@@ -98,6 +98,101 @@ def e2e_table(before, after):
     return "\n".join(rows)
 
 
+def _get(res, dataset, *path):
+    try:
+        r = res["datasets"][dataset]["auto"]
+        for p in path:
+            r = r[p]
+        return r
+    except (KeyError, TypeError):
+        return None
+
+
+def names_update_section():
+    """Name-recognition work on the deployed profile (sm + rules + GLiNER-edge):
+    before = code at the previous commit, v1 = name rules frozen before the
+    held-out set was written, final = after the engine bug fixes."""
+    before = _load("detection_test_names_before_F.json")  # indian suites, old code
+    v1 = _load("detection_test_names_v1_F.json")  # held-out, frozen rules
+    final = _load("detection_test_names_final_F.json")
+    old_main = _load("detection_test_final_F.json")  # gold + public, old code
+    pub_new = _load("detection_test_names_final_F_public.json")
+    if not (before and final):
+        return []
+    rows = ["| Test set | Metric | Before | After |", "|---|---|---:|---:|"]
+
+    def row(label, metric, b, a):
+        rows.append(f"| {label} | {metric} | {pct(b)} | **{pct(a)}** |")
+
+    row("Indian-format docs (67 incl. ALL-CAPS twins)", "Name recall",
+        _get(before, "indian_gold", "per_class", "PERSON", "recall"), _get(final, "indian_gold", "per_class", "PERSON", "recall"))
+    row("Indian-format docs", "Name precision",
+        _get(before, "indian_gold", "per_class", "PERSON", "precision"), _get(final, "indian_gold", "per_class", "PERSON", "precision"))
+    hb = _get(before, "indian_heldout", "per_class", "PERSON", "recall")
+    hv = _get(v1, "indian_heldout", "per_class", "PERSON", "recall") if v1 else None
+    hf = _get(final, "indian_heldout", "per_class", "PERSON", "recall")
+    rows.append(f"| **Held-out Indian names (unseen, 35 docs)** | Name recall | {pct(hb)} | **{pct(hv)}** frozen rules → {pct(hf)} after bug fixes* |")
+    if old_main:
+        for metric, path in (("Token recall", ("token", "recall")), ("Token precision", ("token", "precision")),
+                             ("Token F2", ("token", "f2")), ("Name recall", ("per_class", "PERSON", "recall")),
+                             ("Strict F1", ("strict", "f1"))):
+            row("Blacken gold (44 docs)", metric, _get(old_main, "blacken_gold", *path), _get(final, "blacken_gold", *path))
+        if pub_new:
+            for ds in ("ai4privacy", "gretel"):
+                for metric, path in (("Token recall", ("token", "recall")), ("Token precision", ("token", "precision"))):
+                    row(NAMES.get(ds, ds), metric, _get(old_main, ds, *path), _get(pub_new, ds, *path))
+    out = ["## Name recognition update — deployed profile (small spaCy + rules + GLiNER-edge)", "",
+           "Real uploads showed Indian names, ALL-CAPS forms and resume headers being missed, and first names "
+           "labelled LOCATION/ORGANIZATION. Fixes: engine bugs (Presidio de-duplication erasing exact name matches, "
+           "overlapping detectors cutting names short, generic date guesses beating validated IDs, name runs "
+           "crossing sentence ends), an ALL-CAPS re-read for the NER models, Indian name / honorific / relation "
+           "(S/o, W/o) / field-label recognizers (`app/detection/indian_names.py`), type correction and tech-term "
+           "filtering. Auto-selected entities.", "", *rows, "",
+           "\\* The held-out set (`evals/data/indian_heldout.txt`) was written after the name rules were frozen, with "
+           "names absent from the name lists (1 of 81 name words overlaps). The frozen-rules number is the clean "
+           "generalisation estimate; the final number is slightly optimistic because two engine bugs were found by "
+           "debugging held-out misses and one field label it contains was added.", ""]
+    if old_main and pub_new:
+        lat = []
+        for ds in ("ai4privacy", "gretel"):
+            a, b = old_main["datasets"].get(ds, {}).get("latency"), pub_new["datasets"].get(ds, {}).get("latency")
+            if a and b:
+                lat.append(f"{NAMES.get(ds, ds)} (mean {b['mean_chars']:.0f} chars): p50 {a['p50_ms']:.0f} → {b['p50_ms']:.0f} ms, "
+                           f"p95 {a['p95_ms']:.0f} → {b['p95_ms']:.0f} ms")
+        if lat:
+            out += ["Speed cost (detection per document, Apple Silicon): " + "; ".join(lat) + ". The ALL-CAPS re-read "
+                    "runs the NER models a second time on documents with capitalised stretches, so long documents pay most.", ""]
+    e_old, e_new = _load("e2e_final_F.json"), _load("e2e_names_final_F.json")
+    if e_old and e_new:
+        out += ["End-to-end leakage (gold documents as real files), before → after:", "",
+                "| Format | Leak rate | Over-redaction |", "|---|---:|---:|"]
+        for fmt, n in e_new["formats"].items():
+            o = e_old["formats"].get(fmt, {})
+            out.append(f"| {fmt} | {pct(o.get('leak_rate_auto'))} → **{pct(n['leak_rate_auto'])}** | "
+                       f"{pct(o.get('over_redaction_rate'))} → {pct(n['over_redaction_rate'])} |")
+        out.append("")
+    prof = [("Deployed: small spaCy + rules + GLiNER-edge", "names_final_F", "F_sm_edge_ner"),
+            ("Pruned lg spaCy + rules + GLiNER-edge", "names_final_B", "B_lgpruned_edge"),
+            ("Pruned lg spaCy + rules (no transformer)", "names_final_A", None)]
+    mem = (_load("memory_request.json") or {}).get("configs", {})
+    prow = ["| Profile | Gold R / P | Held-out names R | Indian names R | Peak memory, scanned-PDF request |",
+            "|---|---:|---:|---:|---:|"]
+    for label, tag, mkey in prof:
+        r = _load(f"detection_test_{tag}.json")
+        if not r:
+            continue
+        m = mem.get(mkey or "", {})
+        peak = f"{m['peak_scanned_5p_mb']} MB" if m else "–"
+        prow.append(f"| {label} | {pct(_get(r, 'blacken_gold', 'token', 'recall'))} / {pct(_get(r, 'blacken_gold', 'token', 'precision'))} | "
+                    f"{pct(_get(r, 'indian_heldout', 'per_class', 'PERSON', 'recall'))} | "
+                    f"{pct(_get(r, 'indian_gold', 'per_class', 'PERSON', 'recall'))} | {peak} |")
+    if len(prow) > 2:
+        out += ["Profiles on the final code. Memory is the whole app plus Tesseract during a scanned-PDF upload "
+                "(`results/memory_request.json`) — the number a container limit sees. Pruned-lg + GLiNER is ~1–1.5 pts "
+                "more accurate but peaks ~640 MB, so it does not fit a 512 MB host.", "", *prow, ""]
+    return out
+
+
 def main():
     final = _load("detection_test_final.json")
     base_gold = _load("detection_test_baseline.json")
@@ -110,6 +205,7 @@ def main():
     parts = ["# Blacken evaluation results", "",
              "Generated by `python -m evals.report` from `evals/results/*.json`. "
              "Methodology and caveats: `evals/README.md`.", ""]
+    parts += names_update_section()
 
     if final:
         parts += ["## Detection quality — production model, auto-selected entities (one-click redaction)", "",

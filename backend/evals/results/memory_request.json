@@ -1,0 +1,17 @@
+{
+  "_comment": "Whole-process memory for a real request, measured 2026-11-15 on Apple Silicon: the FastAPI app (macOS phys_footprint) plus Tesseract child processes (RSS), sampled every 100 ms while uploading, redacting and downloading a scanned PDF (pages rasterised at 200 DPI) with MAX_CONCURRENT_JOBS=1. This is what a container memory limit sees; the engine-only numbers in memory.json are lower. Linux numbers on the host may differ somewhat - watch the platform memory graph. Script: scratchpad mem_request.py (TestClient + footprint/ps sampling).",
+  "configs": {
+    "F_sm_edge_ner": {
+      "label": "spaCy sm + rules + GLiNER-edge (deployed)",
+      "idle_mb": 256,
+      "peak_scanned_1p_mb": 433,
+      "peak_scanned_5p_mb": 445
+    },
+    "B_lgpruned_edge": {
+      "label": "spaCy lg-pruned + rules + GLiNER-edge",
+      "idle_mb": 495,
+      "peak_scanned_1p_mb": 642,
+      "peak_scanned_5p_mb": 640
+    }
+  }
+}

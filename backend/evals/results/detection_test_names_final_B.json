@@ -1,0 +1,2308 @@
+{
+  "split": "test",
+  "model": "en_core_web_lg_pruned",
+  "pii_model": "gliner-pii-edge",
+  "pii_threshold": 0.5,
+  "spacy_ner": true,
+  "calibrated_thresholds": false,
+  "datasets": {
+    "indian_heldout": {
+      "detected": {
+        "documents": 35,
+        "gold_entities": 81,
+        "predicted_entities": 97,
+        "token": {
+          "precision": 0.8571428571428571,
+          "recall": 0.9570552147239264,
+          "f1": 0.9043478260869565,
+          "f2": 0.935251798561151,
+          "tp": 156,
+          "fp": 26,
+          "fn": 7
+        },
+        "overlap": {
+          "precision": 0.8041237113402062,
+          "recall": 0.9629629629629629,
+          "missed": 3,
+          "false_alarms": 19,
+          "f1": 0.8764044943820225,
+          "f2": 0.9263657957244654
+        },
+        "full_coverage_recall": 0.9629629629629629,
+        "strict": {
+          "precision": 0.7731958762886598,
+          "recall": 0.9259259259259259,
+          "f1": 0.8426966292134831,
+          "f2": 0.8907363420427553,
+          "tp": 75,
+          "fp": 22,
+          "fn": 6
+        },
+        "per_class": {
+          "ADDRESS": {
+            "gold": 0,
+            "pred": 6,
+            "recall": null,
+            "full_coverage_recall": null,
+            "precision": 0.0,
+            "strict_recall": null
+          },
+          "AGE": {
+            "gold": 0,
+            "pred": 2,
+            "recall": null,
+            "full_coverage_recall": null,
+            "precision": 0.0,
+            "strict_recall": null
+          },
+          "DATE": {
+            "gold": 0,
+            "pred": 2,
+            "recall": null,
+            "full_coverage_recall": null,
+            "precision": 0.0,
+            "strict_recall": null
+          },
+          "FINANCIAL": {
+            "gold": 0,
+            "pred": 2,
+            "recall": null,
+            "full_coverage_recall": null,
+            "precision": 0.0,
+            "strict_recall": null
+          },
+          "GOV_ID": {
+            "gold": 2,
+            "pred": 4,
+            "recall": 1.0,
+            "full_coverage_recall": 1.0,
+            "precision": 1.0,
+            "strict_recall": 1.0,
+            "f1": 1.0,
+            "f2": 1.0
+          },
+          "OTHER_ID": {
+            "gold": 0,
+            "pred": 2,
+            "recall": null,
+            "full_coverage_recall": null,
+            "precision": 0.0,
+            "strict_recall": null
+          },
+          "PERSON": {
+            "gold": 77,
+            "pred": 79,
+            "recall": 0.961038961038961,
+            "full_coverage_recall": 0.961038961038961,
+            "precision": 0.9367088607594937,
+            "strict_recall": 0.948051948051948,
+            "f1": 0.9487179487179488,
+            "f2": 0.9560723514211886
+          },
+          "PHONE": {
+            "gold": 2,
+            "pred": 0,
+            "recall": 1.0,
+            "full_coverage_recall": 1.0,
+            "precision": null,
+            "strict_recall": 0.0
+          }
+        },
+        "negative_documents": 2,
+        "negative_false_alarm_rate": 1.0,
+        "top_misses": [
+          [
+            "PERSON",
+            "CHINGLEN NINGTHOUJA",
+            1
+          ],
+          [
+            "PERSON",
+            "MELWYN D'SOUZA",
+            1
+          ],
+          [
+            "PERSON",
+            "Tanmoy Chakladar",
+            1
+          ]
+        ],
+        "top_false_alarms": [
+          [
+            "FINANCIAL",
+            "31220984411",
+            2
+          ],
+          [
+            "AGE",
+            "38",
+            2
+          ],
+          [
+            "OTHER_ID",
+            "4471209",
+            2
+          ],
+          [
+            "DATE",
+            "47 years",
+            1
+          ],
+          [
+            "ADDRESS",
+            "DR",
+            1
+          ],
+          [
+            "PERSON",
+            "VIA UPI",
+            1
+          ],
+          [
+            "DATE",
+            "tomorrow",
+            1
+          ],
+          [
+            "ADDRESS",
+            "Kaziranga",
+            1
+          ],
+          [
+            "PERSON",
+            "Hornbill",
+            1
+          ],
+          [
+            "ADDRESS",
+            "Kohima",
+            1
+          ],
+          [
+            "PERSON",
+            "Maharaj Terminus",
+            1
+          ],
+          [
+            "ADDRESS",
+            "Mysore Pak",
+            1
+          ],
+          [
+            "PERSON",
+            "Basmati",
+            1
+          ],
+          [
+            "ADDRESS",
+            "Daawat",
+            1
+          ],
+          [
+            "ADDRESS",
+            "KAZIRANGA",
+            1
+          ],
+          [
+            "PERSON",
+            "SHIVAJI MAHARAJ TERMINUS",
+            1
+          ]
+        ],
+        "ci95": {
+          "token_precision": [
+            0.7386934673366834,
+            0.9411764705882353
+          ],
+          "token_recall": [
+            0.9085365853658537,
+            1.0
+          ],
+          "token_f1": [
+            0.8304093567251462,
+            0.9557522123893805
+          ],
+          "token_f2": [
+            0.8863920099875158,
+            0.9746251441753171
+          ],
+          "overlap_recall": [
+            0.922077922077922,
+            1.0
+          ],
+          "overlap_precision": [
+            0.6545454545454545,
+            0.9101123595505618
+          ]
+        },
+        "organization": {
+          "gold": 0,
+          "recall": 0.0,
+          "precision": 0.0
+        },
+        "by_group": {
+          "chat": {
+            "documents": 1,
+            "token_recall": 0.6,
+            "token_precision": 0.75,
+            "entity_recall": 0.6666666666666666
+          },
+          "education": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 0.8,
+            "entity_recall": 1.0
+          },
+          "education-caps": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 0.8,
+            "entity_recall": 1.0
+          },
+          "finance": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "finance-caps": {
+            "documents": 1,
+            "token_recall": 0.4,
+            "token_precision": 0.5,
+            "entity_recall": 0.5
+          },
+          "hr": {
+            "documents": 3,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "hr-caps": {
+            "documents": 3,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "kyc": {
+            "documents": 4,
+            "token_recall": 1.0,
+            "token_precision": 0.9473684210526315,
+            "entity_recall": 1.0
+          },
+          "kyc-caps": {
+            "documents": 4,
+            "token_recall": 1.0,
+            "token_precision": 0.9,
+            "entity_recall": 1.0
+          },
+          "legal": {
+            "documents": 3,
+            "token_recall": 1.0,
+            "token_precision": 0.9473684210526315,
+            "entity_recall": 1.0
+          },
+          "legal-caps": {
+            "documents": 3,
+            "token_recall": 0.8888888888888888,
+            "token_precision": 0.9411764705882353,
+            "entity_recall": 0.875
+          },
+          "medical": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 0.6666666666666666,
+            "entity_recall": 1.0
+          },
+          "medical-caps": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 0.8,
+            "entity_recall": 1.0
+          },
+          "negative": {
+            "documents": 1,
+            "token_recall": 0.0,
+            "token_precision": 0.0,
+            "entity_recall": 0.0
+          },
+          "negative-caps": {
+            "documents": 1,
+            "token_recall": 0.0,
+            "token_precision": 0.0,
+            "entity_recall": 0.0
+          },
+          "ocr": {
+            "documents": 2,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "ocr-caps": {
+            "documents": 2,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "travel": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "travel-caps": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          }
+        }
+      },
+      "auto": {
+        "documents": 35,
+        "gold_entities": 81,
+        "predicted_entities": 86,
+        "token": {
+          "precision": 0.8963414634146342,
+          "recall": 0.901840490797546,
+          "f1": 0.8990825688073395,
+          "f2": 0.9007352941176469,
+          "tp": 147,
+          "fp": 17,
+          "fn": 16
+        },
+        "overlap": {
+          "precision": 0.8604651162790697,
+          "recall": 0.9135802469135802,
+          "missed": 7,
+          "false_alarms": 12,
+          "f1": 0.8862275449101796,
+          "f2": 0.9024390243902438
+        },
+        "full_coverage_recall": 0.9135802469135802,
+        "strict": {
+          "precision": 0.8255813953488372,
+          "recall": 0.8765432098765432,
+          "f1": 0.8502994011976048,
+          "f2": 0.8658536585365855,
+          "tp": 71,
+          "fp": 15,
+          "fn": 10
+        },
+        "per_class": {
+          "ADDRESS": {
+            "gold": 0,
+            "pred": 5,
+            "recall": null,
+            "full_coverage_recall": null,
+            "precision": 0.0,
+            "strict_recall": null
+          },
+          "AGE": {
+            "gold": 0,
+            "pred": 2,
+            "recall": null,
+            "full_coverage_recall": null,
+            "precision": 0.0,
+            "strict_recall": null
+          },
+          "FINANCIAL": {
+            "gold": 0,
+            "pred": 2,
+            "recall": null,
+            "full_coverage_recall": null,
+            "precision": 0.0,
+            "strict_recall": null
+          },
+          "GOV_ID": {
+            "gold": 2,
+            "pred": 4,
+            "recall": 1.0,
+            "full_coverage_recall": 1.0,
+            "precision": 1.0,
+            "strict_recall": 1.0,
+            "f1": 1.0,
+            "f2": 1.0
+          },
+          "OTHER_ID": {
+            "gold": 0,
+            "pred": 1,
+            "recall": null,
+            "full_coverage_recall": null,
+            "precision": 0.0,
+            "strict_recall": null
+          },
+          "PERSON": {
+            "gold": 77,
+            "pred": 72,
+            "recall": 0.9090909090909091,
+            "full_coverage_recall": 0.9090909090909091,
+            "precision": 0.9722222222222222,
+            "strict_recall": 0.8961038961038961,
+            "f1": 0.9395973154362416,
+            "f2": 0.9210526315789473
+          },
+          "PHONE": {
+            "gold": 2,
+            "pred": 0,
+            "recall": 1.0,
+            "full_coverage_recall": 1.0,
+            "precision": null,
+            "strict_recall": 0.0
+          }
+        },
+        "negative_documents": 2,
+        "negative_false_alarm_rate": 1.0,
+        "top_misses": [
+          [
+            "PERSON",
+            "CHINGLEN NINGTHOUJA",
+            1
+          ],
+          [
+            "PERSON",
+            "WASIM AHMAD LONE",
+            1
+          ],
+          [
+            "PERSON",
+            "Anbarasan Thangavel",
+            1
+          ],
+          [
+            "PERSON",
+            "ANBARASAN THANGAVEL",
+            1
+          ],
+          [
+            "PERSON",
+            "PRITAM MAJHI",
+            1
+          ],
+          [
+            "PERSON",
+            "MELWYN D'SOUZA",
+            1
+          ],
+          [
+            "PERSON",
+            "Tanmoy Chakladar",
+            1
+          ]
+        ],
+        "top_false_alarms": [
+          [
+            "FINANCIAL",
+            "31220984411",
+            2
+          ],
+          [
+            "AGE",
+            "38",
+            2
+          ],
+          [
+            "OTHER_ID",
+            "4471209",
+            1
+          ],
+          [
+            "ADDRESS",
+            "Kaziranga",
+            1
+          ],
+          [
+            "ADDRESS",
+            "Kohima",
+            1
+          ],
+          [
+            "PERSON",
+            "Maharaj Terminus",
+            1
+          ],
+          [
+            "ADDRESS",
+            "Mysore Pak",
+            1
+          ],
+          [
+            "ADDRESS",
+            "Daawat",
+            1
+          ],
+          [
+            "ADDRESS",
+            "KAZIRANGA",
+            1
+          ],
+          [
+            "PERSON",
+            "SHIVAJI MAHARAJ TERMINUS",
+            1
+          ]
+        ],
+        "ci95": {
+          "token_precision": [
+            0.7885714285714286,
+            0.9754601226993865
+          ],
+          "token_recall": [
+            0.8353658536585366,
+            0.9653179190751445
+          ],
+          "token_f1": [
+            0.8364779874213836,
+            0.9476744186046511
+          ],
+          "token_f2": [
+            0.841346153846154,
+            0.9505208333333331
+          ],
+          "overlap_recall": [
+            0.8571428571428571,
+            0.9662921348314607
+          ],
+          "overlap_precision": [
+            0.7294117647058823,
+            0.9629629629629629
+          ]
+        },
+        "organization": {
+          "gold": 0,
+          "recall": 0.0,
+          "precision": 0.0
+        },
+        "by_group": {
+          "chat": {
+            "documents": 1,
+            "token_recall": 0.6,
+            "token_precision": 1.0,
+            "entity_recall": 0.6666666666666666
+          },
+          "education": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 0.8,
+            "entity_recall": 1.0
+          },
+          "education-caps": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "finance": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "finance-caps": {
+            "documents": 1,
+            "token_recall": 0.4,
+            "token_precision": 1.0,
+            "entity_recall": 0.5
+          },
+          "hr": {
+            "documents": 3,
+            "token_recall": 0.8888888888888888,
+            "token_precision": 1.0,
+            "entity_recall": 0.8888888888888888
+          },
+          "hr-caps": {
+            "documents": 3,
+            "token_recall": 0.7777777777777778,
+            "token_precision": 1.0,
+            "entity_recall": 0.7777777777777778
+          },
+          "kyc": {
+            "documents": 4,
+            "token_recall": 1.0,
+            "token_precision": 0.9473684210526315,
+            "entity_recall": 1.0
+          },
+          "kyc-caps": {
+            "documents": 4,
+            "token_recall": 1.0,
+            "token_precision": 0.9,
+            "entity_recall": 1.0
+          },
+          "legal": {
+            "documents": 3,
+            "token_recall": 1.0,
+            "token_precision": 0.9473684210526315,
+            "entity_recall": 1.0
+          },
+          "legal-caps": {
+            "documents": 3,
+            "token_recall": 0.7222222222222222,
+            "token_precision": 0.9285714285714286,
+            "entity_recall": 0.75
+          },
+          "medical": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "medical-caps": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "negative": {
+            "documents": 1,
+            "token_recall": 0.0,
+            "token_precision": 0.0,
+            "entity_recall": 0.0
+          },
+          "negative-caps": {
+            "documents": 1,
+            "token_recall": 0.0,
+            "token_precision": 0.0,
+            "entity_recall": 0.0
+          },
+          "ocr": {
+            "documents": 2,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "ocr-caps": {
+            "documents": 2,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "travel": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "travel-caps": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          }
+        }
+      },
+      "latency": {
+        "docs": 35,
+        "mean_chars": 98.68571428571428,
+        "p50_ms": 56.810749985743314,
+        "p95_ms": 93.53725000983104,
+        "p99_ms": 116.18520796764642,
+        "chars_per_sec": 1643.3696685467985
+      }
+    },
+    "indian_gold": {
+      "detected": {
+        "documents": 67,
+        "gold_entities": 174,
+        "predicted_entities": 219,
+        "token": {
+          "precision": 0.8344370860927153,
+          "recall": 0.9818181818181818,
+          "f1": 0.9021479713603819,
+          "f2": 0.9483191169091822,
+          "tp": 378,
+          "fp": 75,
+          "fn": 7
+        },
+        "overlap": {
+          "precision": 0.771689497716895,
+          "recall": 0.9712643678160919,
+          "missed": 5,
+          "false_alarms": 50,
+          "f1": 0.8600508905852416,
+          "f2": 0.9234972677595628
+        },
+        "full_coverage_recall": 0.9712643678160919,
+        "strict": {
+          "precision": 0.6712328767123288,
+          "recall": 0.8448275862068966,
+          "f1": 0.7480916030534351,
+          "f2": 0.8032786885245902,
+          "tp": 147,
+          "fp": 72,
+          "fn": 27
+        },
+        "per_class": {
+          "ADDRESS": {
+            "gold": 0,
+            "pred": 18,
+            "recall": null,
+            "full_coverage_recall": null,
+            "precision": 0.0,
+            "strict_recall": null
+          },
+          "AGE": {
+            "gold": 0,
+            "pred": 2,
+            "recall": null,
+            "full_coverage_recall": null,
+            "precision": 0.0,
+            "strict_recall": null
+          },
+          "DATE": {
+            "gold": 0,
+            "pred": 5,
+            "recall": null,
+            "full_coverage_recall": null,
+            "precision": 0.0,
+            "strict_recall": null
+          },
+          "EMAIL": {
+            "gold": 7,
+            "pred": 7,
+            "recall": 1.0,
+            "full_coverage_recall": 1.0,
+            "precision": 1.0,
+            "strict_recall": 1.0,
+            "f1": 1.0,
+            "f2": 1.0
+          },
+          "FINANCIAL": {
+            "gold": 0,
+            "pred": 2,
+            "recall": null,
+            "full_coverage_recall": null,
+            "precision": 1.0,
+            "strict_recall": null
+          },
+          "GOV_ID": {
+            "gold": 14,
+            "pred": 10,
+            "recall": 0.7142857142857143,
+            "full_coverage_recall": 0.7142857142857143,
+            "precision": 0.8,
+            "strict_recall": 0.5714285714285714,
+            "f1": 0.7547169811320756,
+            "f2": 0.7299270072992701
+          },
+          "NETWORK": {
+            "gold": 0,
+            "pred": 2,
+            "recall": null,
+            "full_coverage_recall": null,
+            "precision": 0.0,
+            "strict_recall": null
+          },
+          "OTHER_ID": {
+            "gold": 0,
+            "pred": 3,
+            "recall": null,
+            "full_coverage_recall": null,
+            "precision": 0.0,
+            "strict_recall": null
+          },
+          "PERSON": {
+            "gold": 140,
+            "pred": 155,
+            "recall": 0.9928571428571429,
+            "full_coverage_recall": 0.9928571428571429,
+            "precision": 0.896774193548387,
+            "strict_recall": 0.85,
+            "f1": 0.9423728813559321,
+            "f2": 0.972027972027972
+          },
+          "PHONE": {
+            "gold": 13,
+            "pred": 15,
+            "recall": 1.0,
+            "full_coverage_recall": 1.0,
+            "precision": 0.8666666666666667,
+            "strict_recall": 1.0,
+            "f1": 0.9285714285714286,
+            "f2": 0.9701492537313434
+          }
+        },
+        "negative_documents": 8,
+        "negative_false_alarm_rate": 1.0,
+        "top_misses": [
+          [
+            "GOV_ID",
+            "KA0120190012345",
+            2
+          ],
+          [
+            "GOV_ID",
+            "LIC4402198",
+            2
+          ],
+          [
+            "PERSON",
+            "MADHAVI LATHA REDDY",
+            1
+          ]
+        ],
+        "top_false_alarms": [
+          [
+            "PERSON",
+            "MR",
+            2
+          ],
+          [
+            "AGE",
+            "52",
+            2
+          ],
+          [
+            "PERSON",
+            "SLIP",
+            2
+          ],
+          [
+            "OTHER_ID",
+            "E20411",
+            2
+          ],
+          [
+            "PERSON",
+            "DR",
+            2
+          ],
+          [
+            "ADDRESS",
+            "DR",
+            2
+          ],
+          [
+            "PHONE",
+            "4521897365",
+            2
+          ],
+          [
+            "PERSON",
+            "GSTIN",
+            2
+          ],
+          [
+            "ADDRESS",
+            "Navrangpura",
+            1
+          ],
+          [
+            "PERSON",
+            "SHRI",
+            1
+          ],
+          [
+            "ADDRESS",
+            "ANALYST",
+            1
+          ],
+          [
+            "NETWORK",
+            "RS. 72",
+            1
+          ],
+          [
+            "ADDRESS",
+            "400",
+            1
+          ],
+          [
+            "DATE",
+            "ATTENDANCE",
+            1
+          ],
+          [
+            "NETWORK",
+            "B.Tech",
+            1
+          ],
+          [
+            "OTHER_ID",
+            "2210456",
+            1
+          ],
+          [
+            "PERSON",
+            "MARKSHEET",
+            1
+          ],
+          [
+            "DATE",
+            "61 years",
+            1
+          ],
+          [
+            "DATE",
+            "yesterday",
+            1
+          ],
+          [
+            "PERSON",
+            "Friday",
+            1
+          ],
+          [
+            "ADDRESS",
+            "Jawaharlal Nehru Port",
+            1
+          ],
+          [
+            "PERSON",
+            "Monday",
+            1
+          ],
+          [
+            "ADDRESS",
+            "Mahatma Gandhi Road",
+            1
+          ],
+          [
+            "ADDRESS",
+            "Rajiv Chowk",
+            1
+          ],
+          [
+            "ADDRESS",
+            "NEHRU",
+            1
+          ]
+        ],
+        "ci95": {
+          "token_precision": [
+            0.7622222222222222,
+            0.893970893970894
+          ],
+          "token_recall": [
+            0.9615384615384616,
+            0.9971830985915493
+          ],
+          "token_f1": [
+            0.8583941605839416,
+            0.9366786140979688
+          ],
+          "token_f2": [
+            0.9244791666666667,
+            0.9674418604651163
+          ],
+          "overlap_recall": [
+            0.9453551912568307,
+            0.9939024390243902
+          ],
+          "overlap_precision": [
+            0.6785714285714286,
+            0.8522167487684729
+          ]
+        },
+        "organization": {
+          "gold": 8,
+          "recall": 0.375,
+          "precision": 0.08823529411764706
+        },
+        "by_group": {
+          "chat": {
+            "documents": 3,
+            "token_recall": 1.0,
+            "token_precision": 0.92,
+            "entity_recall": 1.0
+          },
+          "education": {
+            "documents": 3,
+            "token_recall": 1.0,
+            "token_precision": 0.9285714285714286,
+            "entity_recall": 1.0
+          },
+          "education-caps": {
+            "documents": 3,
+            "token_recall": 1.0,
+            "token_precision": 0.9285714285714286,
+            "entity_recall": 1.0
+          },
+          "finance": {
+            "documents": 2,
+            "token_recall": 1.0,
+            "token_precision": 0.8181818181818182,
+            "entity_recall": 1.0
+          },
+          "finance-caps": {
+            "documents": 2,
+            "token_recall": 1.0,
+            "token_precision": 0.8181818181818182,
+            "entity_recall": 1.0
+          },
+          "hr": {
+            "documents": 4,
+            "token_recall": 1.0,
+            "token_precision": 0.9310344827586207,
+            "entity_recall": 1.0
+          },
+          "hr-caps": {
+            "documents": 4,
+            "token_recall": 1.0,
+            "token_precision": 0.7297297297297297,
+            "entity_recall": 1.0
+          },
+          "kyc": {
+            "documents": 6,
+            "token_recall": 1.0,
+            "token_precision": 0.9777777777777777,
+            "entity_recall": 1.0
+          },
+          "kyc-caps": {
+            "documents": 6,
+            "token_recall": 1.0,
+            "token_precision": 0.9166666666666666,
+            "entity_recall": 1.0
+          },
+          "legal": {
+            "documents": 3,
+            "token_recall": 1.0,
+            "token_precision": 0.9375,
+            "entity_recall": 1.0
+          },
+          "legal-caps": {
+            "documents": 3,
+            "token_recall": 0.9,
+            "token_precision": 0.84375,
+            "entity_recall": 0.9230769230769231
+          },
+          "medical": {
+            "documents": 2,
+            "token_recall": 1.0,
+            "token_precision": 0.8823529411764706,
+            "entity_recall": 1.0
+          },
+          "medical-caps": {
+            "documents": 2,
+            "token_recall": 1.0,
+            "token_precision": 0.8823529411764706,
+            "entity_recall": 1.0
+          },
+          "negative": {
+            "documents": 4,
+            "token_recall": 0.0,
+            "token_precision": 0.0,
+            "entity_recall": 0.0
+          },
+          "negative-caps": {
+            "documents": 4,
+            "token_recall": 0.0,
+            "token_precision": 0.0,
+            "entity_recall": 0.0
+          },
+          "ocr": {
+            "documents": 4,
+            "token_recall": 0.8947368421052632,
+            "token_precision": 1.0,
+            "entity_recall": 0.8181818181818182
+          },
+          "ocr-caps": {
+            "documents": 4,
+            "token_recall": 0.8947368421052632,
+            "token_precision": 0.8947368421052632,
+            "entity_recall": 0.8181818181818182
+          },
+          "resume": {
+            "documents": 4,
+            "token_recall": 1.0,
+            "token_precision": 0.9411764705882353,
+            "entity_recall": 1.0
+          },
+          "travel": {
+            "documents": 2,
+            "token_recall": 1.0,
+            "token_precision": 0.8888888888888888,
+            "entity_recall": 1.0
+          },
+          "travel-caps": {
+            "documents": 2,
+            "token_recall": 1.0,
+            "token_precision": 0.8,
+            "entity_recall": 1.0
+          }
+        }
+      },
+      "auto": {
+        "documents": 67,
+        "gold_entities": 174,
+        "predicted_entities": 183,
+        "token": {
+          "precision": 0.9261083743842364,
+          "recall": 0.9766233766233766,
+          "f1": 0.9506953223767383,
+          "f2": 0.9660842754367934,
+          "tp": 376,
+          "fp": 30,
+          "fn": 9
+        },
+        "overlap": {
+          "precision": 0.9180327868852459,
+          "recall": 0.9655172413793104,
+          "missed": 6,
+          "false_alarms": 15,
+          "f1": 0.9411764705882353,
+          "f2": 0.9556313993174061
+        },
+        "full_coverage_recall": 0.9655172413793104,
+        "strict": {
+          "precision": 0.7978142076502732,
+          "recall": 0.8390804597701149,
+          "f1": 0.8179271708683473,
+          "f2": 0.8304891922639364,
+          "tp": 146,
+          "fp": 37,
+          "fn": 28
+        },
+        "per_class": {
+          "ADDRESS": {
+            "gold": 0,
+            "pred": 5,
+            "recall": null,
+            "full_coverage_recall": null,
+            "precision": 0.0,
+            "strict_recall": null
+          },
+          "AGE": {
+            "gold": 0,
+            "pred": 2,
+            "recall": null,
+            "full_coverage_recall": null,
+            "precision": 0.0,
+            "strict_recall": null
+          },
+          "EMAIL": {
+            "gold": 7,
+            "pred": 7,
+            "recall": 1.0,
+            "full_coverage_recall": 1.0,
+            "precision": 1.0,
+            "strict_recall": 1.0,
+            "f1": 1.0,
+            "f2": 1.0
+          },
+          "FINANCIAL": {
+            "gold": 0,
+            "pred": 2,
+            "recall": null,
+            "full_coverage_recall": null,
+            "precision": 1.0,
+            "strict_recall": null
+          },
+          "GOV_ID": {
+            "gold": 14,
+            "pred": 9,
+            "recall": 0.7142857142857143,
+            "full_coverage_recall": 0.7142857142857143,
+            "precision": 0.8888888888888888,
+            "strict_recall": 0.5714285714285714,
+            "f1": 0.792079207920792,
+            "f2": 0.7434944237918216
+          },
+          "OTHER_ID": {
+            "gold": 0,
+            "pred": 3,
+            "recall": null,
+            "full_coverage_recall": null,
+            "precision": 0.0,
+            "strict_recall": null
+          },
+          "PERSON": {
+            "gold": 140,
+            "pred": 140,
+            "recall": 0.9857142857142858,
+            "full_coverage_recall": 0.9857142857142858,
+            "precision": 0.9857142857142858,
+            "strict_recall": 0.8428571428571429,
+            "f1": 0.9857142857142858,
+            "f2": 0.9857142857142858
+          },
+          "PHONE": {
+            "gold": 13,
+            "pred": 15,
+            "recall": 1.0,
+            "full_coverage_recall": 1.0,
+            "precision": 0.8666666666666667,
+            "strict_recall": 1.0,
+            "f1": 0.9285714285714286,
+            "f2": 0.9701492537313434
+          }
+        },
+        "negative_documents": 8,
+        "negative_false_alarm_rate": 0.875,
+        "top_misses": [
+          [
+            "GOV_ID",
+            "KA0120190012345",
+            2
+          ],
+          [
+            "GOV_ID",
+            "LIC4402198",
+            2
+          ],
+          [
+            "PERSON",
+            "MADHAVI LATHA REDDY",
+            1
+          ],
+          [
+            "PERSON",
+            "SMITA KULKARNI",
+            1
+          ]
+        ],
+        "top_false_alarms": [
+          [
+            "AGE",
+            "52",
+            2
+          ],
+          [
+            "OTHER_ID",
+            "E20411",
+            2
+          ],
+          [
+            "PHONE",
+            "4521897365",
+            2
+          ],
+          [
+            "OTHER_ID",
+            "2210456",
+            1
+          ],
+          [
+            "ADDRESS",
+            "Mahatma Gandhi Road",
+            1
+          ],
+          [
+            "ADDRESS",
+            "NEHRU",
+            1
+          ],
+          [
+            "ADDRESS",
+            "Diwali",
+            1
+          ],
+          [
+            "ADDRESS",
+            "Singh",
+            1
+          ],
+          [
+            "ADDRESS",
+            "SINGH",
+            1
+          ],
+          [
+            "GOV_ID",
+            "Kafka",
+            1
+          ],
+          [
+            "PERSON",
+            "Reddy",
+            1
+          ],
+          [
+            "PERSON",
+            "REDDY",
+            1
+          ]
+        ],
+        "ci95": {
+          "token_precision": [
+            0.8928571428571429,
+            0.9528795811518325
+          ],
+          "token_recall": [
+            0.9550561797752809,
+            0.9946666666666667
+          ],
+          "token_f1": [
+            0.9318801089918256,
+            0.9665071770334928
+          ],
+          "token_f2": [
+            0.948771562990068,
+            0.9805389221556887
+          ],
+          "overlap_recall": [
+            0.937888198757764,
+            0.9890710382513661
+          ],
+          "overlap_precision": [
+            0.8719512195121951,
+            0.9571428571428572
+          ]
+        },
+        "organization": {
+          "gold": 8,
+          "recall": 0.0,
+          "precision": 0.0
+        },
+        "by_group": {
+          "chat": {
+            "documents": 3,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "education": {
+            "documents": 3,
+            "token_recall": 1.0,
+            "token_precision": 0.9285714285714286,
+            "entity_recall": 1.0
+          },
+          "education-caps": {
+            "documents": 3,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "finance": {
+            "documents": 2,
+            "token_recall": 1.0,
+            "token_precision": 0.9,
+            "entity_recall": 1.0
+          },
+          "finance-caps": {
+            "documents": 2,
+            "token_recall": 1.0,
+            "token_precision": 0.9,
+            "entity_recall": 1.0
+          },
+          "hr": {
+            "documents": 4,
+            "token_recall": 1.0,
+            "token_precision": 0.9642857142857143,
+            "entity_recall": 1.0
+          },
+          "hr-caps": {
+            "documents": 4,
+            "token_recall": 0.9259259259259259,
+            "token_precision": 0.8928571428571429,
+            "entity_recall": 0.9230769230769231
+          },
+          "kyc": {
+            "documents": 6,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "kyc-caps": {
+            "documents": 6,
+            "token_recall": 1.0,
+            "token_precision": 0.9565217391304348,
+            "entity_recall": 1.0
+          },
+          "legal": {
+            "documents": 3,
+            "token_recall": 1.0,
+            "token_precision": 0.9375,
+            "entity_recall": 1.0
+          },
+          "legal-caps": {
+            "documents": 3,
+            "token_recall": 0.9,
+            "token_precision": 0.84375,
+            "entity_recall": 0.9230769230769231
+          },
+          "medical": {
+            "documents": 2,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "medical-caps": {
+            "documents": 2,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "negative": {
+            "documents": 4,
+            "token_recall": 0.0,
+            "token_precision": 0.0,
+            "entity_recall": 0.0
+          },
+          "negative-caps": {
+            "documents": 4,
+            "token_recall": 0.0,
+            "token_precision": 0.0,
+            "entity_recall": 0.0
+          },
+          "ocr": {
+            "documents": 4,
+            "token_recall": 0.8947368421052632,
+            "token_precision": 1.0,
+            "entity_recall": 0.8181818181818182
+          },
+          "ocr-caps": {
+            "documents": 4,
+            "token_recall": 0.8947368421052632,
+            "token_precision": 0.8947368421052632,
+            "entity_recall": 0.8181818181818182
+          },
+          "resume": {
+            "documents": 4,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "travel": {
+            "documents": 2,
+            "token_recall": 1.0,
+            "token_precision": 0.8888888888888888,
+            "entity_recall": 1.0
+          },
+          "travel-caps": {
+            "documents": 2,
+            "token_recall": 1.0,
+            "token_precision": 0.8888888888888888,
+            "entity_recall": 1.0
+          }
+        }
+      },
+      "latency": {
+        "docs": 67,
+        "mean_chars": 136.0597014925373,
+        "p50_ms": 66.67958298930898,
+        "p95_ms": 132.13350001024082,
+        "p99_ms": 160.34662502352148,
+        "chars_per_sec": 1849.4580337566554
+      }
+    },
+    "blacken_gold": {
+      "detected": {
+        "documents": 44,
+        "gold_entities": 249,
+        "predicted_entities": 249,
+        "token": {
+          "precision": 0.9090909090909091,
+          "recall": 0.9726962457337884,
+          "f1": 0.9398186314921682,
+          "f2": 0.9592729720632783,
+          "tp": 570,
+          "fp": 57,
+          "fn": 16
+        },
+        "overlap": {
+          "precision": 0.8634538152610441,
+          "recall": 0.9598393574297188,
+          "missed": 10,
+          "false_alarms": 34,
+          "f1": 0.9090989508695574,
+          "f2": 0.9388783523539106
+        },
+        "full_coverage_recall": 0.9558232931726908,
+        "strict": {
+          "precision": 0.751004016064257,
+          "recall": 0.751004016064257,
+          "f1": 0.751004016064257,
+          "f2": 0.751004016064257,
+          "tp": 187,
+          "fp": 62,
+          "fn": 62
+        },
+        "per_class": {
+          "ADDRESS": {
+            "gold": 66,
+            "pred": 38,
+            "recall": 0.9696969696969697,
+            "full_coverage_recall": 0.9545454545454546,
+            "precision": 0.9210526315789473,
+            "strict_recall": 0.3484848484848485,
+            "f1": 0.9447490510333192,
+            "f2": 0.9595613433858807
+          },
+          "AGE": {
+            "gold": 7,
+            "pred": 5,
+            "recall": 0.8571428571428571,
+            "full_coverage_recall": 0.8571428571428571,
+            "precision": 1.0,
+            "strict_recall": 0.5714285714285714,
+            "f1": 0.923076923076923,
+            "f2": 0.8823529411764707
+          },
+          "DATE": {
+            "gold": 30,
+            "pred": 49,
+            "recall": 1.0,
+            "full_coverage_recall": 1.0,
+            "precision": 0.6530612244897959,
+            "strict_recall": 0.9333333333333333,
+            "f1": 0.7901234567901235,
+            "f2": 0.903954802259887
+          },
+          "EMAIL": {
+            "gold": 17,
+            "pred": 17,
+            "recall": 1.0,
+            "full_coverage_recall": 1.0,
+            "precision": 1.0,
+            "strict_recall": 0.8235294117647058,
+            "f1": 1.0,
+            "f2": 1.0
+          },
+          "FINANCIAL": {
+            "gold": 11,
+            "pred": 8,
+            "recall": 0.9090909090909091,
+            "full_coverage_recall": 0.9090909090909091,
+            "precision": 1.0,
+            "strict_recall": 0.7272727272727273,
+            "f1": 0.9523809523809523,
+            "f2": 0.9259259259259258
+          },
+          "GOV_ID": {
+            "gold": 18,
+            "pred": 20,
+            "recall": 0.9444444444444444,
+            "full_coverage_recall": 0.9444444444444444,
+            "precision": 0.9,
+            "strict_recall": 0.9444444444444444,
+            "f1": 0.9216867469879517,
+            "f2": 0.9352078239608802
+          },
+          "NETWORK": {
+            "gold": 6,
+            "pred": 8,
+            "recall": 1.0,
+            "full_coverage_recall": 1.0,
+            "precision": 0.875,
+            "strict_recall": 1.0,
+            "f1": 0.9333333333333333,
+            "f2": 0.9722222222222222
+          },
+          "OTHER_ID": {
+            "gold": 9,
+            "pred": 7,
+            "recall": 0.7777777777777778,
+            "full_coverage_recall": 0.7777777777777778,
+            "precision": 1.0,
+            "strict_recall": 0.7777777777777778,
+            "f1": 0.8750000000000001,
+            "f2": 0.813953488372093
+          },
+          "PERSON": {
+            "gold": 64,
+            "pred": 76,
+            "recall": 0.96875,
+            "full_coverage_recall": 0.96875,
+            "precision": 0.8552631578947368,
+            "strict_recall": 0.953125,
+            "f1": 0.9084761045987376,
+            "f2": 0.9437055076807794
+          },
+          "PHONE": {
+            "gold": 21,
+            "pred": 21,
+            "recall": 0.9523809523809523,
+            "full_coverage_recall": 0.9523809523809523,
+            "precision": 1.0,
+            "strict_recall": 0.9047619047619048,
+            "f1": 0.975609756097561,
+            "f2": 0.9615384615384615
+          }
+        },
+        "negative_documents": 12,
+        "negative_false_alarm_rate": 0.5833333333333334,
+        "top_misses": [
+          [
+            "ADDRESS",
+            "Round Rock",
+            1
+          ],
+          [
+            "ADDRESS",
+            "Reading",
+            1
+          ],
+          [
+            "OTHER_ID",
+            "ZF-20931",
+            1
+          ],
+          [
+            "FINANCIAL",
+            "NWBKGB2L",
+            1
+          ],
+          [
+            "PHONE",
+            "+44 7700 900461",
+            1
+          ],
+          [
+            "OTHER_ID",
+            "4471",
+            1
+          ],
+          [
+            "AGE",
+            "34",
+            1
+          ],
+          [
+            "GOV_ID",
+            "CV 48213",
+            1
+          ],
+          [
+            "PERSON",
+            "Julia",
+            1
+          ],
+          [
+            "PERSON",
+            "Lukas",
+            1
+          ]
+        ],
+        "top_false_alarms": [
+          [
+            "NETWORK",
+            "B.Tech",
+            1
+          ],
+          [
+            "PERSON",
+            "ACA",
+            1
+          ],
+          [
+            "DATE",
+            "7 days",
+            1
+          ],
+          [
+            "DATE",
+            "3 days",
+            1
+          ],
+          [
+            "PERSON",
+            "Tab",
+            1
+          ],
+          [
+            "DATE",
+            "5 days",
+            1
+          ],
+          [
+            "PERSON",
+            "Tab Paracetamol",
+            1
+          ],
+          [
+            "DATE",
+            "one week",
+            1
+          ],
+          [
+            "ADDRESS",
+            "MD",
+            1
+          ],
+          [
+            "PERSON",
+            "L. Repeat",
+            1
+          ],
+          [
+            "PERSON",
+            "IFSC",
+            1
+          ],
+          [
+            "DATE",
+            "Monthly",
+            1
+          ],
+          [
+            "DATE",
+            "48 months",
+            1
+          ],
+          [
+            "DATE",
+            "annual",
+            1
+          ],
+          [
+            "PERSON",
+            "GSTIN",
+            1
+          ],
+          [
+            "PERSON",
+            "CEO",
+            1
+          ],
+          [
+            "PERSON",
+            "Agent",
+            1
+          ],
+          [
+            "DATE",
+            "yesterday",
+            1
+          ],
+          [
+            "PERSON",
+            "Person",
+            1
+          ],
+          [
+            "DATE",
+            "last week",
+            1
+          ],
+          [
+            "DATE",
+            "weekly",
+            1
+          ],
+          [
+            "DATE",
+            "11 months",
+            1
+          ],
+          [
+            "DATE",
+            "monthly",
+            1
+          ],
+          [
+            "ADDRESS",
+            "RN",
+            1
+          ],
+          [
+            "ADDRESS",
+            "UK",
+            1
+          ]
+        ],
+        "ci95": {
+          "token_precision": [
+            0.8694942903752039,
+            0.9415584415584416
+          ],
+          "token_recall": [
+            0.9504132231404959,
+            0.9902097902097902
+          ],
+          "token_f1": [
+            0.9157894736842104,
+            0.9587628865979382
+          ],
+          "token_f2": [
+            0.9409045889732586,
+            0.974648852346694
+          ],
+          "overlap_recall": [
+            0.9263565891472868,
+            0.9853479853479854
+          ],
+          "overlap_precision": [
+            0.8095238095238095,
+            0.9094827586206896
+          ]
+        },
+        "organization": {
+          "gold": 26,
+          "recall": 0.6923076923076923,
+          "precision": 0.391304347826087
+        },
+        "by_group": {
+          "clinical": {
+            "documents": 5,
+            "token_recall": 0.9880952380952381,
+            "token_precision": 0.83,
+            "entity_recall": 0.9743589743589743
+          },
+          "education": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 0.95,
+            "entity_recall": 1.0
+          },
+          "email": {
+            "documents": 1,
+            "token_recall": 0.9230769230769231,
+            "token_precision": 0.8571428571428571,
+            "entity_recall": 0.8571428571428571
+          },
+          "finance": {
+            "documents": 4,
+            "token_recall": 0.9850746268656716,
+            "token_precision": 0.9565217391304348,
+            "entity_recall": 0.9655172413793104
+          },
+          "hr": {
+            "documents": 3,
+            "token_recall": 0.9636363636363636,
+            "token_precision": 0.9814814814814815,
+            "entity_recall": 0.96
+          },
+          "immigration": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 0.9411764705882353,
+            "entity_recall": 1.0
+          },
+          "insurance": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 0.9375,
+            "entity_recall": 1.0
+          },
+          "invoice": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 0.9333333333333333,
+            "entity_recall": 1.0
+          },
+          "it": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 0.9166666666666666,
+            "entity_recall": 1.0
+          },
+          "kyc": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 0.9642857142857143,
+            "entity_recall": 1.0
+          },
+          "legal": {
+            "documents": 5,
+            "token_recall": 0.9611650485436893,
+            "token_precision": 0.9611650485436893,
+            "entity_recall": 0.9285714285714286
+          },
+          "letter": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 0.9230769230769231,
+            "entity_recall": 1.0
+          },
+          "negative": {
+            "documents": 12,
+            "token_recall": 0.0,
+            "token_precision": 0.0,
+            "entity_recall": 0.0
+          },
+          "resume": {
+            "documents": 3,
+            "token_recall": 0.9310344827586207,
+            "token_precision": 0.9473684210526315,
+            "entity_recall": 0.9166666666666666
+          },
+          "support": {
+            "documents": 2,
+            "token_recall": 0.9166666666666666,
+            "token_precision": 0.9428571428571428,
+            "entity_recall": 0.9375
+          },
+          "tax": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "travel": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          }
+        }
+      },
+      "auto": {
+        "documents": 44,
+        "gold_entities": 249,
+        "predicted_entities": 217,
+        "token": {
+          "precision": 0.9707903780068728,
+          "recall": 0.9641638225255973,
+          "f1": 0.9674657534246577,
+          "f2": 0.965481886534518,
+          "tp": 565,
+          "fp": 17,
+          "fn": 21
+        },
+        "overlap": {
+          "precision": 0.9723502304147466,
+          "recall": 0.9437751004016064,
+          "missed": 14,
+          "false_alarms": 6,
+          "f1": 0.9578495953020263,
+          "f2": 0.949354970878917
+        },
+        "full_coverage_recall": 0.9397590361445783,
+        "strict": {
+          "precision": 0.8525345622119815,
+          "recall": 0.7429718875502008,
+          "f1": 0.7939914163090128,
+          "f2": 0.7625721352019785,
+          "tp": 185,
+          "fp": 32,
+          "fn": 64
+        },
+        "per_class": {
+          "ADDRESS": {
+            "gold": 66,
+            "pred": 34,
+            "recall": 0.9242424242424242,
+            "full_coverage_recall": 0.9090909090909091,
+            "precision": 1.0,
+            "strict_recall": 0.3333333333333333,
+            "f1": 0.9606299212598425,
+            "f2": 0.9384615384615385
+          },
+          "AGE": {
+            "gold": 7,
+            "pred": 5,
+            "recall": 0.8571428571428571,
+            "full_coverage_recall": 0.8571428571428571,
+            "precision": 1.0,
+            "strict_recall": 0.5714285714285714,
+            "f1": 0.923076923076923,
+            "f2": 0.8823529411764707
+          },
+          "DATE": {
+            "gold": 30,
+            "pred": 33,
+            "recall": 1.0,
+            "full_coverage_recall": 1.0,
+            "precision": 0.9696969696969697,
+            "strict_recall": 0.9333333333333333,
+            "f1": 0.9846153846153847,
+            "f2": 0.9937888198757764
+          },
+          "EMAIL": {
+            "gold": 17,
+            "pred": 17,
+            "recall": 1.0,
+            "full_coverage_recall": 1.0,
+            "precision": 1.0,
+            "strict_recall": 0.8235294117647058,
+            "f1": 1.0,
+            "f2": 1.0
+          },
+          "FINANCIAL": {
+            "gold": 11,
+            "pred": 8,
+            "recall": 0.9090909090909091,
+            "full_coverage_recall": 0.9090909090909091,
+            "precision": 1.0,
+            "strict_recall": 0.7272727272727273,
+            "f1": 0.9523809523809523,
+            "f2": 0.9259259259259258
+          },
+          "GOV_ID": {
+            "gold": 18,
+            "pred": 18,
+            "recall": 0.8888888888888888,
+            "full_coverage_recall": 0.8888888888888888,
+            "precision": 0.9444444444444444,
+            "strict_recall": 0.8888888888888888,
+            "f1": 0.9158249158249158,
+            "f2": 0.8994708994708995
+          },
+          "NETWORK": {
+            "gold": 6,
+            "pred": 7,
+            "recall": 1.0,
+            "full_coverage_recall": 1.0,
+            "precision": 1.0,
+            "strict_recall": 1.0,
+            "f1": 1.0,
+            "f2": 1.0
+          },
+          "OTHER_ID": {
+            "gold": 9,
+            "pred": 7,
+            "recall": 0.7777777777777778,
+            "full_coverage_recall": 0.7777777777777778,
+            "precision": 1.0,
+            "strict_recall": 0.7777777777777778,
+            "f1": 0.8750000000000001,
+            "f2": 0.813953488372093
+          },
+          "PERSON": {
+            "gold": 64,
+            "pred": 67,
+            "recall": 0.96875,
+            "full_coverage_recall": 0.96875,
+            "precision": 0.9402985074626866,
+            "strict_recall": 0.953125,
+            "f1": 0.9543122404104569,
+            "f2": 0.9629227886796173
+          },
+          "PHONE": {
+            "gold": 21,
+            "pred": 21,
+            "recall": 0.9523809523809523,
+            "full_coverage_recall": 0.9523809523809523,
+            "precision": 1.0,
+            "strict_recall": 0.9047619047619048,
+            "f1": 0.975609756097561,
+            "f2": 0.9615384615384615
+          }
+        },
+        "negative_documents": 12,
+        "negative_false_alarm_rate": 0.16666666666666666,
+        "top_misses": [
+          [
+            "ADDRESS",
+            "Austin",
+            2
+          ],
+          [
+            "ADDRESS",
+            "Round Rock",
+            1
+          ],
+          [
+            "ADDRESS",
+            "Reading",
+            1
+          ],
+          [
+            "OTHER_ID",
+            "ZF-20931",
+            1
+          ],
+          [
+            "FINANCIAL",
+            "NWBKGB2L",
+            1
+          ],
+          [
+            "GOV_ID",
+            "M4829106",
+            1
+          ],
+          [
+            "PHONE",
+            "+44 7700 900461",
+            1
+          ],
+          [
+            "ADDRESS",
+            "M14 5TQ",
+            1
+          ],
+          [
+            "OTHER_ID",
+            "4471",
+            1
+          ],
+          [
+            "AGE",
+            "34",
+            1
+          ],
+          [
+            "GOV_ID",
+            "CV 48213",
+            1
+          ],
+          [
+            "PERSON",
+            "Julia",
+            1
+          ],
+          [
+            "PERSON",
+            "Lukas",
+            1
+          ]
+        ],
+        "top_false_alarms": [
+          [
+            "PERSON",
+            "Tab",
+            1
+          ],
+          [
+            "PERSON",
+            "Tab Paracetamol",
+            1
+          ],
+          [
+            "PERSON",
+            "L. Repeat",
+            1
+          ],
+          [
+            "PERSON",
+            "Person",
+            1
+          ],
+          [
+            "GOV_ID",
+            "v1",
+            1
+          ],
+          [
+            "DATE",
+            "6 minutes 14 seconds",
+            1
+          ]
+        ],
+        "ci95": {
+          "token_precision": [
+            0.9472049689440993,
+            0.9880546075085325
+          ],
+          "token_recall": [
+            0.9362101313320825,
+            0.9869067103109657
+          ],
+          "token_f1": [
+            0.948559670781893,
+            0.9823083403538332
+          ],
+          "token_f2": [
+            0.9419354838709677,
+            0.9839300817592331
+          ],
+          "overlap_recall": [
+            0.9036697247706422,
+            0.9765100671140939
+          ],
+          "overlap_precision": [
+            0.9444444444444444,
+            0.9915611814345991
+          ]
+        },
+        "organization": {
+          "gold": 26,
+          "recall": 0.0,
+          "precision": 0.0
+        },
+        "by_group": {
+          "clinical": {
+            "documents": 5,
+            "token_recall": 0.9880952380952381,
+            "token_precision": 0.9222222222222223,
+            "entity_recall": 0.9743589743589743
+          },
+          "education": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 0.95,
+            "entity_recall": 1.0
+          },
+          "email": {
+            "documents": 1,
+            "token_recall": 0.9230769230769231,
+            "token_precision": 1.0,
+            "entity_recall": 0.8571428571428571
+          },
+          "finance": {
+            "documents": 4,
+            "token_recall": 0.9850746268656716,
+            "token_precision": 1.0,
+            "entity_recall": 0.9655172413793104
+          },
+          "hr": {
+            "documents": 3,
+            "token_recall": 0.9636363636363636,
+            "token_precision": 1.0,
+            "entity_recall": 0.96
+          },
+          "immigration": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "insurance": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 0.9375,
+            "entity_recall": 1.0
+          },
+          "invoice": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "it": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 0.9166666666666666,
+            "entity_recall": 1.0
+          },
+          "kyc": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "legal": {
+            "documents": 5,
+            "token_recall": 0.9514563106796117,
+            "token_precision": 1.0,
+            "entity_recall": 0.9047619047619048
+          },
+          "letter": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "negative": {
+            "documents": 12,
+            "token_recall": 0.0,
+            "token_precision": 0.0,
+            "entity_recall": 0.0
+          },
+          "resume": {
+            "documents": 3,
+            "token_recall": 0.896551724137931,
+            "token_precision": 1.0,
+            "entity_recall": 0.8333333333333334
+          },
+          "support": {
+            "documents": 2,
+            "token_recall": 0.8611111111111112,
+            "token_precision": 1.0,
+            "entity_recall": 0.875
+          },
+          "tax": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          },
+          "travel": {
+            "documents": 1,
+            "token_recall": 1.0,
+            "token_precision": 1.0,
+            "entity_recall": 1.0
+          }
+        }
+      },
+      "latency": {
+        "docs": 44,
+        "mean_chars": 363.22727272727275,
+        "p50_ms": 166.1160829826258,
+        "p95_ms": 272.274709015619,
+        "p99_ms": 330.6899580056779,
+        "chars_per_sec": 2211.02660497427
+      }
+    }
+  }
+}

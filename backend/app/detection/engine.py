@@ -19,7 +19,7 @@ from typing import Dict, List, Optional, Set
 
 import spacy
 
-from presidio_analyzer import AnalyzerEngine
+from presidio_analyzer import AnalyzerEngine, RecognizerResult
 from presidio_analyzer.nlp_engine import NlpEngineProvider
 from presidio_analyzer.predefined_recognizers import (
     AbaRoutingRecognizer,
@@ -34,6 +34,15 @@ from presidio_analyzer.predefined_recognizers import (
 )
 
 from app.detection.gazetteers import is_non_identifying_place
+from app.detection.indian_names import (
+    AMBIGUOUS_SINGLE,
+    CONTEXT_NAME_RECOGNIZERS,
+    IndianNameRecognizer,
+    all_tokens_known_names,
+    clean_person_span,
+    is_institution,
+    is_tech_or_code,
+)
 from app.detection.recognizers import ALL_CUSTOM_RECOGNIZERS
 
 logger = logging.getLogger("blacken")
@@ -138,7 +147,25 @@ PERSON_CONFIDENCE_PENALTY = 0.5
 # Recognizers whose PERSON output already reflects context (a "Name:" label,
 # or a transformer reading the whole sentence), so the bare-single-word
 # penalty - which exists because spaCy tags "Docker" PERSON - doesn't apply.
-CONTEXTUAL_PERSON_RECOGNIZERS = {"LabeledPersonRecognizer", "GlinerOnnxRecognizer"}
+CONTEXTUAL_PERSON_RECOGNIZERS = {
+    "LabeledPersonRecognizer",
+    "GlinerOnnxRecognizer",
+    "IndianNameRecognizer",
+    "HonorificNameRecognizer",
+    "RelationNameRecognizer",
+    "FieldNameRecognizer",
+}
+# Structural recognizers that already reject institutions and labels.
+STRUCTURED_PERSON_RECOGNIZERS = CONTEXTUAL_PERSON_RECOGNIZERS - {"GlinerOnnxRecognizer"}
+
+# Statistical NER only: "Disha" tagged LOCATION, "React" tagged LOCATION.
+NAME_LIKE_TYPES = {"PERSON", "LOCATION", "ORGANIZATION", "NRP"}
+
+# Two or more ALL-CAPS words in a row: a KYC form, an ID card, a ticket or
+# an OCR'd scan. Statistical NER relies on casing, so it misses names there.
+_CAPS_RUN = re.compile(r"\b[A-Z][A-Z'\-]+(?:[ \t]+[A-Z][A-Z'\-]*\.?)+")
+_CAPS_WORD = re.compile(r"\b[A-Z][A-Z'\-]+\b")
+
 
 
 def _looks_like_a_name(entity_text: str) -> bool:
@@ -354,15 +381,50 @@ def _merge_address_family(entities: List[dict], text: str) -> List[dict]:
     return others + merged
 
 
-def _resolve_overlaps(entities: List[dict]) -> List[dict]:
+GENERIC_NER_TYPES = {"DATE_TIME", "LOCATION", "ORGANIZATION", "NRP"}
+GENERIC_NER_PENALTY = 0.3
+
+
+def _merge_overlapping_persons(entities: List[dict], text: Optional[str] = None) -> List[dict]:
+    """Two detectors finding "Babu Naidu" and "Suresh Babu Naidu" mean one
+    person: keep the union, so no part of the name is left visible."""
+    persons = sorted((e for e in entities if e["type"] == "PERSON"), key=lambda e: e["start"])
+    others = [e for e in entities if e["type"] != "PERSON"]
+    merged: List[dict] = []
+    for e in persons:
+        if merged and e["start"] < merged[-1]["end"]:
+            last = merged[-1]
+            if e["end"] > last["end"]:
+                if text is not None:
+                    last["text"] = text[last["start"] : e["end"]]
+                else:  # append the part of e that extends past the current end
+                    last["text"] = last["text"] + e["text"][last["end"] - e["start"] :]
+                last["end"] = e["end"]
+            last["confidence"] = max(last["confidence"], e["confidence"])
+            last["selected"] = last["selected"] or e["selected"]
+        else:
+            merged.append(dict(e))
+    return others + merged
+
+
+def _resolve_overlaps(entities: List[dict], text: Optional[str] = None) -> List[dict]:
     """Presidio's own de-duplication only drops results that share both a
     span *and* an entity type (see EntityRecognizer.remove_duplicates). It
     does not resolve cases like a URL recognizer matching a substring of an
     already-detected EMAIL_ADDRESS, or DATE_TIME and AGE both firing on
     "45-year-old" - so we do a second pass here, keeping the
     highest-confidence entity for any overlapping span."""
+    entities = _merge_overlapping_persons(entities, text)
+    # Generic NER guesses lose to anything more specific they overlap: spaCy
+    # tags "10 37" inside the NINO "JG 10 37 72 D" as a date at a flat 0.85,
+    # which would otherwise beat the validated identifier (0.65).
     ordered = sorted(
-        entities, key=lambda e: (-e["confidence"], e["start"], -(e["end"] - e["start"]))
+        entities,
+        key=lambda e: (
+            -(e["confidence"] - (GENERIC_NER_PENALTY if e["type"] in GENERIC_NER_TYPES else 0.0)),
+            e["start"],
+            -(e["end"] - e["start"]),
+        ),
     )
     kept: List[dict] = []
     for entity in ordered:
@@ -465,6 +527,10 @@ class PiiDetectionEngine:
             self.analyzer.registry.add_recognizer(recognizer_cls(supported_language=language))
         for recognizer in ALL_CUSTOM_RECOGNIZERS:
             self.analyzer.registry.add_recognizer(recognizer)
+        # Run outside the analyzer on purpose: Presidio drops a result that is
+        # contained in a higher-scoring one of the same type, so a sloppy NER
+        # span ("Ashwath Hegdekatte / Male / 29") would erase the exact name.
+        self._name_recognizers = [IndianNameRecognizer(supported_language=language), *CONTEXT_NAME_RECOGNIZERS]
 
         self.auto_select_thresholds = (
             _load_calibrated_thresholds() if use_calibrated_thresholds else {}
@@ -496,6 +562,10 @@ class PiiDetectionEngine:
         # entities also omitted (see module docstring above) to keep every
         # built-in recognizer - including country-specific ID formats - in play.
         results = self.analyzer.analyze(text=text, language=self.language)
+        results = list(results) + self._caps_pass(text)
+        for recognizer in self._name_recognizers:
+            results.extend(recognizer.analyze(text, ["PERSON"], None))
+        results = self._split_person_spans(text, results)
 
         clipped = []
         for result in results:
@@ -517,37 +587,99 @@ class PiiDetectionEngine:
         for result, (start, end, entity_text) in clipped:
             score = float(result.score)
             recognizer = (result.recognition_metadata or {}).get("recognizer_name", "")
-            if result.entity_type == "PERSON" and recognizer not in CONTEXTUAL_PERSON_RECOGNIZERS:
+            entity_type = result.entity_type
+            relabeled = False
+            if entity_type in NAME_LIKE_TYPES and recognizer not in STRUCTURED_PERSON_RECOGNIZERS:
+                tokens = entity_text.split()
+                # Software words are never people or places ("React", "Next.js").
+                if tokens and all(is_tech_or_code(t) for t in tokens):
+                    continue
+                # A known Indian name tagged as a place / organisation is a
+                # person ("Disha", "Madhu Sudhan").
+                if (
+                    entity_type != "PERSON"
+                    and all_tokens_known_names(entity_text)
+                    and not (len(tokens) == 1 and tokens[0].lower().strip(".,") in AMBIGUOUS_SINGLE)
+                ):
+                    entity_type = "PERSON"
+                    score = max(score, 0.7)
+                    relabeled = True
+                # "Kyara Infotech", "Mahatma Gandhi Road": an institution or a
+                # street, not a person.
+                elif entity_type == "PERSON" and any(is_institution(t) for t in tokens):
+                    score *= 0.4
+            if entity_type == "PERSON" and recognizer not in CONTEXTUAL_PERSON_RECOGNIZERS and not relabeled:
                 score = _adjust_person_confidence(
                     entity_text, score, text, start, end, known_name_parts
                 )
-            elif result.entity_type == "LOCATION":
+            elif entity_type == "LOCATION":
                 score = _adjust_location_confidence(entity_text, score)
-            elif result.entity_type == "DATE_TIME":
+            elif entity_type == "DATE_TIME":
                 score = _adjust_date_confidence(entity_text, score)
-            elif result.entity_type == "PHONE_NUMBER" and recognizer != "LabeledPhoneRecognizer":
+            elif entity_type == "PHONE_NUMBER" and recognizer != "LabeledPhoneRecognizer":
                 score = _adjust_phone_confidence(score)
-            elif result.entity_type in VALIDATED_ID_CONFIDENCE_FLOOR:
-                score = max(score, VALIDATED_ID_CONFIDENCE_FLOOR[result.entity_type])
+            elif entity_type in VALIDATED_ID_CONFIDENCE_FLOOR:
+                score = max(score, VALIDATED_ID_CONFIDENCE_FLOOR[entity_type])
 
-            min_score = MIN_SCORE_BY_TYPE.get(result.entity_type, DEFAULT_MIN_SCORE)
+            min_score = MIN_SCORE_BY_TYPE.get(entity_type, DEFAULT_MIN_SCORE)
             if score < min_score:
                 continue
 
             entities.append(
                 {
                     "text": entity_text,
-                    "type": result.entity_type,
+                    "type": entity_type,
                     "start": start,
                     "end": end,
                     "confidence": round(score, 4),
                     "source": "presidio",
                     "selected": score
-                    >= self.auto_select_thresholds.get(result.entity_type, AUTO_SELECT_MIN_SCORE),
+                    >= self.auto_select_thresholds.get(entity_type, AUTO_SELECT_MIN_SCORE),
                 }
             )
 
-        return _resolve_overlaps(_merge_address_family(entities, text))
+        return _resolve_overlaps(_merge_address_family(entities, text), text)
+
+    def _caps_pass(self, text: str) -> List[RecognizerResult]:
+        """Re-read ALL-CAPS stretches in Title Case so the NER models can see
+        names ("NAME: RAHUL KUMAR SHARMA"). Only PERSON results that fall
+        entirely on upper-case text are kept; offsets are unchanged because
+        ASCII lower-casing preserves length."""
+        if not _CAPS_RUN.search(text):
+            return []
+        titled = _CAPS_WORD.sub(lambda m: m.group()[0] + m.group()[1:].lower(), text)
+        extra = self.analyzer.analyze(text=titled, language=self.language, entities=["PERSON"])
+        kept = []
+        for r in extra:
+            letters = [c for c in text[r.start : r.end] if c.isalpha()]
+            if letters and all(c.isupper() for c in letters):
+                kept.append(r)
+        return kept
+
+    @staticmethod
+    def _split_person_spans(text: str, results) -> List[RecognizerResult]:
+        """Split "RAJU SHARMA Son of Mohan Sharma" into two names and trim
+        honorifics / dangling relation letters (see clean_person_span)."""
+        out = []
+        for r in results:
+            if r.entity_type != "PERSON":
+                out.append(r)
+                continue
+            for s, e in clean_person_span(text, r.start, r.end):
+                if (s, e) == (r.start, r.end):
+                    out.append(r)
+                else:
+                    out.append(
+                        RecognizerResult(
+                            entity_type="PERSON",
+                            start=s,
+                            end=e,
+                            score=r.score,
+                            analysis_explanation=r.analysis_explanation,
+                            recognition_metadata=r.recognition_metadata,
+                        )
+                    )
+        return out
 
     @staticmethod
     def _clip_to_single_line(text: str, start: int, end: int):

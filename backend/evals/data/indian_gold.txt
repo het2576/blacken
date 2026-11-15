@@ -1,0 +1,181 @@
+=== kyc-01 | kyc ===
+CUSTOMER KYC FORM
+Name: [[PERSON|Suresh Babu Naidu]]
+Father's Name: [[PERSON|Ramana Naidu]]
+Date of Birth: [[IGNORE|14/03/1984]]
+PAN: [[GOV_ID|ABCPN1234F]]
+Mobile: [[PHONE|+91 98480 12345]]
+Address: [[IGNORE|Plot 22, Jubilee Hills, Hyderabad 500033]]
+
+=== kyc-02 | kyc ===
+Applicant Name [[PERSON|Fatima Begum Sheikh]]
+Husband's Name [[PERSON|Abdul Rahim Sheikh]]
+Occupation Homemaker
+Email [[EMAIL|fatima.sheikh81@gmail.com]]
+Residence [[IGNORE|Mominpura, Nagpur]]
+
+=== kyc-03 | kyc ===
+Name of the Account Holder: [[PERSON|Gurpreet Kaur Sandhu]]
+Nominee: [[PERSON|Harjinder Singh Sandhu]] (Husband)
+Branch: [[IGNORE|Model Town, Ludhiana]]
+Phone: [[PHONE|98765 22110]]
+
+=== kyc-04 | kyc ===
+Mr. [[PERSON|Arjun Reddy Patel]] holds a savings account at the Navrangpura branch.
+Aadhaar: [[GOV_ID|4521 8890 3367]]
+Contact: [[PHONE|9099887766]]
+
+=== kyc-05 | kyc ===
+Name: [[PERSON|Debashis Mukhopadhyay]]
+S/o Late [[PERSON|Tarun Kumar Mukhopadhyay]]
+Resident of [[IGNORE|Salt Lake, Kolkata]]
+Voter ID: [[GOV_ID|WBX1234567]]
+
+=== kyc-06 | kyc ===
+This is to certify that Smt. [[PERSON|Revathi Subramaniam]] W/o Shri [[PERSON|K. Subramaniam]] is a resident of [[IGNORE|Mylapore, Chennai]].
+
+=== legal-01 | legal ===
+RENT AGREEMENT
+This agreement is made on [[IGNORE|5 January 2024]] between [[PERSON|Rajesh Kumar Gupta]], S/o [[PERSON|Mohan Lal Gupta]], hereinafter the Landlord, and [[PERSON|Anjali Deshpande]], D/o [[PERSON|Vishwas Deshpande]], hereinafter the Tenant.
+Witness 1: [[PERSON|Pradeep Shinde]]
+Witness 2: [[PERSON|Nasreen Pathan]]
+
+=== legal-02 | legal ===
+AFFIDAVIT
+I, [[PERSON|Lakshmi Narayanan]], W/o [[PERSON|K. Narayanan]], aged 52 years, residing at [[IGNORE|Adyar, Chennai]], do hereby solemnly affirm as follows.
+Deponent: [[PERSON|Lakshmi Narayanan]]
+
+=== legal-03 | legal ===
+Sale deed executed by [[PERSON|Bhupinder Singh Rathore]] in favour of [[PERSON|Madhavi Latha Reddy]]. Witnessed by [[PERSON|Sanjeev Tiwari]] and [[PERSON|Ayesha Siddiqui]]. Registered at the [[IGNORE|Sub-Registrar office, Jaipur]].
+
+=== hr-01 | hr ===
+SALARY SLIP - OCTOBER 2024
+Employee Name: [[PERSON|Kavya Ramachandran]]
+Employee ID: E20411
+Designation: Senior Analyst
+Net Pay: Rs. 72,400
+Bank A/C: [[GOV_ID|50100234567890]]
+
+=== hr-02 | hr ===
+Offer Letter
+Dear [[PERSON|Nikhil Bhandari]],
+We are pleased to offer you the position of Product Manager. Please contact [[PERSON|Smita Kulkarni]] in HR at [[EMAIL|smita.kulkarni@company.in]] for onboarding.
+Regards,
+[[PERSON|Vandana Mishra]]
+
+=== hr-03 | hr ===
+Attendance Register - Team Alpha
+1. [[PERSON|Tarun Chakraborty]] - Present
+2. [[PERSON|Zoya Merchant]] - Present
+3. [[PERSON|Balasubramanian Iyer]] - Leave
+4. [[PERSON|Pooja Agarwal]] - Present
+5. [[PERSON|Ishaan Malhotra]] - Present
+
+=== hr-04 | hr ===
+Reference check completed with Dr. [[PERSON|Meenakshi Sundaram]], former Head of Department. Candidate [[PERSON|Rohit Pandey]] was rated highly.
+
+=== resume-01 | resume ===
+[[PERSON|Ananya Krishnamurthy]]
+Backend Developer | [[EMAIL|ananya.k94@gmail.com]] | [[PHONE|+91 90030 45612]]
+B.Tech, [[ORGANIZATION|NIT Trichy]], [[IGNORE|2016]]
+Skills: Java, Spring, Kafka, Docker
+
+=== resume-02 | resume ===
+[[PERSON|Mohammed Irfan Qureshi]]
+Chartered Accountant
+[[EMAIL|irfan.qureshi@outlook.com]]
+Experience: [[ORGANIZATION|Deloitte]], [[IGNORE|2015-2021]]
+
+=== resume-03 | resume ===
+[[PERSON|Harsh Vardhan Chauhan]] | Data Scientist
+[[PHONE|8800 123 456]] | [[EMAIL|harsh.chauhan@yahoo.in]]
+Projects: Streamlit dashboard, NLP pipeline with spaCy and PyTorch
+
+=== resume-04 | resume ===
+[[PERSON|Sneha Joshi]]
+Marketing Executive, [[IGNORE|Pune]]
+References: Mr. [[PERSON|Amit Bhosale]] ([[PHONE|98220 11223]])
+
+=== edu-01 | education ===
+TRANSFER CERTIFICATE
+Name of Student: [[PERSON|Aarav Sharma]]
+Father's Name: [[PERSON|Vinod Kumar Sharma]]
+Mother's Name: [[PERSON|Sunita Sharma]]
+School: [[ORGANIZATION|Kendriya Vidyalaya]]
+
+=== edu-02 | education ===
+MARKSHEET
+Candidate: [[PERSON|Thiruvengadam Palaniappan]]
+Roll No: 2210456
+Subject: Mathematics 88 | Physics 79
+
+=== edu-03 | education ===
+Hall Ticket: Candidate [[PERSON|Shreya Banerjee]], Centre [[IGNORE|Kolkata]]. Invigilator Dr. [[PERSON|Samir Dutta]].
+
+=== med-01 | medical ===
+DISCHARGE SUMMARY
+Patient: [[PERSON|Ramesh Chandra Verma]], 61 years, Male
+Attending: Dr. [[PERSON|Neha Kapoor]]
+Referred by Dr. [[PERSON|Anil Joshi]]
+Hospital: [[ORGANIZATION|Apollo Hospitals]]
+
+=== med-02 | medical ===
+Insurance claim for [[PERSON|Shabnam Ansari]]. Policy holder [[PERSON|Mohd. Salim Ansari]]. Claim contact [[PHONE|9811 456 789]].
+
+=== chat-01 | chat ===
+Thanks, [[PERSON|Meenakshi]]. Please ask [[PERSON|Harpreet Singh Bedi]] and [[PERSON|Mohammed Irfan]] to join the call with [[PERSON|Kavita]].
+
+=== chat-02 | chat ===
+Hi [[PERSON|Rahul]], I spoke to [[PERSON|Priyanka Chopra Menon]] yesterday. [[PERSON|Siddharth]] will share the file by Friday.
+Cheers,
+[[PERSON|Devika]]
+
+=== chat-03 | chat ===
+Nominees: [[PERSON|Deepak Joshi]], [[PERSON|Sunita Kulkarni]], [[PERSON|Imran Qureshi]], [[PERSON|Gurpreet Kaur]], [[PERSON|Vikram Chaudhary]]
+
+=== ticket-01 | travel ===
+E-TICKET
+Passenger 1: [[PERSON|Karthik Raghunathan]] / Male / 34
+Passenger 2: [[PERSON|Divya Karthik]] / Female / 31
+Boarding: [[IGNORE|Bengaluru]] to [[IGNORE|Delhi]]
+
+=== ticket-02 | travel ===
+Booking confirmed for Mrs. [[PERSON|Padmavathi Rao]] and Mr. [[PERSON|Venkat Rao]]. PNR 4521897365.
+
+=== inv-01 | finance ===
+TAX INVOICE
+Bill To: [[PERSON|Jaswinder Singh Gill]]
+GSTIN: [[GOV_ID|03AAACG1234F1Z5]]
+Amount: Rs. 18,500
+Sold by [[ORGANIZATION|Tata Motors]]
+
+=== inv-02 | finance ===
+Cheque payable to [[PERSON|Ritu Agnihotri]]. Remitter: [[PERSON|Naveen Kumar Sinha]]. IFSC: SBIN0001234
+
+=== ocr-01 | ocr ===
+Name [[PERSON|Raju Sharma]] Son of [[PERSON|Mohan Sharma]] Date of Birth [[IGNORE|15 08 1985]] Address [[IGNORE|Flat 4B Andheri West Mumbai]]
+
+=== ocr-02 | ocr ===
+Government of India Name [[PERSON|Sakshi Tripathi]] Daughter of [[PERSON|Brijesh Tripathi]] Phone [[PHONE|9415566778]] Sex Female
+
+=== ocr-03 | ocr ===
+Driving Licence Holder [[PERSON|Mallikarjun Gowda]] Son of [[PERSON|Basavaraj Gowda]] Valid till [[IGNORE|2031]] Licence No [[GOV_ID|KA0120190012345]]
+
+=== ocr-04 | ocr ===
+Member [[PERSON|Lalitha Devi]] Wife of [[PERSON|Srinivasa Murthy]] Policy Number [[GOV_ID|LIC4402198]]
+
+=== neg-01 | negative ===
+The shipment will leave Jawaharlal Nehru Port on Monday and reach Mahatma Gandhi Road by evening.
+Visit Sri Venkateswara Temple, Shiv Nadar University and the Ram Mandir near Rajiv Chowk.
+Payments accepted via PhonePe, Paytm and Bank of Baroda.
+
+=== neg-02 | negative ===
+Annual Report - Tata Consultancy Services and Infosys reported growth. Ganesh Chaturthi and Diwali sales were strong across Kerala, Gujarat and Punjab.
+Product tags: Sunrise Kumar Cotton, Patel Brothers Spices, Singh Textiles.
+
+=== neg-03 | negative ===
+Python, Django, Kubernetes, Docker, Streamlit, Postman, Kafka, Tableau, Terraform, Redis, Grafana. Experience with Agile and Scrum.
+Meeting agenda: budget review, Q3 roadmap, hiring plan.
+
+=== neg-04 | negative ===
+Dr. Reddy's Laboratories, Hindustan Unilever and Bajaj Auto announced results. Contact the helpdesk or visit the Indira Gandhi International Airport website.

@@ -93,12 +93,11 @@ def test_single_word_tech_terms_not_auto_selected_as_person(engine):
     get down-weighted and shouldn't be pre-checked for redaction."""
     text = "Skills: Docker, Postman, Streamlit, and NextAuth."
     entities = engine.detect(text)
-    person_hits = [e for e in entities if e["type"] == "PERSON"]
-
-    assert person_hits, "expected spaCy to still tag these as PERSON candidates"
-    for entity in person_hits:
-        assert entity["selected"] is False, entity
-        assert entity["confidence"] < 0.6
+    # Known software words are now dropped outright (indian_names.TECH_TERMS /
+    # is_tech_or_code), so they don't even clutter the review list.
+    name_like = [e for e in entities if e["type"] in {"PERSON", "LOCATION", "ORGANIZATION", "NRP"}]
+    assert not any(e["selected"] for e in name_like), name_like
+    assert not {"Docker", "Postman", "Streamlit", "NextAuth"} & {e["text"] for e in name_like}
 
 
 def test_multiword_capitalized_name_keeps_full_confidence(engine):

@@ -1,0 +1,73 @@
+=== ho-kyc-01 | kyc ===
+CUSTOMER DETAILS
+Name: [[PERSON|Tejaswini Hosmani]]
+Father's Name: [[PERSON|Shivalingappa Hosmani]]
+Mobile: [[PHONE|9448012233]]
+City: [[IGNORE|Dharwad]]
+
+=== ho-kyc-02 | kyc ===
+Applicant [[PERSON|Mrinalini Borthakur]], D/o [[PERSON|Hemanta Borthakur]], resident of [[IGNORE|Jorhat, Assam]].
+PAN: [[GOV_ID|BKRPB4471M]]
+
+=== ho-kyc-03 | kyc ===
+Account Holder: [[PERSON|Lalrinpuii Hmar]]
+Nominee: [[PERSON|Zothanpuia Hmar]] (Brother)
+Branch: [[IGNORE|Aizawl]]
+
+=== ho-kyc-04 | kyc ===
+Shri [[PERSON|Tsering Wangchuk]] S/o [[PERSON|Sonam Norbu]] holds account no. 31220984411 at the [[IGNORE|Leh]] branch.
+
+=== ho-legal-01 | legal ===
+This deed is executed by [[PERSON|Ibomcha Meitei]], S/o Late [[PERSON|Tombi Meitei]], in favour of [[PERSON|Chinglen Ningthouja]].
+Witness: [[PERSON|Bijoylakshmi Thokchom]]
+
+=== ho-legal-02 | legal ===
+AFFIDAVIT
+I, [[PERSON|Sumitra Hansda]], W/o [[PERSON|Budhan Murmu]], aged 38 years, residing at [[IGNORE|Dumka]], do hereby state as follows.
+
+=== ho-legal-03 | legal ===
+Agreement between [[PERSON|Wasim Ahmad Lone]] (Landlord) and [[PERSON|Ishrat Jahan Dar]] (Tenant) for premises at [[IGNORE|Rajbagh, Srinagar]].
+
+=== ho-hr-01 | hr ===
+Employee Name: [[PERSON|Hrishikesh Pednekar]]
+Reporting Manager: [[PERSON|Chinmayi Kshirsagar]]
+Department: Operations
+
+=== ho-hr-02 | hr ===
+Dear [[PERSON|Sreejith Kunnath]],
+Your joining date is confirmed. Please report to [[PERSON|Anbarasan Thangavel]] on arrival.
+Regards,
+[[PERSON|Joyeeta Sarmah]]
+
+=== ho-hr-03 | hr ===
+Shortlisted: [[PERSON|Gaurang Vasava]], [[PERSON|Ruchita Bhayani]], [[PERSON|Pritam Majhi]], [[PERSON|Nivedita Saikia]]
+
+=== ho-edu-01 | education ===
+Name of Student: [[PERSON|Arundhati Bhowmik]]
+Mother's Name: [[PERSON|Sraboni Bhowmik]]
+Roll No: 4471209
+
+=== ho-med-01 | medical ===
+Patient: [[PERSON|Bodhisattva Lahiri]], 47 years
+Attending: Dr. [[PERSON|Paramveer Dhindsa]]
+
+=== ho-travel-01 | travel ===
+Passenger 1: [[PERSON|Ashwath Hegdekatte]] / Male / 29
+Passenger 2: [[PERSON|Shrinidhi Kamathkar]] / Female / 27
+
+=== ho-fin-01 | finance ===
+Bill To: [[PERSON|Clinton Fernandes]]
+Payment received from [[PERSON|Melwyn D'Souza]] via UPI.
+
+=== ho-chat-01 | chat ===
+Thanks [[PERSON|Ojasvi]], I'll loop in [[PERSON|Tanmoy Chakladar]] and [[PERSON|Rinchen Lhamu]] tomorrow.
+
+=== ho-ocr-01 | ocr ===
+Name [[PERSON|Pempa Tamang]] Son of [[PERSON|Dawa Tamang]] Date of Birth [[IGNORE|02 11 1990]] Address [[IGNORE|Darjeeling]]
+
+=== ho-ocr-02 | ocr ===
+Holder [[PERSON|Keerthana Shanbhag]] Daughter of [[PERSON|Raghavendra Shanbhag]] Valid till [[IGNORE|2030]]
+
+=== ho-neg-01 | negative ===
+The festival at Kaziranga and the Hornbill celebrations in Kohima drew large crowds. Trains depart from Chhatrapati Shivaji Maharaj Terminus.
+Order Mysore Pak from Kanti Sweets and Basmati rice from Daawat.

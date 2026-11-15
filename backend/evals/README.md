@@ -20,6 +20,8 @@ python scripts/fetch_pii_model.py             # GLiNER-edge (pinned, SHA-256 che
 python -m evals.run_detection --split dev --limit 1000 --model en_core_web_sm \
     --pii-model models/gliner-pii-edge --tag cfg_F_sm_edge_ner
 python -m evals.calibrate --limit 1500 --dry-run   # per-type thresholds (dev only)
+python -m evals.run_detection --datasets indian_heldout indian_gold blacken_gold \
+    --model en_core_web_sm --pii-model models/gliner-pii-edge --tag names_final_F
 ```
 
 Every experiment is judged on the **test** splits *and* the fully annotated gold
@@ -34,6 +36,10 @@ thresholds (gold recall -4.3 pts - they learned the public sets' label gaps) and
 | **Blacken gold** (`data/blacken_gold.txt`) | 44 docs, 249 PII entities | Realistic resumes, clinical notes, Indian KYC/loan/rent/payslips, US HR/tax/lease, UK NHS/visa, support chats, server logs; 12 PII-free negatives | Test only. Every PII occurrence annotated → precision is meaningful |
 | **ai4privacy pii-masking-400k** (EN) | 17,046 docs, 17.7k entities | Breadth of identifier formats, US + GB locales | Tuned on `train` (dev), reported on `validation` (test) |
 | **Gretel synthetic PII finance** (EN) | 2,891 docs, 9.1k entities | Long financial/legal documents (~1.4k chars) | Tuned on `train` (dev), reported on `test` |
+| **Indian-format suite** (`data/indian_gold.txt`) | 37 docs + 30 ALL-CAPS twins, 140 names | KYC forms, affidavits with S/o / W/o, payslips, tickets, OCR-style run-on ID text, chats; hard negatives like "Jawaharlal Nehru Port" | Opt-in (`--datasets indian_gold`). Written alongside the name rules, so its names overlap the name lists - a regression suite, not a generalisation estimate |
+| **Indian held-out** (`data/indian_heldout.txt`) | 18 docs + 17 ALL-CAPS twins, 77 names | Same formats, names from regions the lists cover least (Assamese, Mizo, Ladakhi, Manipuri, Santhali, Kashmiri, Konkani, Tulu) | Written **after** the name rules were frozen; 1 of 81 name words is in the lists. Never tune on it |
+
+Only PERSON (plus a few IDs/contacts) is annotated carefully in the two Indian suites - addresses and dates are `IGNORE` - so read the PERSON per-class numbers. Every forms-style document is also scored as an upper-cased twin because KYC forms, IDs and scans are commonly ALL CAPS.
 
 Public sets are downloaded on first use into `evals/.cache/` (gitignored).
 
